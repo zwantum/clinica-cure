@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGradMale" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8F8F5" />
+      <stop offset="100%" stop-color="#CEF0EA" />
+    </linearGradient>
+    <linearGradient id="skinGradMale" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F5D0B5" />
+      <stop offset="100%" stop-color="#E8BA99" />
+    </linearGradient>
+    <linearGradient id="coatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F1F5F9" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.12" flood-color="#0E746D" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="240" height="240" rx="32" fill="url(#bgGradMale)" />
+
+  <!-- Subtle Medical Cross pattern in top-right -->
+  <g opacity="0.35" transform="translate(196, 18)">
+    <rect x="7" y="0" width="6" height="20" rx="3" fill="#26B09A" />
+    <rect x="0" y="7" width="20" height="6" rx="3" fill="#26B09A" />
+  </g>
+
+  <!-- Male Doctor Figure -->
+  <g id="doctor-figure">
+    <!-- Inner Scrub / Shirt (Clinica Cure Teal) -->
+    <path d="M96 142 L144 142 L150 178 L90 178 Z" fill="#0E746D" />
+    <!-- V-Neck scrub cut -->
+    <path d="M106 142 L120 162 L134 142 Z" fill="#E8BA99" />
+
+    <!-- Shoulders & Doctor White Coat Body -->
+    <path d="M42 240 C42 188 64 168 92 160 L104 240 Z" fill="url(#coatGrad)" filter="url(#shadow)" />
+    <path d="M198 240 C198 188 176 168 148 160 L136 240 Z" fill="url(#coatGrad)" filter="url(#shadow)" />
+
+    <!-- Center Coat Section -->
+    <path d="M86 160 L120 240 L154 160 Z" fill="#F8FAFC" opacity="0.9" />
+
+    <!-- Left Coat Lapel -->
+    <path d="M92 152 L68 188 L104 240 L114 240 L102 182 Z" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" />
+    <!-- Right Coat Lapel -->
+    <path d="M148 152 L172 188 L136 240 L126 240 L138 182 Z" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" />
+
+    <!-- Stethoscope -->
+    <!-- Tubes hanging around neck -->
+    <path d="M98 148 C94 172 90 200 102 216 C108 224 116 224 118 214" fill="none" stroke="#334155" stroke-width="4.5" stroke-linecap="round" />
+    <path d="M142 148 C146 172 150 196 138 214" fill="none" stroke="#334155" stroke-width="4.5" stroke-linecap="round" />
+    <!-- Stethoscope Chestpiece (Bell & Diaphragm) -->
+    <circle cx="102" cy="218" r="8" fill="#94A3B8" stroke="#334155" stroke-width="2" />
+    <circle cx="102" cy="218" r="4.5" fill="#0E746D" />
+
+    <!-- Neck -->
+    <rect x="107" y="120" width="26" height="30" rx="6" fill="#E8BA99" />
+    <!-- Neck shadow under chin -->
+    <ellipse cx="120" cy="130" rx="12" ry="5" fill="#D39F7D" opacity="0.4" />
+
+    <!-- Ears -->
+    <circle cx="82" cy="100" r="8" fill="#E8BA99" />
+    <circle cx="158" cy="100" r="8" fill="#E8BA99" />
+
+    <!-- Head / Face -->
+    <ellipse cx="120" cy="98" rx="38" ry="44" fill="url(#skinGradMale)" />
+
+    <!-- Professional Short Hair -->
+    <path d="M82 92 C80 66 94 48 120 48 C146 48 160 66 158 92 C152 74 142 66 120 66 C98 66 88 74 82 92 Z" fill="#2C3E50" />
+    <!-- Sideburns -->
+    <rect x="81" y="85" width="5" height="15" rx="2" fill="#2C3E50" />
+    <rect x="154" y="85" width="5" height="15" rx="2" fill="#2C3E50" />
+
+    <!-- Eyebrows -->
+    <path d="M96 86 C102 83 108 84 112 86" stroke="#1E293B" stroke-width="2.2" stroke-linecap="round" fill="none" />
+    <path d="M128 86 C132 84 138 83 144 86" stroke="#1E293B" stroke-width="2.2" stroke-linecap="round" fill="none" />
+
+    <!-- Eyes (Friendly, caring) -->
+    <circle cx="104" cy="95" r="3.2" fill="#1E293B" />
+    <circle cx="136" cy="95" r="3.2" fill="#1E293B" />
+    <circle cx="105.2" cy="93.8" r="1" fill="#FFFFFF" />
+    <circle cx="137.2" cy="93.8" r="1" fill="#FFFFFF" />
+
+    <!-- Nose -->
+    <path d="M120 95 L118 107 L123 107" fill="none" stroke="#D39F7D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Friendly Smile -->
+    <path d="M110 118 C114 123 126 123 130 118" fill="none" stroke="#9C5D3E" stroke-width="2.2" stroke-linecap="round" />
+
+    <!-- Small ID Badge on coat -->
+    <rect x="68" y="196" width="18" height="24" rx="3" fill="#FFFFFF" stroke="#0E746D" stroke-width="1.2" />
+    <rect x="71" y="200" width="12" height="4" rx="1" fill="#0E746D" />
+    <line x1="71" y1="208" x2="83" y2="208" stroke="#94A3B8" stroke-width="1" />
+    <line x1="71" y1="212" x2="80" y2="212" stroke="#94A3B8" stroke-width="1" />
+  </g>
+</svg>

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGradGen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EEF9F7" />
+      <stop offset="100%" stop-color="#DDF5F0" />
+    </linearGradient>
+    <linearGradient id="coatGradGen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F1F5F9" />
+    </linearGradient>
+    <filter id="shadowGen" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.12" flood-color="#0E746D" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="240" height="240" rx="32" fill="url(#bgGradGen)" />
+
+  <!-- Subtle Medical Cross pattern -->
+  <g opacity="0.3" transform="translate(196, 18)">
+    <rect x="7" y="0" width="6" height="20" rx="3" fill="#26B09A" />
+    <rect x="0" y="7" width="20" height="6" rx="3" fill="#26B09A" />
+  </g>
+
+  <!-- Neutral Medical Specialist Silhouette -->
+  <g id="neutral-doctor-figure">
+    <!-- Inner Scrub / Shirt -->
+    <path d="M96 142 L144 142 L150 178 L90 178 Z" fill="#0E746D" />
+    <path d="M106 142 L120 162 L134 142 Z" fill="#CBD5E1" />
+
+    <!-- Shoulders & Coat -->
+    <path d="M42 240 C42 188 64 168 92 160 L104 240 Z" fill="url(#coatGradGen)" filter="url(#shadowGen)" />
+    <path d="M198 240 C198 188 176 168 148 160 L136 240 Z" fill="url(#coatGradGen)" filter="url(#shadowGen)" />
+    <path d="M86 160 L120 240 L154 160 Z" fill="#F8FAFC" opacity="0.9" />
+
+    <!-- Left Lapel -->
+    <path d="M92 152 L68 188 L104 240 L114 240 L102 182 Z" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" />
+    <!-- Right Lapel -->
+    <path d="M148 152 L172 188 L136 240 L126 240 L138 182 Z" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" />
+
+    <!-- Stethoscope -->
+    <path d="M98 148 C94 172 90 200 102 216 C108 224 116 224 118 214" fill="none" stroke="#334155" stroke-width="4.5" stroke-linecap="round" />
+    <path d="M142 148 C146 172 150 196 138 214" fill="none" stroke="#334155" stroke-width="4.5" stroke-linecap="round" />
+    <circle cx="102" cy="218" r="8" fill="#94A3B8" stroke="#334155" stroke-width="2" />
+    <circle cx="102" cy="218" r="4.5" fill="#0E746D" />
+
+    <!-- Neck -->
+    <rect x="107" y="120" width="26" height="30" rx="6" fill="#94A3B8" opacity="0.3" />
+
+    <!-- Head / Avatar Silhouette -->
+    <circle cx="120" cy="94" r="36" fill="#64748B" opacity="0.85" />
+    <!-- Stethoscope Earpieces going up into ears -->
+    <path d="M98 148 C94 136 92 112 100 100" fill="none" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+    <path d="M142 148 C146 136 148 112 140 100" fill="none" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Caduceus / Cross Badge on Chest -->
+    <rect x="68" y="196" width="18" height="24" rx="3" fill="#FFFFFF" stroke="#0E746D" stroke-width="1.2" />
+    <path d="M77 202 L77 214 M71 208 L83 208" stroke="#0E746D" stroke-width="2" stroke-linecap="round" />
+  </g>
+</svg>
