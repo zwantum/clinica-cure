@@ -90,7 +90,7 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-white text-slate-800">
       {/* ── 1. FULL-WIDTH HERO SECTION (OPEN LAYOUT, NO BOXED CONTAINER) ── */}
-      <section className="bg-[#F4F9F8] border-b border-[#DDEAE7] pt-5 pb-10 sm:pb-12 md:pb-14">
+      <section className="bg-[#F4F9F8] border-b border-[#DDEAE7] pt-4 pb-6 sm:pt-5 sm:pb-12 md:pb-14">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           {/* Breadcrumb Navigation */}
           <nav
@@ -219,7 +219,7 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
       </section>
 
       {/* ── 2. MAIN BODY SECTION (CRISP WHITE BACKGROUND & TWO-COLUMN LAYOUT) ── */}
-      <section className="bg-white py-10 sm:py-12 md:py-14">
+      <section className="bg-white py-6 sm:py-12 md:py-14">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_380px] gap-8 lg:gap-10 items-start">
             {/* ═════════ LEFT MAIN COLUMN ═════════ */}
@@ -232,10 +232,10 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
 
                 <div className="grid md:grid-cols-[1.25fr_1fr] gap-6 items-center mt-4">
                   <div className="space-y-3.5">
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    <p className="text-[14px] sm:text-sm text-slate-600 leading-relaxed">
                       {deptData.aboutDesc1}
                     </p>
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    <p className="text-[14px] sm:text-sm text-slate-600 leading-relaxed">
                       {deptData.aboutDesc2}
                     </p>
                   </div>
@@ -264,20 +264,33 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
                     </div>
                   </div>
 
+                  {/* Desktop / Tablet Sideways Link */}
                   <Link
                     href="/doctors"
-                    className="text-xs sm:text-sm font-semibold text-[#0E746D] hover:underline inline-flex items-center gap-1 shrink-0 pt-1"
+                    className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-[#0E746D] hover:underline shrink-0 pt-1"
                   >
                     <span>View All Doctors</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-500 mt-1 mb-6 ml-12">
+
+                <p className="text-[13px] sm:text-sm text-slate-500 mt-1 mb-2.5 sm:mb-6 ml-12">
                   You may also like to consult these specialists:
                 </p>
 
+                {/* Mobile View Link: Displayed Below Paragraph */}
+                <div className="sm:hidden mb-5 ml-12">
+                  <Link
+                    href="/doctors"
+                    className="text-[13px] font-semibold text-[#0E746D] hover:underline inline-flex items-center gap-1.5"
+                  >
+                    <span>View All Doctors</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+
                 {/* Doctor Cards Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4">
                   {deptDoctors.slice(0, 4).map((doc) => (
                     <DepartmentDoctorCard key={doc.slug} doctor={doc} />
                   ))}
@@ -344,7 +357,7 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
                 {/* Enhanced Book Now Button with Hover Effects */}
                 <Link
                   href={`/book-appointment?department=${dept.slug}`}
-                  className="w-full bg-white hover:bg-[#F0FAF7] text-[#0A635B] hover:text-[#064a44] font-display font-bold text-sm py-3.5 px-5 rounded-2xl flex items-center justify-center gap-2 mt-5 transition-all duration-300 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group/btn"
+                  className="w-fit inline-flex sm:w-full sm:flex items-center justify-center gap-2 bg-white hover:bg-[#F0FAF7] text-[#0A635B] hover:text-[#064a44] font-display font-bold text-sm py-3 px-10 sm:py-3.5 sm:px-5 rounded-2xl mt-5 transition-all duration-300 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group/btn"
                 >
                   <span>Book Now</span>
                   <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />

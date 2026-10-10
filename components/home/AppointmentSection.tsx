@@ -59,7 +59,7 @@ export default function AppointmentSection() {
   }
 
   return (
-    <section id="health-info" className="py-14 sm:py-18 md:py-18 bg-[#F6FBFA]">
+    <section id="health-info" className="pt-6 pb-12 sm:py-16 md:py-18 bg-[#F6FBFA]">
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-stretch justify-center">
           {/* LEFT CARD: Your Appointment, Made Simple */}

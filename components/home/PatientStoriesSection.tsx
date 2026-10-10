@@ -378,8 +378,9 @@ export default function PatientStoriesSection({
 
         {/* Video Player Grid Showcase (Side-by-side on small tablet and above) */}
         <div className={`${showHeading ? 'mt-8 sm:mt-10' : ''} grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-5 sm:gap-6 md:gap-8 lg:gap-12 items-center`}>
-          {/* Left Column: The Custom Video Player */}
-          <div className="relative w-full aspect-video rounded-2xl sm:rounded-3xl overflow-hidden bg-black shadow-md border border-[#E2ECE9] flex items-center justify-center group">
+          {/* Left Column: The Custom Video Player & Mobile Playlist */}
+          <div className="flex flex-col gap-3 w-full">
+            <div className="relative w-full aspect-video rounded-2xl sm:rounded-3xl overflow-hidden bg-black shadow-md border border-[#E2ECE9] flex items-center justify-center group">
             <video
               ref={videoRef}
               src={activeStory.videoUrl}
@@ -464,8 +465,55 @@ export default function PatientStoriesSection({
             </div>
           </div>
 
-          {/* Right Column: Vertical Timeline Playlist Selector (Shows ~3 items at a time + vertical scroll) */}
-          <div className="relative flex items-center py-1 shrink-0 w-full sm:w-[160px] md:w-[185px] lg:w-[205px]">
+            {/* Mobile-Only Playlist: Compact Horizontal Thumbnails Only (< sm) */}
+            <div className="sm:hidden w-full mt-3">
+              <div className="mb-2 px-1">
+                <span className="text-xs font-bold text-slate-800">Other Patient Stories</span>
+              </div>
+              <div className="flex items-center gap-2.5 overflow-x-auto px-1.5 py-1 pb-2 scrollbar-none snap-x">
+                {TESTIMONIALS.map((t) => {
+                  const isActive = t.id === activeStory.id
+                  return (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => handleSelectStory(t)}
+                      aria-label={`Watch story of ${t.name}`}
+                      className={`relative shrink-0 w-[114px] aspect-[16/10] rounded-xl overflow-hidden text-left transition-all snap-start cursor-pointer focus:outline-none ${
+                        isActive
+                          ? 'ring-2 ring-[#00A88F] shadow-md scale-[1.02]'
+                          : 'opacity-85 hover:opacity-100 border border-slate-200/90 bg-black'
+                      }`}
+                    >
+                      <img
+                        src={t.image}
+                        alt={t.name}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                        <span
+                          className={`w-6 h-6 rounded-full flex items-center justify-center shadow-md ${
+                            isActive
+                              ? 'bg-[#00A88F] text-white'
+                              : 'bg-white/95 text-[#00A88F]'
+                          }`}
+                        >
+                          <Play className="w-2.5 h-2.5 translate-x-0.5 fill-current" />
+                        </span>
+                      </div>
+                      <span className="absolute bottom-1 right-1 bg-black/80 text-white text-[8px] font-semibold px-1 py-0.5 rounded leading-none">
+                        {t.duration}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Vertical Timeline Playlist Selector (Desktop & Tablet only) */}
+          <div className="hidden sm:flex relative items-center py-1 shrink-0 sm:w-[160px] md:w-[185px] lg:w-[205px]">
             {/* Continuous Timeline Line on Left */}
             <div className="absolute top-3 bottom-3 left-[11px] w-0.5 bg-[#26B09A]/30 z-0" />
 

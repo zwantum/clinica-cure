@@ -54,7 +54,7 @@ export default function DepartmentsPage() {
   return (
     <div className="bg-white min-h-screen text-slate-800">
       {/* ── 1. FULL-WIDTH HERO SECTION (Matching Site Standard) ── */}
-      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-10 sm:py-12 md:py-14 lg:py-16 min-h-[380px] sm:min-h-[420px] md:min-h-[460px] flex items-center">
+      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-6 sm:py-12 md:py-14 lg:py-16 min-h-[320px] sm:min-h-[420px] md:min-h-[460px] flex items-center">
         {/* Department / Medical Team Hero Image with subtle fade */}
         <div className="absolute top-0 bottom-0 right-0 w-full sm:w-[85%] md:w-[72%] lg:w-[66%] xl:w-[62%] 2xl:w-[58%] pointer-events-none select-none z-0">
           <img
@@ -90,7 +90,7 @@ export default function DepartmentsPage() {
             </h1>
 
             {/* Description */}
-            <p className="mt-3.5 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-600 leading-relaxed max-w-xl">
+            <p className="mt-3.5 sm:mt-4 text-[14px] sm:text-sm md:text-base text-slate-600 leading-relaxed max-w-xl">
               From round-the-clock emergency and intensive critical care to advanced laparoscopic surgeries, brain &amp; spine neurosurgery, cardiology, and maternity - discover our multidisciplinary medical departments in Bariatu, Ranchi.
             </p>
 
@@ -161,7 +161,7 @@ export default function DepartmentsPage() {
       </section>
 
       {/* ── 2. MAIN DIRECTORY SECTION (Filter Tabs + Search + Cards) ── */}
-      <section className="bg-[#F6FBFA] py-10 sm:py-14 md:py-16">
+      <section className="bg-[#F6FBFA] py-6 sm:py-14 md:py-16">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           {/* Section Introduction */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
@@ -172,7 +172,7 @@ export default function DepartmentsPage() {
               <h2 className="font-display font-semibold text-slate-900 text-2xl sm:text-3xl leading-tight">
                 Browse Clinical Departments
               </h2>
-              <p className="text-slate-600 text-xs sm:text-sm mt-1 max-w-xl">
+              <p className="text-slate-600 text-[14px] sm:text-sm mt-1 max-w-xl">
                 Filter by medical division, surgical speciality, or search by specific symptoms and treatments.
               </p>
             </div>
@@ -184,16 +184,16 @@ export default function DepartmentsPage() {
       </section>
 
       {/* ── 3. CLINICAL EXCELLENCE PILLARS ── */}
-      <section className="py-14 sm:py-16 lg:py-20 bg-white border-t border-slate-100">
+      <section className="py-8 sm:py-16 lg:py-20 bg-white border-t border-slate-100">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-7 sm:mb-16">
             <span className="text-xs sm:text-sm font-bold text-[#0E746D] uppercase tracking-wider block mb-2">
               WHY CHOOSE CLINICA CURE
             </span>
             <h2 className="font-display font-semibold text-slate-900 text-2xl sm:text-3xl lg:text-4xl leading-tight">
               Hospital Standards Backing Every Speciality
             </h2>
-            <p className="mt-3 text-xs sm:text-sm md:text-base text-slate-600 leading-relaxed">
+            <p className="mt-3 text-[14px] sm:text-sm md:text-base text-slate-600 leading-relaxed">
               Every medical consultation, diagnostic test, and surgical intervention adheres to strict clinical protocols and empathetic patient care.
             </p>
           </div>
@@ -212,7 +212,7 @@ export default function DepartmentsPage() {
                   <h3 className="font-display font-bold text-slate-900 text-base sm:text-lg leading-snug group-hover:text-[#0E746D] transition-colors">
                     {pillar.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2.5">
+                  <p className="text-[14px] sm:text-sm text-slate-600 leading-relaxed mt-2.5">
                     {pillar.description}
                   </p>
                 </div>
@@ -223,9 +223,9 @@ export default function DepartmentsPage() {
       </section>
 
       {/* ── 4. NEED HELP CHOOSING A DEPARTMENT BANNER ── */}
-      <section className="pb-16 sm:pb-20 bg-white">
+      <section className="pb-8 sm:pb-20 bg-white">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
-          <div className="bg-gradient-to-r from-[#0E746D] to-[#0A534B] text-white rounded-3xl p-8 sm:p-10 md:p-12 shadow-lg relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="bg-gradient-to-r from-[#0E746D] to-[#0A534B] text-white rounded-3xl p-5 sm:p-10 md:p-12 shadow-lg relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
             {/* Glow effect */}
             <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/10 blur-2xl pointer-events-none" />
             <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-[#A7F3D0]/10 blur-2xl pointer-events-none" />
@@ -237,7 +237,7 @@ export default function DepartmentsPage() {
               <h3 className="font-display font-bold text-2xl sm:text-3xl text-white leading-tight">
                 Not Sure Which Department You Need?
               </h3>
-              <p className="text-white/85 text-xs sm:text-sm mt-3 leading-relaxed">
+              <p className="text-white/85 text-[14px] sm:text-sm mt-3 leading-relaxed">
                 Our patient care coordination team can help evaluate your symptoms and schedule you directly with the right clinical specialist.
               </p>
             </div>

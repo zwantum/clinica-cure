@@ -329,7 +329,7 @@ export default function DepartmentsDirectory() {
                 </span>
 
                 {/* Description */}
-                <p className="mt-2.5 text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3">
+                <p className="mt-2.5 text-[14px] sm:text-sm text-slate-600 leading-relaxed line-clamp-3">
                   {detail.desc}
                 </p>
 

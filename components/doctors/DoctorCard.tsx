@@ -35,7 +35,7 @@ export default function DoctorCard({ doctor: doc }: DoctorCardProps) {
           <h3 className="font-display font-bold text-base sm:text-lg lg:text-xl text-slate-900 leading-snug truncate group-hover:text-[#0E6B60] transition-colors">
             {doc.name}
           </h3>
-          <p className="text-[#0E6B60] text-xs sm:text-sm font-normal mt-1.5 leading-snug line-clamp-2">
+          <p className="text-[#0E6B60] text-[14px] sm:text-sm font-normal mt-1.5 leading-snug line-clamp-2">
             {doc.designation}
           </p>
         </div>
@@ -46,7 +46,7 @@ export default function DoctorCard({ doctor: doc }: DoctorCardProps) {
         <p className="text-[10.5px] sm:text-[11px] font-display font-bold text-slate-700/70 uppercase tracking-wider">
           Qualifications
         </p>
-        <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1 leading-relaxed line-clamp-2">
+        <p className="text-[14px] sm:text-sm text-slate-600 font-medium mt-1 leading-relaxed line-clamp-2">
           {Array.isArray(doc.qualifications)
             ? doc.qualifications.join(', ')
             : doc.qualifications}

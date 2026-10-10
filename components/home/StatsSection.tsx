@@ -18,9 +18,9 @@ export default function StatsSection() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-0 lg:divide-x lg:divide-slate-100">
           {HOMEPAGE_STATS.map((stat) => (
             <div key={stat.label} className="lg:px-7 lg:first:pl-0 lg:last:pr-0 flex flex-col justify-start">
-              <div className="font-display font-bold text-[28px] sm:text-[30px] md:text-[32px] text-[#0e746d] tracking-tight leading-none inline-flex items-start">
+              <div className="font-display font-bold text-[20px] sm:text-[30px] md:text-[32px] text-[#0e746d] tracking-tight leading-none inline-flex items-start">
                 <span>{stat.value}</span>
-                <sup className="text-[#0e746d] text-[18px] sm:text-[1.55rem] font-bold leading-none ml-0.5 relative -top-0.5 sm:-top-1 select-none">
+                <sup className="text-[#0e746d] text-[13px] sm:text-[1.55rem] font-bold leading-none ml-0.5 relative -top-0.5 sm:-top-1 select-none">
                   {stat.suffix}
                 </sup>
               </div>

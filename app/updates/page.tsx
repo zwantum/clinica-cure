@@ -34,7 +34,7 @@ const NOTICES = [
 
 export default function UpdatesPage() {
   return (
-    <div className="bg-[#F8FAF9] min-h-screen py-10 sm:py-14">
+    <div className="bg-[#F8FAF9] pt-6 sm:pt-8 pb-8 sm:pb-10">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
           <div>

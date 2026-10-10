@@ -3,8 +3,8 @@ export default function HeroBanner() {
     <section id="hero" className="relative w-full overflow-hidden bg-white">
       <div className="w-full">
         <picture>
-          <source media="(max-width: 639px)" srcSet="/images/bg-mobile.webp" />
-          <source media="(min-width: 640px)" srcSet="/images/bg.png" />
+          <source media="(max-width: 639px)" srcSet="/images/bg-mobile.png" />
+          <source media="(min-width: 640px)" srcSet="/images/bg-2.png" />
           <img
             src="/images/bg.png"
             alt="Clinica Cure Hospital Banner - Advanced Multi-Speciality Healthcare in Ranchi"

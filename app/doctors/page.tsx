@@ -176,7 +176,7 @@ export default function DoctorsPage() {
             </h1>
 
             {/* Description */}
-            <p className="mt-3.5 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-600 leading-relaxed max-w-xl">
+            <p className="mt-3.5 sm:mt-4 text-[14px] sm:text-sm md:text-base text-slate-600 leading-relaxed max-w-xl">
               Connect with over 34+ renowned surgeons, physicians, and consultants across 20 specialized departments at Clinica Cure Hospital. Evidence-based care tailored to your recovery.
             </p>
 
@@ -258,7 +258,7 @@ export default function DoctorsPage() {
               <h2 className="font-display font-semibold text-slate-900 text-2xl sm:text-3xl leading-tight">
                 Browse Specialists &amp; Consultants
               </h2>
-              <p className="text-slate-600 text-xs sm:text-sm mt-1 max-w-xl">
+              <p className="text-slate-600 text-[14px] sm:text-sm mt-1 max-w-xl">
                 Filter by department, doctor name, qualifications, or gender to find your preferred physician.
               </p>
             </div>
@@ -530,7 +530,7 @@ export default function DoctorsPage() {
             <h2 className="font-display font-semibold text-slate-900 text-2xl sm:text-3xl lg:text-4xl leading-tight">
               Why Patients Trust Clinica Cure Specialists
             </h2>
-            <p className="mt-3 text-xs sm:text-sm md:text-base text-slate-600 leading-relaxed">
+            <p className="mt-3 text-[14px] sm:text-sm md:text-base text-slate-600 leading-relaxed">
               Every consultation and surgical intervention is guided by rigorous clinical standards, ethical medical counsel, and advanced hospital technology.
             </p>
           </div>
@@ -549,7 +549,7 @@ export default function DoctorsPage() {
                   <h3 className="font-display font-bold text-slate-900 text-base sm:text-lg leading-snug group-hover:text-[#0E746D] transition-colors">
                     {pillar.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2.5">
+                  <p className="text-[14px] sm:text-sm text-slate-600 leading-relaxed mt-2.5">
                     {pillar.description}
                   </p>
                 </div>
@@ -571,7 +571,7 @@ export default function DoctorsPage() {
               <h2 className="font-display font-semibold text-slate-900 text-2xl sm:text-3xl lg:text-4xl leading-tight">
                 Frequently Asked Questions About Consultations
               </h2>
-              <p className="mt-3 text-xs sm:text-sm md:text-base text-slate-600 leading-relaxed">
+              <p className="mt-3 text-[14px] sm:text-sm md:text-base text-slate-600 leading-relaxed">
                 Everything you need to know about booking an appointment, medical records, emergency OPD, and second opinions at Clinica Cure Hospital.
               </p>
 
@@ -623,7 +623,7 @@ export default function DoctorsPage() {
                     </div>
                   </button>
                   {isOpen && (
-                    <div className="px-5 pb-5 sm:px-6 sm:pb-6 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                    <div className="px-5 pb-5 sm:px-6 sm:pb-6 text-[14px] sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
                       {faq.a}
                     </div>
                   )}

@@ -38,7 +38,7 @@ export function DoctorTabsNav() {
   }
 
   return (
-    <div className="overflow-x-auto no-scrollbar py-2 -mx-4 px-4 sm:mx-0 sm:px-0">
+    <div className="overflow-x-auto no-scrollbar pt-4 pb-1 sm:py-2 -mx-4 px-4 sm:mx-0 sm:px-0">
       <nav
         aria-label="Doctor profile tabs"
         className="inline-flex items-center p-1 sm:p-1.5 rounded-full bg-[#F4F9F8] border border-[#DCEBE7] shadow-xs min-w-max"

@@ -125,7 +125,7 @@ export default function AboutPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* ── 1. HERO SECTION: FULL BACKGROUND IMAGE (CONSISTENT WITH DOCTORS & PATIENT STORIES) ── */}
-      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-10 sm:py-12 md:py-14 lg:py-16 min-h-[440px] sm:min-h-[480px] md:min-h-[520px] flex items-center">
+      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-6 sm:py-12 md:py-14 lg:py-16 min-h-[380px] sm:min-h-[480px] md:min-h-[520px] flex items-center">
         {/* Full Right-anchored Hospital Building Image with smooth fade mask */}
         <div className="absolute top-0 bottom-0 right-0 w-full sm:w-[85%] md:w-[72%] lg:w-[64%] xl:w-[58%] 2xl:w-[54%] pointer-events-none select-none z-0">
           <img
@@ -169,7 +169,7 @@ export default function AboutPage() {
             </h1>
 
             {/* Description */}
-            <p className="mt-3.5 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-600 leading-relaxed max-w-xl">
+            <p className="mt-3.5 sm:mt-4 text-[14px] sm:text-sm md:text-base text-slate-600 leading-relaxed max-w-xl">
               At Clinica Cure Hospital, we combine advanced medical technology, experienced
               specialists, and a patient-first approach to provide comprehensive, compassionate care
               for you and your family.
@@ -193,22 +193,22 @@ export default function AboutPage() {
               </Link>
             </div>
 
-            {/* 4 Feature Badges in a Row (Matching Reference) */}
-            <div className="mt-8 pt-6 border-t border-slate-200/80 flex flex-wrap sm:flex-nowrap items-center gap-5 sm:gap-6 md:gap-7 lg:gap-8 w-fit">
+            {/* 4 Feature Badges in a Single Row (Grid on mobile, flex on desktop) */}
+            <div className="mt-8 pt-6 border-t border-slate-200/80 grid grid-cols-4 gap-1.5 sm:gap-6 md:gap-7 lg:gap-8 w-full sm:w-fit max-w-lg sm:max-w-none">
               {HERO_FEATURES.map((item) => {
                 const IconComp = item.icon
                 return (
                   <div
                     key={item.title}
-                    className="flex flex-col items-center text-center group shrink-0"
+                    className="flex flex-col items-center text-center group min-w-0"
                   >
-                    <div className="w-11 h-11 rounded-full bg-[#EAF7F4] text-[#0E746D] flex items-center justify-center mb-2 shadow-2xs border border-[#26B09A]/20 group-hover:scale-105 transition-transform">
-                      <IconComp className="w-5 h-5 text-[#0E746D]" strokeWidth={2} />
+                    <div className="w-9.5 h-9.5 sm:w-11 sm:h-11 rounded-full bg-[#EAF7F4] text-[#0E746D] flex items-center justify-center mb-1.5 sm:mb-2 shadow-2xs border border-[#26B09A]/20 group-hover:scale-105 transition-transform shrink-0">
+                      <IconComp className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-[#0E746D]" strokeWidth={2} />
                     </div>
-                    <div className="font-display font-bold text-xs text-slate-900 leading-tight whitespace-nowrap">
+                    <div className="font-display font-bold text-[10px] sm:text-xs text-slate-900 leading-tight sm:whitespace-nowrap text-center">
                       {item.title}
                     </div>
-                    <div className="text-[11px] text-slate-500 font-medium leading-tight mt-0.5 whitespace-nowrap">
+                    <div className="text-[9.5px] sm:text-[11px] text-slate-500 font-medium leading-tight mt-0.5 sm:whitespace-nowrap text-center">
                       {item.subtitle}
                     </div>
                   </div>
@@ -220,7 +220,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 3. Hospital Story & Medical Integrity Section ── */}
-      <section className="py-14 sm:py-20 bg-white">
+      <section className="py-8 sm:py-16 lg:py-20 bg-white">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8 grid lg:grid-cols-2 gap-12 lg:gap-14 items-center">
           {/* Real Hospital Showcase Image */}
           <div className="relative">
@@ -247,7 +247,7 @@ export default function AboutPage() {
 
             <div className="w-14 h-1 bg-[#0E746D] my-4 rounded-full" />
 
-            <div className="space-y-4 text-slate-600 text-xs sm:text-sm leading-relaxed">
+            <div className="space-y-4 text-slate-600 text-[14px] sm:text-sm leading-relaxed">
               <p>
                 Clinica Cure was founded with a dedicated mission: to bring advanced multi-speciality
                 tertiary care within easy reach of every family in Ranchi and surrounding regions.
@@ -268,19 +268,19 @@ export default function AboutPage() {
 
             {/* 4 Feature Badges */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 pt-5 border-t border-[#DDEAE7]">
-              <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-800">
+              <div className="flex items-center gap-2.5 text-[14px] sm:text-xs font-semibold text-slate-800">
                 <CheckCircle2 className="w-4 h-4 text-[#0E746D] shrink-0" />
                 <span>24x7 Critical Care &amp; Trauma Unit</span>
               </div>
-              <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-800">
+              <div className="flex items-center gap-2.5 text-[14px] sm:text-xs font-semibold text-slate-800">
                 <CheckCircle2 className="w-4 h-4 text-[#0E746D] shrink-0" />
                 <span>30+ Cashless TPA &amp; Insurance Partners</span>
               </div>
-              <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-800">
+              <div className="flex items-center gap-2.5 text-[14px] sm:text-xs font-semibold text-slate-800">
                 <CheckCircle2 className="w-4 h-4 text-[#0E746D] shrink-0" />
                 <span>Verified Senior Medical Faculty</span>
               </div>
-              <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-800">
+              <div className="flex items-center gap-2.5 text-[14px] sm:text-xs font-semibold text-slate-800">
                 <CheckCircle2 className="w-4 h-4 text-[#0E746D] shrink-0" />
                 <span>Modern Diagnostic Imaging In-House</span>
               </div>
@@ -290,7 +290,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 4. Why Choose Clinica Cure: Care Beyond Treatment ── */}
-      <section className="py-14 sm:py-20 lg:py-18 bg-[#F4F9F8] ">
+      <section className="py-8 sm:py-16 lg:py-18 bg-[#F4F9F8]">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="grid lg:grid-cols-[1fr_2.2fr] xl:grid-cols-[1fr_2.4fr] gap-8 lg:gap-12 xl:gap-14 items-center">
             {/* Left Content */}
@@ -301,7 +301,7 @@ export default function AboutPage() {
               <h2 className="font-display font-extrabold text-slate-900 text-2xl sm:text-3xl lg:text-[34px] leading-tight tracking-tight">
                 Care Beyond Treatment
               </h2>
-              <p className="mt-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+              <p className="mt-3 text-[14px] sm:text-sm text-slate-600 leading-relaxed">
                 We go beyond just treating illnesses. Our focus is on overall well-being, combining
                 medical expertise, technology, and empathy to deliver the best outcomes.
               </p>
@@ -369,7 +369,7 @@ export default function AboutPage() {
       <DepartmentsSection />
 
       {/* ── 6. A Hospital Built Around People (Hospital Overview & Metrics) ── */}
-      <section className="py-10 sm:py-12 lg:py-4 relative overflow-hidden">
+      <section className="py-7 sm:py-12 lg:py-4 relative overflow-hidden">
         {/* Light Faded Clinica Cure Favicon Watermark on Right Side Edge */}
         <div className="absolute top-1/2 -translate-y-1/2 -right-8 sm:-right-12 md:-right-8 lg:-right-6 w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-96 lg:h-96 pointer-events-none select-none z-0 opacity-[0.04]">
           <img
@@ -428,7 +428,7 @@ export default function AboutPage() {
               </h2>
 
               {/* Subtext */}
-              <p className="mt-2.5 text-xs sm:text-sm md:text-sm lg:text-base text-slate-600 leading-relaxed max-w-xl">
+              <p className="mt-2.5 text-[14px] sm:text-sm md:text-sm lg:text-base text-slate-600 leading-relaxed max-w-xl">
                 Modern infrastructure, advanced technology and a compassionate team — all under one roof at Bariatu, Ranchi.
               </p>
 
@@ -492,9 +492,9 @@ export default function AboutPage() {
       </section>
 
       {/* ── 7. Call To Action (Care & Appointment Booking) ── */}
-      <section className="py-14 sm:py-16 bg-white border-t border-[#DDEAE7]">
+      <section className="py-8 sm:py-16 bg-white border-t border-[#DDEAE7]">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
-          <div className="rounded-3xl bg-gradient-to-br from-[#0B5C56] via-[#0E746D] to-[#074742] text-white p-7 sm:p-10 lg:p-12 relative overflow-hidden shadow-xl">
+          <div className="rounded-3xl bg-gradient-to-br from-[#0B5C56] via-[#0E746D] to-[#074742] text-white p-5 sm:p-10 lg:p-12 relative overflow-hidden shadow-xl">
             {/* Background Texture Accents */}
             <div className="absolute -right-10 -bottom-10 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -left-10 -top-10 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none" />
@@ -507,7 +507,7 @@ export default function AboutPage() {
                 <h2 className="font-display font-extrabold text-white text-2xl sm:text-3xl lg:text-4xl mt-2 leading-tight">
                   Ready to Consult Our Medical Specialists?
                 </h2>
-                <p className="mt-3 text-xs sm:text-sm text-white/85 leading-relaxed">
+                <p className="mt-3 text-[14px] sm:text-sm text-white/85 leading-relaxed">
                   Book a confirmed consultation with our senior doctors or reach our round-the-clock emergency desk. At Clinica Cure, compassionate care is always within your reach.
                 </p>
 
