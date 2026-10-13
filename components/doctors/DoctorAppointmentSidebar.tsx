@@ -12,6 +12,7 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import { siteConfig } from '@/config/site'
+import { getDoctorSchedule } from '@/config/doctor-schedules'
 
 interface DoctorAppointmentSidebarProps {
   doctorName: string
@@ -26,24 +27,18 @@ export function DoctorAppointmentSidebar({
   departmentName,
   departmentSlug,
 }: DoctorAppointmentSidebarProps) {
-  // Calendar state (defaults to Dec 2024 and active day 10 to match design screenshot)
-  const [currentDate, setCurrentDate] = useState(new Date(2024, 11, 1))
-  const [selectedDay, setSelectedDay] = useState(10)
-  const [selectedSlot, setSelectedSlot] = useState('10:00 AM')
+  const doctorSchedule = getDoctorSchedule(doctorSlug)
+  const today = new Date()
+
+  // Calendar state based on current date
+  const [currentDate, setCurrentDate] = useState(today)
+  const [selectedDay, setSelectedDay] = useState(today.getDate())
 
   const timeSlots = [
-    '10:00 AM',
-    '10:30 AM',
-    '11:00 AM',
-    '11:30 AM',
-    '12:00 PM',
-    '12:30 PM',
-    '2:00 PM',
-    '2:30 PM',
-    '3:00 PM',
-    '3:30 PM',
-    '4:00 PM',
+    ...doctorSchedule.slots.morning,
+    ...doctorSchedule.slots.evening,
   ]
+  const [selectedSlot, setSelectedSlot] = useState(timeSlots[0] || '10:00 AM')
 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -146,12 +141,9 @@ export function DoctorAppointmentSidebar({
 
         {/* Card Body - Elevated with prominent rounded top border radius overlapping into the teal header */}
         <div className="relative z-10 -mt-5 sm:-mt-6 rounded-t-[26px] sm:rounded-t-[30px] bg-white p-5 sm:p-6 space-y-6 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
-          {/* Step 1: Select Date */}
+          {/* Select Date */}
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-900 mb-3">
-              <span className="w-5.5 h-5.5 rounded-full bg-[#0E746D] text-white text-[11px] font-bold flex items-center justify-center shadow-xs">
-                1
-              </span>
+            <div className="mb-3">
               <span className="font-display font-bold text-slate-900 text-xs sm:text-sm">
                 Select Date
               </span>
@@ -191,16 +183,24 @@ export function DoctorAppointmentSidebar({
                 if (day === null) {
                   return <div key={`empty-${idx}`} className="h-7" />
                 }
+                const dayDate = new Date(year, month, day)
+                const isAvailable = doctorSchedule.availableDays.includes(dayDate.getDay())
                 const isSelected = day === selectedDay
+
                 return (
                   <button
                     key={day}
                     type="button"
-                    onClick={() => setSelectedDay(day)}
-                    className={`h-7 w-7 mx-auto rounded-full text-xs flex items-center justify-center font-medium transition-all cursor-pointer ${isSelected
+                    disabled={!isAvailable}
+                    onClick={() => isAvailable && setSelectedDay(day)}
+                    title={isAvailable ? `Available on ${monthNames[month]} ${day}` : `Dr. ${doctorName} is not scheduled on this day`}
+                    className={`h-7 w-7 mx-auto rounded-full text-xs flex items-center justify-center font-medium transition-all ${
+                      isSelected
                         ? 'bg-[#0E746D] text-white font-bold shadow-md shadow-[#0E746D]/20 scale-105'
-                        : 'text-slate-700 hover:bg-[#EAF7F4] hover:text-[#0E746D]'
-                      }`}
+                        : isAvailable
+                        ? 'text-slate-700 hover:bg-[#EAF7F4] hover:text-[#0E746D] cursor-pointer'
+                        : 'text-slate-300 opacity-35 cursor-not-allowed'
+                    }`}
                   >
                     {day}
                   </button>
@@ -209,12 +209,9 @@ export function DoctorAppointmentSidebar({
             </div>
           </div>
 
-          {/* Step 2: Select Time Slot */}
+          {/* Select Time Slot */}
           <div className="pt-4 border-t border-slate-100">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-900 mb-3">
-              <span className="w-5.5 h-5.5 rounded-full bg-[#0E746D] text-white text-[11px] font-bold flex items-center justify-center shadow-xs">
-                2
-              </span>
+            <div className="mb-3">
               <span className="font-display font-bold text-slate-900 text-xs sm:text-sm">
                 Select Time Slot
               </span>
@@ -244,7 +241,7 @@ export function DoctorAppointmentSidebar({
           <div className="pt-2 space-y-2.5">
             {/* 1. Book Appointment CTA Button */}
             <Link
-              href={`/book-appointment?doctor=${doctorSlug}&date=${year}-${month + 1}-${selectedDay}&slot=${encodeURIComponent(
+              href={`/book-appointment?doctor=${doctorSlug}&date=${year}-${String(month + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}&slot=${encodeURIComponent(
                 selectedSlot
               )}`}
               className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-[#0E746D] hover:bg-[#0b5c57] text-white font-display font-bold text-xs sm:text-sm transition-all shadow-md shadow-[#0E746D]/20 active:scale-[0.98] cursor-pointer"
@@ -252,8 +249,6 @@ export function DoctorAppointmentSidebar({
               <CalendarDays className="w-4 h-4" />
               <span>Book Appointment</span>
             </Link>
-
-
           </div>
         </div>
       </div>
@@ -290,7 +285,7 @@ export function DoctorAppointmentSidebar({
         <h3 className="font-display font-bold text-slate-900 text-base sm:text-lg mt-0.5">
           {departmentName || 'Radiology & Imaging'}
         </h3>
-        <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+        <p className="text-[14px] sm:text-xs text-slate-600 mt-2 leading-relaxed">
           Comprehensive diagnostic imaging services with advanced technology and expert interpretation.
         </p>
         <Link
@@ -317,7 +312,7 @@ export function DoctorAppointmentSidebar({
             className="w-full h-full object-cover"
           />
         </div>
-        <p className="text-xs text-slate-600 mt-3 leading-relaxed">
+        <p className="text-[14px] sm:text-xs text-slate-600 mt-3 leading-relaxed">
           Advanced imaging technology for accurate and timely diagnosis.
         </p>
         <Link

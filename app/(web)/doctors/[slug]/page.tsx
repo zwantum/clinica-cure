@@ -186,11 +186,11 @@ export default async function DoctorProfilePage({ params }: PageProps) {
 
                 {/* 4 Metric Badges in a horizontal row */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
-                  <div className="flex flex-col items-center text-center p-3 rounded-2xl bg-white/90 backdrop-blur-xs border border-[#DCEBE7] shadow-2xs">
+                  <div className="flex flex-col items-center text-center p-2">
                     <div className="w-9 h-9 rounded-full bg-[#EAF7F4] text-[#0E746D] flex items-center justify-center mb-1.5">
                       <Clock className="w-4 h-4" />
                     </div>
-                    <span className="font-display font-bold text-slate-900 text-xs sm:text-sm">
+                    <span className="font-display font-semibold text-slate-900 text-xs sm:text-sm">
                       10+
                     </span>
                     <span className="text-[10.5px] text-slate-500 leading-tight mt-0.5">
@@ -198,11 +198,11 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                     </span>
                   </div>
 
-                  <div className="flex flex-col items-center text-center p-3 rounded-2xl bg-white/90 backdrop-blur-xs border border-[#DCEBE7] shadow-2xs">
+                  <div className="flex flex-col items-center text-center p-2">
                     <div className="w-9 h-9 rounded-full bg-[#EAF7F4] text-[#0E746D] flex items-center justify-center mb-1.5">
                       <ScanLine className="w-4 h-4" />
                     </div>
-                    <span className="font-display font-bold text-slate-900 text-xs sm:text-sm">
+                    <span className="font-display font-semibold text-slate-900 text-xs sm:text-sm">
                       5,000+
                     </span>
                     <span className="text-[10.5px] text-slate-500 leading-tight mt-0.5">
@@ -210,11 +210,11 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                     </span>
                   </div>
 
-                  <div className="flex flex-col items-center text-center p-3 rounded-2xl bg-white/90 backdrop-blur-xs border border-[#DCEBE7] shadow-2xs">
+                  <div className="flex flex-col items-center text-center p-2">
                     <div className="w-9 h-9 rounded-full bg-[#EAF7F4] text-[#0E746D] flex items-center justify-center mb-1.5">
                       <Award className="w-4 h-4" />
                     </div>
-                    <span className="font-display font-bold text-slate-900 text-xs sm:text-sm">
+                    <span className="font-display font-semibold text-slate-900 text-xs sm:text-sm">
                       Advanced
                     </span>
                     <span className="text-[10.5px] text-slate-500 leading-tight mt-0.5">
@@ -222,11 +222,11 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                     </span>
                   </div>
 
-                  <div className="flex flex-col items-center text-center p-3 rounded-2xl bg-white/90 backdrop-blur-xs border border-[#DCEBE7] shadow-2xs">
+                  <div className="flex flex-col items-center text-center p-2">
                     <div className="w-9 h-9 rounded-full bg-[#EAF7F4] text-[#0E746D] flex items-center justify-center mb-1.5">
                       <Heart className="w-4 h-4" />
                     </div>
-                    <span className="font-display font-bold text-slate-900 text-xs sm:text-sm">
+                    <span className="font-display font-semibold text-slate-900 text-xs sm:text-sm">
                       Patient-Centric
                     </span>
                     <span className="text-[10.5px] text-slate-500 leading-tight mt-0.5">
@@ -327,7 +327,7 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                       <h4 className="font-display font-bold text-slate-900 text-xs sm:text-sm">
                         Radio Diagnosis
                       </h4>
-                      <p className="text-xs text-slate-500 mt-1 leading-snug">
+                      <p className="text-[13.5px] sm:text-xs text-slate-500 mt-1 leading-snug">
                         Comprehensive X-ray and imaging interpretation
                       </p>
                     </div>
@@ -342,7 +342,7 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                       <h4 className="font-display font-bold text-slate-900 text-xs sm:text-sm">
                         Ultrasound &amp; Colour Doppler
                       </h4>
-                      <p className="text-xs text-slate-500 mt-1 leading-snug">
+                      <p className="text-[13.5px] sm:text-xs text-slate-500 mt-1 leading-snug">
                         High-resolution ultrasound and vascular studies
                       </p>
                     </div>
@@ -357,7 +357,7 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                       <h4 className="font-display font-bold text-slate-900 text-xs sm:text-sm">
                         Digital X-Ray
                       </h4>
-                      <p className="text-xs text-slate-500 mt-1 leading-snug">
+                      <p className="text-[13.5px] sm:text-xs text-slate-500 mt-1 leading-snug">
                         Advanced digital radiography for accurate diagnosis
                       </p>
                     </div>
@@ -372,7 +372,7 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                       <h4 className="font-display font-bold text-slate-900 text-xs sm:text-sm">
                         CT &amp; MRI Reporting
                       </h4>
-                      <p className="text-xs text-slate-500 mt-1 leading-snug">
+                      <p className="text-[13.5px] sm:text-xs text-slate-500 mt-1 leading-snug">
                         Detailed reporting with clinical insights
                       </p>
                     </div>
@@ -480,7 +480,7 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                   </Link>
                 </div>
 
-                <p className="text-[13px] sm:text-sm text-slate-500 mt-1 mb-2 sm:mb-6 ml-12">
+                <p className="text-[14px] sm:text-sm text-slate-500 mt-1 mb-2 sm:mb-6 ml-12">
                   You may also like to consult these specialists:
                 </p>
 
@@ -488,7 +488,7 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                 <div className="sm:hidden mb-4 ml-12">
                   <Link
                     href="/doctors"
-                    className="text-[13px] font-semibold text-[#0E746D] hover:underline inline-flex items-center gap-1.5"
+                    className="text-[14px] sm:text-[13px] font-semibold text-[#0E746D] hover:underline inline-flex items-center gap-1.5"
                   >
                     <span>View All Doctors</span>
                     <ArrowRight className="w-3.5 h-3.5" />

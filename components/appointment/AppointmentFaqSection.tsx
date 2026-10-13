@@ -67,7 +67,7 @@ export default function AppointmentFaqSection() {
   }
 
   return (
-    <section className="py-12 sm:py-16 bg-white border-t border-slate-200/80">
+    <section className="py-12 sm:py-7 md:py-8 lg:py-16 bg-white border-t border-slate-200/80">
       <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8">
         
         {/* ── TOP: CLINICAL VALUE PILLARS ── */}
@@ -78,7 +78,7 @@ export default function AppointmentFaqSection() {
           <h2 className="mt-3 font-display font-semibold text-slate-900 text-2xl sm:text-3xl">
             Why Book with Clinica Cure Hospital?
           </h2>
-          <p className="mt-2 text-xs sm:text-sm text-slate-600 leading-relaxed">
+          <p className="mt-2 text-[14px] sm:text-sm text-slate-600 leading-relaxed">
             Delivering prompt, patient-first outpatient clinical consultations supported by state-of-the-art diagnostic and surgical infrastructure in Ranchi.
           </p>
         </div>
@@ -97,7 +97,7 @@ export default function AppointmentFaqSection() {
                 <h3 className="font-display font-bold text-slate-900 text-sm sm:text-base mb-1.5">
                   {item.title}
                 </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <p className="text-[14px] sm:text-xs text-slate-600 leading-relaxed">
                   {item.desc}
                 </p>
               </div>
@@ -139,7 +139,7 @@ export default function AppointmentFaqSection() {
                   </button>
 
                   {isOpen && (
-                    <div className="px-4 pb-4 sm:px-5 sm:pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                    <div className="px-4 pb-4 sm:px-5 sm:pb-5 text-[14px] sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
                       {faq.a}
                     </div>
                   )}
@@ -154,7 +154,7 @@ export default function AppointmentFaqSection() {
               <p className="font-display font-bold text-slate-900 text-xs sm:text-sm">
                 Have a unique medical inquiry or need ambulance transfer?
               </p>
-              <p className="text-xs text-slate-600 mt-0.5">
+              <p className="text-[14px] sm:text-xs text-slate-600 mt-0.5">
                 Our 24x7 emergency and admissions control desk is available round-the-clock.
               </p>
             </div>

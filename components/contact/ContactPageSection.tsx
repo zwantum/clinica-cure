@@ -65,7 +65,7 @@ export default function ContactPageSection() {
   }
 
   return (
-    <section className="pt-4 sm:pt-6 md:pt-6 lg:pt-8 pb-8 sm:pb-10 lg:pb-12 bg-[#F8FAF9] overflow-hidden">
+    <section className="pt-4 sm:pt-4 md:pt-5 lg:pt-8 pb-8 sm:pb-6 md:pb-7 lg:pb-12 bg-[#F8FAF9] overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8">
         {/* ── TOP ROW: 4 CONTACT INFO CARDS (4 in a row on tablet & desktop) ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-3.5 md:gap-2.5 lg:gap-3.5 xl:gap-5">
@@ -79,10 +79,10 @@ export default function ContactPageSection() {
                 <h3 className="font-display font-bold text-slate-900 text-sm sm:text-base md:text-[13px] lg:text-sm xl:text-base leading-snug">
                   Visit Our Hospital
                 </h3>
-                <p className="text-xs md:text-[11.5px] lg:text-xs xl:text-sm text-slate-600 mt-1 leading-snug">
+                <p className="text-[14px] sm:text-xs md:text-[11.5px] lg:text-xs xl:text-sm text-slate-600 mt-1 leading-snug">
                   Bariatu Road, Ranchi,
                 </p>
-                <p className="text-xs md:text-[11.5px] lg:text-xs xl:text-sm text-slate-600 leading-snug">
+                <p className="text-[14px] sm:text-xs md:text-[11.5px] lg:text-xs xl:text-sm text-slate-600 leading-snug">
                   Jharkhand - 834009
                 </p>
               </div>
@@ -193,7 +193,7 @@ export default function ContactPageSection() {
               <h2 className="font-display font-bold text-slate-900 text-2xl sm:text-3xl mt-1.5 leading-snug">
                 How Can We Help You?
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+              <p className="text-[14px] sm:text-sm text-slate-600 mt-2 leading-relaxed">
                 Have a medical query, need more information or want to book an appointment? Fill out the form below and our team will get back to you.
               </p>
 
@@ -356,7 +356,7 @@ export default function ContactPageSection() {
               <h3 className="font-display font-bold text-slate-900 text-xl sm:text-2xl lg:text-[23px] xl:text-[30px] leading-tight mt-1.5">
                 Your Health<br />Is Our Priority
               </h3>
-              <p className="text-xs sm:text-[13px] xl:text-sm text-slate-600 mt-2.5 leading-relaxed max-w-[260px] sm:max-w-none md:max-w-[280px] lg:max-w-[195px] xl:max-w-[290px]">
+              <p className="text-[14px] sm:text-[13px] xl:text-sm text-slate-600 mt-2.5 leading-relaxed max-w-[260px] sm:max-w-none md:max-w-[280px] lg:max-w-[195px] xl:max-w-[290px]">
                 Whether it&apos;s a routine check-up, specialist consultation or emergency care, our team is always ready to support you.
               </p>
 
@@ -424,7 +424,7 @@ export default function ContactPageSection() {
             <h2 className="font-display font-semibold text-slate-900 text-xl sm:text-2xl lg:text-3xl">
               Find us on the Map
             </h2>
-            <p className="mt-1 text-xs sm:text-sm text-slate-600 leading-relaxed">
+            <p className="mt-1 text-[14px] sm:text-sm text-slate-600 leading-relaxed">
               Visit us at our hospital in Bariatu, Ranchi. We are well connected and easily accessible.
             </p>
           </div>
@@ -502,7 +502,7 @@ export default function ContactPageSection() {
               </h2>
 
               {/* Subtext */}
-              <p className="mt-2 text-xs sm:text-sm md:text-[13px] lg:text-sm xl:text-base text-slate-600 leading-relaxed max-w-xl">
+              <p className="mt-2 text-[14px] sm:text-sm md:text-[13px] lg:text-sm xl:text-base text-slate-600 leading-relaxed max-w-xl">
                 Modern infrastructure, advanced technology and a compassionate team — all under one roof at Bariatu, Ranchi.
               </p>
 

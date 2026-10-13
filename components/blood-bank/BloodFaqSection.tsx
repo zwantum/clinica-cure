@@ -60,7 +60,7 @@ export default function BloodFaqSection() {
   }
 
   return (
-    <section className="py-8 sm:py-12 bg-white">
+    <section className="py-8 sm:py-6 md:py-7 lg:py-12 bg-white">
       <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8">
         {/* Header with Title and Phone Desk */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 pb-6 border-b border-slate-100">
@@ -68,7 +68,7 @@ export default function BloodFaqSection() {
             <h2 className="font-display font-extrabold text-slate-900 text-2xl sm:text-3xl lg:text-4xl tracking-tight">
               Frequently Asked Questions
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 mt-2">
+            <p className="text-[14px] sm:text-sm text-slate-600 mt-2">
               Find answers to common questions about blood donation at Clinica Cure.
             </p>
           </div>
@@ -116,7 +116,7 @@ export default function BloodFaqSection() {
                   </button>
 
                   {isOpen && (
-                    <div className="px-5 pb-5 sm:px-6 sm:pb-6 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/40">
+                    <div className="px-5 pb-5 sm:px-6 sm:pb-6 pt-1 text-[14px] sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/40">
                       {faq.a}
                     </div>
                   )}
@@ -153,7 +153,7 @@ export default function BloodFaqSection() {
                   </button>
 
                   {isOpen && (
-                    <div className="px-5 pb-5 sm:px-6 sm:pb-6 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/40">
+                    <div className="px-5 pb-5 sm:px-6 sm:pb-6 pt-1 text-[14px] sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/40">
                       {faq.a}
                     </div>
                   )}

@@ -414,7 +414,7 @@ export default function DepartmentsSection() {
     <section
       ref={sectionRef}
       id="departments"
-      className="py-8 sm:py-10 md:py-14 bg-white"
+      className="py-8 sm:py-6 md:py-7 lg:py-14 bg-white"
       onMouseEnter={() => { isPausedRef.current = true }}
       onMouseLeave={() => { isPausedRef.current = false }}
     >
@@ -513,12 +513,12 @@ export default function DepartmentsSection() {
                     {dept.name}
                   </h3>
                   <span className="block w-10 h-[3px] bg-[#00A88F] rounded mt-2" />
-                  <p className="mt-2.5 sm:mt-3.5 leading-relaxed text-slate-600 text-xs sm:text-sm md:text-[13.5px] lg:text-base">
+                  <p className="mt-2.5 sm:mt-3.5 leading-relaxed text-slate-600 text-[14px] sm:text-sm md:text-[13.5px] lg:text-base">
                     {dept.desc}
                   </p>
                   <div className="mt-3.5 sm:mt-4 lg:mt-6 grid sm:grid-cols-2 gap-x-4 lg:gap-x-6 gap-y-2 sm:gap-y-2.5 lg:gap-y-3">
                     {dept.points.map((pt) => (
-                      <div key={pt} className="flex items-start gap-2 text-xs sm:text-sm">
+                      <div key={pt} className="flex items-start gap-2 text-[14px] sm:text-sm">
                         <span className="w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-full bg-[#00A88F] text-white flex items-center justify-center shrink-0 mt-0.5">
                           <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3" strokeWidth={3} />
                         </span>

@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function ContactHeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-8 sm:py-10 md:py-11 lg:py-12 xl:py-18">
+    <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-8 sm:py-6 md:py-7 lg:py-12 xl:py-18">
       {/* Right: Hospital Building with Emergency Entrance and Ambulance */}
       <div className="absolute right-0 top-0 bottom-0 w-full md:w-[48%] lg:w-[50%] xl:w-[54%] pointer-events-none select-none z-0">
         <div className="relative w-full h-full">
@@ -35,7 +35,7 @@ export default function ContactHeroSection() {
           </h1>
 
           {/* Description */}
-          <p className="mt-2 sm:mt-2.5 text-xs sm:text-sm md:text-[13px] lg:text-sm xl:text-[15px] text-slate-600 leading-relaxed max-w-lg md:max-w-[390px] lg:max-w-[440px] xl:max-w-xl">
+          <p className="mt-2 sm:mt-2.5 text-[14px] sm:text-sm md:text-[13px] lg:text-sm xl:text-[15px] text-slate-600 leading-relaxed max-w-lg md:max-w-[390px] lg:max-w-[440px] xl:max-w-xl">
             We are here to help you with appointments, medical queries, diagnostic services, insurance assistance or emergency support.
           </p>
         </div>

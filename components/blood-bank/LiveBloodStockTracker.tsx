@@ -89,7 +89,7 @@ export default function LiveBloodStockTracker({
   }
 
   return (
-    <section id="live-blood-stock" className="py-8 sm:py-12 bg-white scroll-mt-20">
+    <section id="live-blood-stock" className="py-8 sm:py-6 md:py-7 lg:py-12 bg-white scroll-mt-20">
       <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8">
         {/* Header Row */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
@@ -98,7 +98,7 @@ export default function LiveBloodStockTracker({
             <h2 className="font-display font-bold text-slate-900 text-2xl sm:text-3xl lg:text-4xl">
               Live Blood Group Availability
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl leading-relaxed">
+            <p className="text-[14px] sm:text-sm text-slate-600 mt-2 max-w-2xl leading-relaxed">
               Updated in real-time from our blood bank inventory. Availability may change quickly. Please confirm with our team before visiting.
             </p>
           </div>
@@ -221,7 +221,7 @@ export default function LiveBloodStockTracker({
               <p className="font-display font-bold text-slate-900 text-sm">
                 Can&apos;t find the required blood group?
               </p>
-              <p className="text-xs text-slate-600 mt-0.5">
+              <p className="text-[14px] sm:text-xs text-slate-600 mt-0.5">
                 Submit a request and our team will notify you when it becomes available.
               </p>
             </div>

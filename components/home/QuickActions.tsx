@@ -4,7 +4,7 @@ import { siteConfig } from '@/config/site'
 
 export default function QuickActions() {
   return (
-    <section className="relative bg-transparent -mt-6 sm:-mt-8 md:-mt-12 z-20 pb-2 sm:pb-4 md:pb-5">
+    <section className="relative bg-transparent -mt-6 sm:mt-1.5 md:mt-5 lg:-mt-12 z-20 pb-2 sm:pb-2.5 md:pb-3 lg:pb-5">
       <div className="max-w-[1400px] mx-auto px-3 sm:px-4 md:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5">
         {/* 1. Find a Doctor */}
         <Link

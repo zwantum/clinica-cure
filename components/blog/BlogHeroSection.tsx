@@ -3,7 +3,7 @@ import { Sparkles, ShieldCheck, HeartHandshake, BookOpen, Stethoscope } from 'lu
 
 export default function BlogHeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-8 sm:py-10 md:py-12 lg:py-14">
+    <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-8 sm:py-6 md:py-7 lg:py-14">
       {/* Background Graphic / Ambient Hospital Image */}
       <div className="absolute right-0 top-0 bottom-0 w-full md:w-[48%] lg:w-[50%] xl:w-[52%] pointer-events-none select-none z-0">
         <div className="relative w-full h-full">
@@ -41,7 +41,7 @@ export default function BlogHeroSection() {
           </h1>
 
           {/* Description */}
-          <p className="mt-2.5 text-xs sm:text-sm md:text-[15px] text-slate-600 leading-relaxed max-w-xl">
+          <p className="mt-2.5 text-[14px] sm:text-sm md:text-[15px] text-slate-600 leading-relaxed max-w-xl">
             Doctor-verified medical insights, symptom explanations, surgical advances, and preventive wellness strategies curated directly by the clinical faculty at Clinica Cure Hospital, Bariatu, Ranchi.
           </p>
 

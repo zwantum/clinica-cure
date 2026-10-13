@@ -125,7 +125,7 @@ export default function AboutPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* ── 1. HERO SECTION: FULL BACKGROUND IMAGE (CONSISTENT WITH DOCTORS & PATIENT STORIES) ── */}
-      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-6 sm:py-12 md:py-14 lg:py-16 min-h-[380px] sm:min-h-[480px] md:min-h-[520px] flex items-center">
+      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-6 sm:py-8 md:py-9 lg:py-16 min-h-[380px] sm:min-h-[420px] md:min-h-[460px] lg:min-h-[520px] flex items-center">
         {/* Full Right-anchored Hospital Building Image with smooth fade mask */}
         <div className="absolute top-0 bottom-0 right-0 w-full sm:w-[85%] md:w-[72%] lg:w-[64%] xl:w-[58%] 2xl:w-[54%] pointer-events-none select-none z-0">
           <img
@@ -220,7 +220,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 3. Hospital Story & Medical Integrity Section ── */}
-      <section className="py-8 sm:py-16 lg:py-20 bg-white">
+      <section className="py-8 sm:py-7 md:py-8 lg:py-20 bg-white">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8 grid lg:grid-cols-2 gap-12 lg:gap-14 items-center">
           {/* Real Hospital Showcase Image */}
           <div className="relative">
@@ -290,7 +290,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 4. Why Choose Clinica Cure: Care Beyond Treatment ── */}
-      <section className="py-8 sm:py-16 lg:py-18 bg-[#F4F9F8]">
+      <section className="py-8 sm:py-7 md:py-8 lg:py-18 bg-[#F4F9F8]">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="grid lg:grid-cols-[1fr_2.2fr] xl:grid-cols-[1fr_2.4fr] gap-8 lg:gap-12 xl:gap-14 items-center">
             {/* Left Content */}
@@ -369,7 +369,7 @@ export default function AboutPage() {
       <DepartmentsSection />
 
       {/* ── 6. A Hospital Built Around People (Hospital Overview & Metrics) ── */}
-      <section className="py-7 sm:py-12 lg:py-4 relative overflow-hidden">
+      <section className="py-7 sm:py-6 md:py-7 lg:py-4 relative overflow-hidden">
         {/* Light Faded Clinica Cure Favicon Watermark on Right Side Edge */}
         <div className="absolute top-1/2 -translate-y-1/2 -right-8 sm:-right-12 md:-right-8 lg:-right-6 w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-96 lg:h-96 pointer-events-none select-none z-0 opacity-[0.04]">
           <img
@@ -492,7 +492,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 7. Call To Action (Care & Appointment Booking) ── */}
-      <section className="py-8 sm:py-16 bg-white border-t border-[#DDEAE7]">
+      <section className="py-8 sm:py-7 md:py-8 lg:py-16 bg-white border-t border-[#DDEAE7]">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="rounded-3xl bg-gradient-to-br from-[#0B5C56] via-[#0E746D] to-[#074742] text-white p-5 sm:p-10 lg:p-12 relative overflow-hidden shadow-xl">
             {/* Background Texture Accents */}

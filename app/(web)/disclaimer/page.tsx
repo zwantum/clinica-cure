@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function DisclaimerPage() {
   return (
-    <div className="bg-[#F8FAF9] pt-6 sm:pt-8 pb-8 sm:pb-10">
+    <div className="bg-[#F8FAF9] pt-6 sm:pt-6 md:pt-6 lg:pt-8 pb-8 sm:pb-6 md:pb-7 lg:pb-10">
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2 text-xs text-slate-500 mb-4">
           <Link href="/" className="hover:text-[#0E746D]">Home</Link>

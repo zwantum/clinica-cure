@@ -2,14 +2,14 @@ import { HOMEPAGE_STATS } from '@/config/constants'
 
 export default function StatsSection() {
   return (
-    <section id="hospital-stats" className="py-8 sm:pt-6 sm:pb-10 md:pt-6 md:pb-12 lg:pt-6 lg:pb-12 xl:py-16 bg-white border-t border-slate-100/90">
+    <section id="hospital-stats" className="py-8 sm:py-5 md:py-6 lg:pt-6 lg:pb-12 xl:py-16 bg-white border-t border-slate-100/90">
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8">
         {/* Left-Aligned Section Header */}
-        <div className="text-left max-w-2xl mb-6 sm:mb-8 lg:mb-12">
+        <div className="text-left max-w-2xl mb-6 sm:mb-5 md:mb-6 lg:mb-12">
           <h2 className="font-display font-semibold text-slate-900 text-[22px] sm:text-3xl lg:text-[34px] leading-tight">
             Trusted Care. Proven Experience.
           </h2>
-          <p className="mt-2.5 text-xs sm:text-sm text-[#64748B] leading-relaxed">
+          <p className="mt-2.5 text-[14px] sm:text-sm text-[#64748B] leading-relaxed">
             Delivering comprehensive multi-speciality care with compassion, advanced medical facilities and experienced specialists.
           </p>
         </div>
@@ -27,7 +27,7 @@ export default function StatsSection() {
               <h3 className="mt-1.5 sm:mt-2.5 font-display font-semibold text-sm sm:text-base text-slate-900 leading-snug">
                 {stat.label}
               </h3>
-              <p className="mt-1 text-xs text-[#64748B] leading-relaxed">
+              <p className="mt-1 text-[13.5px] sm:text-xs text-[#64748B] leading-relaxed">
                 {stat.description}
               </p>
             </div>

@@ -90,7 +90,7 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-white text-slate-800">
       {/* ── 1. FULL-WIDTH HERO SECTION (OPEN LAYOUT, NO BOXED CONTAINER) ── */}
-      <section className="bg-[#F4F9F8] border-b border-[#DDEAE7] pt-4 pb-6 sm:pt-5 sm:pb-12 md:pb-14">
+      <section className="bg-[#F4F9F8] border-b border-[#DDEAE7] pt-4 pb-6 sm:pt-5 sm:pb-7 md:pb-8 lg:pb-14">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           {/* Breadcrumb Navigation */}
           <nav
@@ -121,7 +121,7 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
               <p className="mt-2.5 text-[#0E746D] font-display font-semibold text-base sm:text-lg lg:text-xl">
                 {deptData.subtitle}
               </p>
-              <p className="mt-3.5 text-sm sm:text-[15px] text-slate-600 leading-relaxed max-w-xl">
+              <p className="mt-3.5 text-[14px] sm:text-[15px] text-slate-600 leading-relaxed max-w-xl">
                 {deptData.heroDesc}
               </p>
 
@@ -167,7 +167,7 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
                 <h3 className="font-display font-bold text-sm text-slate-900 leading-snug">
                   Preventive &amp; Routine Care
                 </h3>
-                <p className="text-xs text-slate-500 mt-1 leading-snug">
+                <p className="text-[13.5px] sm:text-xs text-slate-500 mt-1 leading-snug">
                   Regular check-ups for a healthier tomorrow
                 </p>
               </div>
@@ -181,7 +181,7 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
                 <h3 className="font-display font-bold text-sm text-slate-900 leading-snug">
                   Expert Physicians
                 </h3>
-                <p className="text-xs text-slate-500 mt-1 leading-snug">
+                <p className="text-[13.5px] sm:text-xs text-slate-500 mt-1 leading-snug">
                   Experienced and compassionate doctors
                 </p>
               </div>
@@ -195,7 +195,7 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
                 <h3 className="font-display font-bold text-sm text-slate-900 leading-snug">
                   Advanced Diagnostics
                 </h3>
-                <p className="text-xs text-slate-500 mt-1 leading-snug">
+                <p className="text-[13.5px] sm:text-xs text-slate-500 mt-1 leading-snug">
                   Accurate diagnosis with modern technology
                 </p>
               </div>
@@ -209,7 +209,7 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
                 <h3 className="font-display font-bold text-sm text-slate-900 leading-snug">
                   Holistic Treatment
                 </h3>
-                <p className="text-xs text-slate-500 mt-1 leading-snug">
+                <p className="text-[13.5px] sm:text-xs text-slate-500 mt-1 leading-snug">
                   Personalised care for long-term wellness
                 </p>
               </div>
@@ -219,7 +219,7 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
       </section>
 
       {/* ── 2. MAIN BODY SECTION (CRISP WHITE BACKGROUND & TWO-COLUMN LAYOUT) ── */}
-      <section className="bg-white py-6 sm:py-12 md:py-14">
+      <section className="bg-white py-6 sm:py-7 md:py-8 lg:py-14">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_380px] gap-8 lg:gap-10 items-start">
             {/* ═════════ LEFT MAIN COLUMN ═════════ */}
@@ -350,7 +350,7 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
                   </h3>
                 </div>
 
-                <p className="text-white/80 text-xs mt-1.5 leading-relaxed">
+                <p className="text-white/80 text-[14px] sm:text-xs mt-1.5 leading-relaxed">
                   Schedule your appointment with our {dept.name} specialists.
                 </p>
 
@@ -426,7 +426,7 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
                 <h4 className="font-display font-bold text-slate-900 text-base leading-snug">
                   Not Sure Which Department?
                 </h4>
-                <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                <p className="text-[14px] sm:text-xs text-slate-600 mt-1.5 leading-relaxed">
                   Our team can help you find the right specialist for your symptoms and health concerns.
                 </p>
 

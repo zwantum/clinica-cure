@@ -43,7 +43,7 @@ export default function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-10 sm:py-14 md:py-16 bg-white">
+    <section id="contact" className="py-10 sm:py-7 md:py-8 lg:py-16 bg-white">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
         <div className="text-left max-w-2xl">
           <p className="text-[#0e746d] font-display font-bold text-xs md:text-sm tracking-wider uppercase">
@@ -57,7 +57,7 @@ export default function ContactSection() {
           </p>
         </div>
 
-        <div className="mt-8 sm:mt-10 grid lg:grid-cols-[1.1fr_0.9fr] gap-8">
+        <div className="mt-8 sm:mt-6 md:mt-7 lg:mt-10 grid lg:grid-cols-[1.1fr_0.9fr] gap-8">
           {/* Left Column: Info Cards & Map */}
           <div className="space-y-5">
             <div className="grid sm:grid-cols-2 gap-4">
@@ -68,7 +68,7 @@ export default function ContactSection() {
                 </span>
                 <div>
                   <p className="font-display font-bold text-slate-900 text-sm">Address</p>
-                  <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                  <p className="text-[14px] sm:text-sm text-slate-600 mt-1 leading-relaxed">
                     {siteConfig.address}
                   </p>
                 </div>
@@ -81,10 +81,10 @@ export default function ContactSection() {
                 </span>
                 <div>
                   <p className="font-display font-bold text-slate-900 text-sm">Phone</p>
-                  <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                  <p className="text-[14px] sm:text-sm text-slate-600 mt-1">
                     Reception: <a href={`tel:${siteConfig.phoneRaw}`} className="hover:underline">{siteConfig.phone}</a>
                   </p>
-                  <p className="text-xs sm:text-sm text-red-600 font-semibold mt-0.5">
+                  <p className="text-[14px] sm:text-sm text-red-600 font-semibold mt-0.5">
                     Emergency: 24x7 Available
                   </p>
                 </div>
@@ -97,7 +97,7 @@ export default function ContactSection() {
                 </span>
                 <div>
                   <p className="font-display font-bold text-slate-900 text-sm">Email</p>
-                  <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                  <p className="text-[14px] sm:text-sm text-slate-600 mt-1">
                     <a href={`mailto:${siteConfig.email}`} className="hover:underline">{siteConfig.email}</a>
                   </p>
                 </div>
@@ -110,7 +110,7 @@ export default function ContactSection() {
                 </span>
                 <div>
                   <p className="font-display font-bold text-slate-900 text-sm">OPD Hours</p>
-                  <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                  <p className="text-[14px] sm:text-sm text-slate-600 mt-1">
                     Mon–Sat: {siteConfig.opdHours}<br />
                     Emergency: Open {siteConfig.emergencyHours}
                   </p>
@@ -139,7 +139,7 @@ export default function ContactSection() {
               <h3 className="font-display font-bold text-slate-900 text-lg sm:text-xl">
                 Send Us a Message
               </h3>
-              <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+              <p className="text-[14px] sm:text-sm text-slate-600 mt-1 leading-relaxed">
                 Have a medical query or need more information? Fill out the form below and we will get back to you promptly.
               </p>
 

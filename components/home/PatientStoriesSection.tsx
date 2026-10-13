@@ -360,7 +360,7 @@ export default function PatientStoriesSection({
   }
 
   return (
-    <section id="stories" className="py-8 sm:py-10 md:py-14 bg-[#F6FBFA]">
+    <section id="stories" className="py-8 sm:py-6 md:py-7 lg:py-14 bg-[#F6FBFA]">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
         {/* Section Header */}
         {showHeading && (
@@ -468,7 +468,7 @@ export default function PatientStoriesSection({
             {/* Mobile-Only Playlist: Compact Horizontal Thumbnails Only (< sm) */}
             <div className="sm:hidden w-full mt-3">
               <div className="mb-2 px-1">
-                <span className="text-xs font-bold text-slate-800">Other Patient Stories</span>
+                <span className="text-[14px] sm:text-xs font-bold text-slate-800">Other Patient Stories</span>
               </div>
               <div className="flex items-center gap-2.5 overflow-x-auto px-1.5 py-1 pb-2 scrollbar-none snap-x">
                 {TESTIMONIALS.map((t) => {
@@ -634,7 +634,7 @@ export default function PatientStoriesSection({
                 </h2>
 
                 {/* Subtext */}
-                <p className="mt-2.5 text-xs sm:text-sm md:text-sm lg:text-base text-slate-600 leading-relaxed max-w-xl">
+                <p className="mt-2.5 text-[14px] sm:text-sm md:text-sm lg:text-base text-slate-600 leading-relaxed max-w-xl">
                   Modern infrastructure, advanced technology and a compassionate team — all under one roof at Bariatu, Ranchi.
                 </p>
 
@@ -725,7 +725,7 @@ export default function PatientStoriesSection({
                     {'★'.repeat(5)}
                   </div>
                   <span className="text-xs sm:text-sm font-bold text-[#1E293B]">4.8 / 5.0</span>
-                  <span className="text-[11px] sm:text-sm text-[#64748B]">• Based on 874+ reviews on Google</span>
+                  <span className="text-[13px] sm:text-sm text-[#64748B]">• Based on 874+ reviews on Google</span>
                 </div>
               </div>
             </div>
@@ -748,7 +748,7 @@ export default function PatientStoriesSection({
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1">
-                        <h4 className="font-display font-bold text-xs sm:text-sm text-slate-800 truncate">{r.name}</h4>
+                        <h4 className="font-display font-bold text-[14px] sm:text-sm text-slate-800 truncate">{r.name}</h4>
                         <svg className="w-3.5 h-3.5 text-[#00A88F] shrink-0" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                         </svg>
@@ -771,7 +771,7 @@ export default function PatientStoriesSection({
                   {'★'.repeat(r.rating)}
                 </div>
 
-                <p className="text-xs sm:text-[13px] text-[#475569] leading-relaxed">{r.text}</p>
+                <p className="text-[14px] sm:text-[13px] text-[#475569] leading-relaxed">{r.text}</p>
               </div>
             ))}
           </div>

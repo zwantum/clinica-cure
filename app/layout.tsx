@@ -2,8 +2,6 @@ import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google'
 import './globals.css'
 import { siteConfig } from '@/config/site'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -76,17 +74,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${plusJakartaSans.variable} ${inter.variable}`}>
+    <html
+      lang="en"
+      className={`${plusJakartaSans.variable} ${inter.variable}`}
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+    >
       <body className="bg-white text-body antialiased overflow-x-clip">
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-brand focus:text-white focus:px-4 focus:py-2 focus:rounded-lg"
-        >
-          Skip to content
-        </a>
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   )

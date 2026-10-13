@@ -77,7 +77,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     <div className="bg-[#F8FAF9] min-h-screen text-slate-800">
 
       {/* ── 1. ARTICLE HEADER & HERO ── */}
-      <section className="bg-[#F0F8FC] border-b border-slate-200/80 pt-8 sm:pt-10 md:pt-12 pb-10 sm:pb-12">
+      <section className="bg-[#F0F8FC] border-b border-slate-200/80 pt-8 sm:pt-6 md:pt-7 lg:pt-12 pb-10 sm:pb-6 md:pb-7 lg:pb-12">
         <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8">
 
           {/* Breadcrumbs */}
@@ -180,7 +180,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       </div>
 
       {/* ── 3. MAIN CONTENT: 2-COLUMN GRID ── */}
-      <section className="py-10 sm:py-14 md:py-16">
+      <section className="py-10 sm:py-7 md:py-8 lg:py-16">
         <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-6 items-start">
 
@@ -210,7 +210,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                         {sec.bullets.map((b, bIdx) => {
                           const [boldPrefix, ...rest] = b.split(':')
                           return (
-                            <li key={bIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
+                            <li key={bIdx} className="flex items-start gap-2.5 text-[14px] sm:text-sm text-slate-700">
                               <span className="w-2 h-2 rounded-full bg-[#0E746D] shrink-0 mt-2" />
                               <span className="leading-relaxed">
                                 {rest.length > 0 ? (
@@ -248,7 +248,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                           )}
                           <span>{sec.callout.title}</span>
                         </div>
-                        <p className="text-xs sm:text-sm leading-relaxed">
+                        <p className="text-[14px] sm:text-sm leading-relaxed">
                           {sec.callout.text}
                         </p>
                       </div>
@@ -270,7 +270,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                           <h4 className="font-display font-bold text-slate-900 text-sm sm:text-base mb-1.5">
                             Q: {faq.q}
                           </h4>
-                          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                          <p className="text-[14px] sm:text-sm text-slate-600 leading-relaxed">
                             {faq.a}
                           </p>
                         </div>
@@ -423,7 +423,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                   </h3>
                 </div>
 
-                <p className="text-xs sm:text-[13px] text-white/85 mt-2 leading-relaxed">
+                <p className="text-[14px] sm:text-[13px] text-white/85 mt-2 leading-relaxed">
                   Schedule your appointment with our {post.category} specialists.
                 </p>
 
@@ -474,7 +474,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 <h3 className="font-display font-bold text-slate-900 text-lg sm:text-xl mt-1.5 mb-1">
                   Clinica Cure Hospital
                 </h3>
-                <p className="text-xs text-slate-600 mb-4">
+                <p className="text-[14px] sm:text-xs text-slate-600 mb-4">
                   {siteConfig.address}
                 </p>
 
@@ -499,7 +499,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       </section>
 
       {/* ── 4. RELATED ARTICLES AT BOTTOM ── */}
-      <section className="py-12 sm:py-16 bg-white border-t border-slate-200/80">
+      <section className="py-12 sm:py-7 md:py-8 lg:py-16 bg-white border-t border-slate-200/80">
         <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-8">
             <div>

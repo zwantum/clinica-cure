@@ -23,7 +23,7 @@ const WHY_ICONS: Record<string, LucideIcon> = {
 
 export default function WhyChooseUs() {
   return (
-    <section id="why" className="pt-2 sm:pt-4 md:pt-6 pb-6 bg-white">
+    <section id="why" className="pt-2 sm:pt-2 sm:pb-4 md:pt-3 md:pb-4 lg:pt-6 lg:pb-6 bg-white">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
         <div className="text-left max-w-2xl">
           <p className="text-[#0e746d] font-display font-bold text-xs md:text-sm tracking-wider uppercase">
@@ -53,7 +53,7 @@ export default function WhyChooseUs() {
                   <h3 className="mt-3 font-display font-semibold text-slate-900 text-sm sm:text-base leading-snug">
                     {item.title}
                   </h3>
-                  <p className="mt-1.5 text-xs text-slate-600 leading-relaxed">
+                  <p className="mt-1.5 text-[14px] sm:text-xs text-slate-600 leading-relaxed">
                     {item.description}
                   </p>
                 </div>

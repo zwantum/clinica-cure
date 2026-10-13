@@ -140,7 +140,7 @@ export default function DoctorsPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* ── 1. HERO SECTION (Consistent with Patient Stories & Core Partners) ── */}
-      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-10 sm:py-12 md:py-14 lg:py-16 min-h-[380px] sm:min-h-[420px] md:min-h-[460px] flex items-center">
+      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-10 sm:py-8 md:py-9 lg:py-16 min-h-[380px] sm:min-h-[390px] md:min-h-[410px] lg:min-h-[460px] flex items-center">
         {/* Doctor Team Hero Image with subtle fade */}
         <div className="absolute top-0 bottom-0 right-0 w-full sm:w-[85%] md:w-[72%] lg:w-[66%] xl:w-[62%] 2xl:w-[58%] pointer-events-none select-none z-0">
           <img
@@ -247,7 +247,7 @@ export default function DoctorsPage() {
       </section>
 
       {/* ── 2. MAIN DIRECTORY SECTION (Filter Bar + Pills + Cards) ── */}
-      <section className="bg-[#F6FBFA] py-8 sm:py-10 md:py-14">
+      <section className="bg-[#F6FBFA] py-8 sm:py-6 md:py-7 lg:py-14">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           {/* Section Introduction */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
@@ -505,7 +505,7 @@ export default function DoctorsPage() {
                 <UserRound className="w-7 h-7" strokeWidth={1.8} />
               </div>
               <h3 className="font-display font-bold text-slate-900 text-base sm:text-lg">No doctors found</h3>
-              <p className="text-slate-600 text-xs sm:text-sm mt-1 max-w-md mx-auto">
+              <p className="text-slate-600 text-[14px] sm:text-sm mt-1 max-w-md mx-auto">
                 No specialists matched your current search filters. Try clearing filters or searching with different keywords.
               </p>
               <button
@@ -521,7 +521,7 @@ export default function DoctorsPage() {
       </section>
 
       {/* ── 3. CLINICAL EXCELLENCE PILLARS (Why Choose Our Faculty) ── */}
-      <section className="py-14 sm:py-16 lg:py-20 bg-white border-t border-slate-100">
+      <section className="py-14 sm:py-7 md:py-8 lg:py-20 bg-white border-t border-slate-100">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
             <span className="text-xs sm:text-sm font-bold text-[#0E746D] uppercase tracking-wider block mb-2">
@@ -560,7 +560,7 @@ export default function DoctorsPage() {
       </section>
 
       {/* ── 4. FREQUENTLY ASKED QUESTIONS (Accordion) ── */}
-      <section className="py-14 sm:py-16 lg:py-20 bg-[#F6FBFA] border-t border-slate-200/80">
+      <section className="py-14 sm:py-7 md:py-8 lg:py-20 bg-[#F6FBFA] border-t border-slate-200/80">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8 grid lg:grid-cols-[0.8fr_1.2fr] gap-8 lg:gap-12">
           {/* Left Column (Sticky heading) */}
           <div className="relative">

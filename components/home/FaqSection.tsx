@@ -52,7 +52,7 @@ export default function FaqSection() {
   }
 
   return (
-    <section id="faq" className="py-8 sm:py-10 md:py-14 bg-[#F6FBFA]">
+    <section id="faq" className="py-8 sm:py-6 md:py-7 lg:py-14 bg-[#F6FBFA]">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 grid lg:grid-cols-[0.8fr_1.2fr] gap-8 lg:gap-12">
         {/* Left Column (Sticky on desktop) */}
         <div className="relative">
@@ -68,7 +68,7 @@ export default function FaqSection() {
               <p className="font-display font-bold text-slate-900 text-sm sm:text-base">
                 Still have questions?
               </p>
-              <p className="text-xs sm:text-sm text-slate-600 mt-1">
+              <p className="text-[14px] sm:text-sm text-slate-600 mt-1">
                 Our patient care team is happy to help with anything not covered here.
               </p>
               <Link

@@ -37,7 +37,7 @@ const STEPS = [
 
 export default function BloodDonationSteps() {
   return (
-    <section className="py-8 sm:py-12 bg-white">
+    <section className="py-8 sm:py-6 md:py-7 lg:py-12 bg-white">
       <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8">
         
         {/* Section Heading */}
@@ -45,7 +45,7 @@ export default function BloodDonationSteps() {
           <h2 className="font-display font-extrabold text-slate-900 text-2xl sm:text-3xl lg:text-4xl tracking-tight">
             Your 4-Step Donation Journey
           </h2>
-          <p className="text-slate-600 text-xs sm:text-sm mt-2 leading-relaxed">
+          <p className="text-slate-600 text-[14px] sm:text-sm mt-2 leading-relaxed">
             A safe, simple and well-guided process from registration to post-donation care.
           </p>
         </div>
@@ -77,7 +77,7 @@ export default function BloodDonationSteps() {
                     <h3 className="font-display font-bold text-slate-900 text-sm sm:text-base leading-snug mt-0.5">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                    <p className="text-[14px] sm:text-xs text-slate-500 mt-1 leading-relaxed">
                       {item.desc}
                     </p>
                   </div>

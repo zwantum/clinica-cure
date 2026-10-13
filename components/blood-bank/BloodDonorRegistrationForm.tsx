@@ -74,7 +74,7 @@ export default function BloodDonorRegistrationForm({
   }
 
   return (
-    <section id="blood-donor-form" className="py-14 sm:py-20 bg-white relative scroll-mt-20 border-t border-[#E2ECE9]">
+    <section id="blood-donor-form" className="py-14 sm:py-7 md:py-8 lg:py-20 bg-white relative scroll-mt-20 border-t border-[#E2ECE9]">
       <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8">
         <div className="max-w-4xl mx-auto">
           {/* Section Header */}
@@ -86,7 +86,7 @@ export default function BloodDonorRegistrationForm({
             <h2 className="font-display font-bold text-slate-900 text-2xl sm:text-3xl lg:text-4xl">
               Register as a Voluntary Blood Donor
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 mt-2.5 max-w-xl mx-auto leading-relaxed">
+            <p className="text-[14px] sm:text-sm text-slate-600 mt-2.5 max-w-xl mx-auto leading-relaxed">
               Join hundreds of proud donors in Ranchi. We reach out when someone with your blood type is in critical need, or schedule your convenient donation at Clinica Cure Hospital.
             </p>
           </div>
@@ -334,7 +334,7 @@ export default function BloodDonorRegistrationForm({
               <h3 className="font-display font-bold text-slate-900 text-2xl sm:text-3xl mt-1">
                 Thank You, Lifesaver!
               </h3>
-              <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-md mx-auto">
+              <p className="text-[14px] sm:text-sm text-slate-600 mt-1 max-w-md mx-auto">
                 Your voluntary donor registration has been enrolled in Clinica Cure Blood Bank Registry.
               </p>
 

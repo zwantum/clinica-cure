@@ -21,7 +21,7 @@ export default function BloodEligibilityAndFacts() {
   const [showGuidelinesModal, setShowGuidelinesModal] = useState(false)
 
   return (
-    <section className="py-8 sm:py-12 bg-white">
+    <section className="py-8 sm:py-6 md:py-7 lg:py-12 bg-white">
       <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
           
@@ -41,7 +41,7 @@ export default function BloodEligibilityAndFacts() {
                   </div>
                   <div>
                     <h4 className="font-display font-bold text-slate-900 text-sm">Age</h4>
-                    <p className="text-xs text-slate-600 mt-0.5">18–65 years</p>
+                    <p className="text-[13.5px] sm:text-xs text-slate-600 mt-0.5">18–65 years</p>
                   </div>
                 </div>
 
@@ -52,7 +52,7 @@ export default function BloodEligibilityAndFacts() {
                   </div>
                   <div>
                     <h4 className="font-display font-bold text-slate-900 text-sm">Minimum Weight</h4>
-                    <p className="text-xs text-slate-600 mt-0.5">50 kg</p>
+                    <p className="text-[13.5px] sm:text-xs text-slate-600 mt-0.5">50 kg</p>
                   </div>
                 </div>
 
@@ -63,7 +63,7 @@ export default function BloodEligibilityAndFacts() {
                   </div>
                   <div>
                     <h4 className="font-display font-bold text-slate-900 text-sm">Generally Healthy</h4>
-                    <p className="text-xs text-slate-600 mt-0.5">No major illness</p>
+                    <p className="text-[13.5px] sm:text-xs text-slate-600 mt-0.5">No major illness</p>
                   </div>
                 </div>
 
@@ -74,7 +74,7 @@ export default function BloodEligibilityAndFacts() {
                   </div>
                   <div>
                     <h4 className="font-display font-bold text-slate-900 text-sm">No Recent Surgery</h4>
-                    <p className="text-xs text-slate-600 mt-0.5">In last 6 months</p>
+                    <p className="text-[13.5px] sm:text-xs text-slate-600 mt-0.5">In last 6 months</p>
                   </div>
                 </div>
 
@@ -85,7 +85,7 @@ export default function BloodEligibilityAndFacts() {
                   </div>
                   <div>
                     <h4 className="font-display font-bold text-slate-900 text-sm">No Active Infection</h4>
-                    <p className="text-xs text-slate-600 mt-0.5">As per guidelines</p>
+                    <p className="text-[13.5px] sm:text-xs text-slate-600 mt-0.5">As per guidelines</p>
                   </div>
                 </div>
 
@@ -96,7 +96,7 @@ export default function BloodEligibilityAndFacts() {
                   </div>
                   <div>
                     <h4 className="font-display font-bold text-slate-900 text-sm">Valid ID Proof</h4>
-                    <p className="text-xs text-slate-600 mt-0.5">Required</p>
+                    <p className="text-[13.5px] sm:text-xs text-slate-600 mt-0.5">Required</p>
                   </div>
                 </div>
               </div>
@@ -140,7 +140,7 @@ export default function BloodEligibilityAndFacts() {
                     <h4 className="font-display font-bold text-slate-900 text-sm sm:text-base">
                       1 Donation
                     </h4>
-                    <p className="text-xs text-slate-600 mt-0.5">
+                    <p className="text-[14px] sm:text-xs text-slate-600 mt-0.5">
                       can save up to 3 lives.
                     </p>
                   </div>
@@ -155,7 +155,7 @@ export default function BloodEligibilityAndFacts() {
                     <h4 className="font-display font-bold text-slate-900 text-sm sm:text-base">
                       15–20 Minutes
                     </h4>
-                    <p className="text-xs text-slate-600 mt-0.5">
+                    <p className="text-[14px] sm:text-xs text-slate-600 mt-0.5">
                       to donate blood
                     </p>
                   </div>
@@ -170,7 +170,7 @@ export default function BloodEligibilityAndFacts() {
                     <h4 className="font-display font-bold text-slate-900 text-sm sm:text-base">
                       56 Days
                     </h4>
-                    <p className="text-xs text-slate-600 mt-0.5">
+                    <p className="text-[14px] sm:text-xs text-slate-600 mt-0.5">
                       your body replaces the donated blood
                     </p>
                   </div>
@@ -185,7 +185,7 @@ export default function BloodEligibilityAndFacts() {
                     <h4 className="font-display font-bold text-slate-900 text-sm sm:text-base">
                       Regular Donation
                     </h4>
-                    <p className="text-xs text-slate-600 mt-0.5">
+                    <p className="text-[14px] sm:text-xs text-slate-600 mt-0.5">
                       helps maintain good heart health
                     </p>
                   </div>
@@ -213,7 +213,7 @@ export default function BloodEligibilityAndFacts() {
               Comprehensive Donor Eligibility Criteria
             </h3>
 
-            <div className="space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed max-h-[60vh] overflow-y-auto pr-1">
+            <div className="space-y-3 text-[14px] sm:text-sm text-slate-700 leading-relaxed max-h-[60vh] overflow-y-auto pr-1">
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
                 <strong className="text-slate-900 block font-semibold">1. Hemoglobin Level:</strong>
                 Minimum 12.5 g/dL measured instantly on-site with sterile digital hemoglobinometer.

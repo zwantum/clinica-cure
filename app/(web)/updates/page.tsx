@@ -34,7 +34,7 @@ const NOTICES = [
 
 export default function UpdatesPage() {
   return (
-    <div className="bg-[#F8FAF9] pt-6 sm:pt-8 pb-8 sm:pb-10">
+    <div className="bg-[#F8FAF9] pt-6 sm:pt-6 md:pt-6 lg:pt-8 pb-8 sm:pb-6 md:pb-7 lg:pb-10">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
           <div>
@@ -79,7 +79,7 @@ export default function UpdatesPage() {
                 <h3 className="font-display font-semibold text-slate-900 text-base leading-snug">
                   {notice.title}
                 </h3>
-                <p className="text-xs text-slate-600 mt-2.5 leading-relaxed">
+                <p className="text-[14px] sm:text-xs text-slate-600 mt-2.5 leading-relaxed">
                   {notice.description}
                 </p>
               </div>

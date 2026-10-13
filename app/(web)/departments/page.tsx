@@ -54,7 +54,7 @@ export default function DepartmentsPage() {
   return (
     <div className="bg-white min-h-screen text-slate-800">
       {/* ── 1. FULL-WIDTH HERO SECTION (Matching Site Standard) ── */}
-      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-6 sm:py-12 md:py-14 lg:py-16 min-h-[320px] sm:min-h-[420px] md:min-h-[460px] flex items-center">
+      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-6 sm:py-8 md:py-9 lg:py-16 min-h-[320px] sm:min-h-[380px] md:min-h-[400px] lg:min-h-[460px] flex items-center">
         {/* Department / Medical Team Hero Image with subtle fade */}
         <div className="absolute top-0 bottom-0 right-0 w-full sm:w-[85%] md:w-[72%] lg:w-[66%] xl:w-[62%] 2xl:w-[58%] pointer-events-none select-none z-0">
           <img
@@ -161,7 +161,7 @@ export default function DepartmentsPage() {
       </section>
 
       {/* ── 2. MAIN DIRECTORY SECTION (Filter Tabs + Search + Cards) ── */}
-      <section className="bg-[#F6FBFA] py-6 sm:py-14 md:py-16">
+      <section className="bg-[#F6FBFA] py-6 sm:py-7 md:py-8 lg:py-16">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           {/* Section Introduction */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
@@ -184,7 +184,7 @@ export default function DepartmentsPage() {
       </section>
 
       {/* ── 3. CLINICAL EXCELLENCE PILLARS ── */}
-      <section className="py-8 sm:py-16 lg:py-20 bg-white border-t border-slate-100">
+      <section className="py-8 sm:py-7 md:py-8 lg:py-20 bg-white border-t border-slate-100">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="text-center max-w-3xl mx-auto mb-7 sm:mb-16">
             <span className="text-xs sm:text-sm font-bold text-[#0E746D] uppercase tracking-wider block mb-2">
@@ -223,7 +223,7 @@ export default function DepartmentsPage() {
       </section>
 
       {/* ── 4. NEED HELP CHOOSING A DEPARTMENT BANNER ── */}
-      <section className="pb-8 sm:pb-20 bg-white">
+      <section className="pb-8 sm:pb-8 md:pb-10 lg:pb-20 bg-white">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="bg-gradient-to-r from-[#0E746D] to-[#0A534B] text-white rounded-3xl p-5 sm:p-10 md:p-12 shadow-lg relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
             {/* Glow effect */}

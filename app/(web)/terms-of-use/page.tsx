@@ -1,30 +1,30 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ShieldCheck } from 'lucide-react'
+import { FileText } from 'lucide-react'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Clinica Cure Hospital',
-  description: 'Privacy Policy and patient data protection standards at Clinica Cure Hospital, Bariatu, Ranchi.',
+  title: 'Terms of Use | Clinica Cure Hospital',
+  description: 'Terms of use and website guidelines for Clinica Cure Hospital, Bariatu, Ranchi.',
 }
 
-export default function PrivacyPolicyPage() {
+export default function TermsOfUsePage() {
   return (
-    <div className="bg-[#F8FAF9] pt-6 sm:pt-8 pb-8 sm:pb-10">
+    <div className="bg-[#F8FAF9] pt-6 sm:pt-6 md:pt-6 lg:pt-8 pb-8 sm:pb-6 md:pb-7 lg:pb-10">
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2 text-xs text-slate-500 mb-4">
           <Link href="/" className="hover:text-[#0E746D]">Home</Link>
           <span>/</span>
-          <span className="text-slate-900 font-medium">Privacy Policy</span>
+          <span className="text-slate-900 font-medium">Terms of Use</span>
         </div>
 
         <div className="bg-white rounded-3xl border border-[#DDEAE7] p-6 sm:p-10 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-[#EAF7F4] text-[#0E746D] flex items-center justify-center">
-              <ShieldCheck className="w-5 h-5" />
+              <FileText className="w-5 h-5" />
             </div>
             <h1 className="font-display font-bold text-slate-900 text-2xl sm:text-3xl">
-              Privacy Policy
+              Terms of Use
             </h1>
           </div>
           <p className="text-xs text-slate-500 mb-8">
@@ -34,52 +34,48 @@ export default function PrivacyPolicyPage() {
           <div className="space-y-6 text-sm text-slate-600 leading-relaxed">
             <section>
               <h2 className="font-display font-semibold text-slate-900 text-base sm:text-lg mb-2">
-                1. Commitment to Patient Privacy
+                1. Acceptance of Terms
               </h2>
               <p>
-                At {siteConfig.name}, safeguarding your confidential medical information and personal data is fundamental to our clinical ethics. This policy explains how we collect, handle, and protect your information when you visit our facility, use our website, or book appointments.
+                By accessing or using the website, appointment booking portals, and online services provided by {siteConfig.name}, you agree to adhere to these Terms of Use and all applicable laws and regulations in India.
               </p>
             </section>
 
             <section>
               <h2 className="font-display font-semibold text-slate-900 text-base sm:text-lg mb-2">
-                2. Information We Collect
+                2. Medical Advice Disclaimer
               </h2>
               <p>
-                We may collect personal identification details (name, contact number, email, address), demographic data, and clinical history necessary for scheduling consultations, processing lab investigations, diagnostic reporting, and maintaining official medical records.
+                The information provided on this website is for general informational and educational purposes only. It does not constitute medical diagnosis, individual clinical advice, or treatment plans. In case of a medical emergency, visit our 24x7 emergency department at {siteConfig.address} or call {siteConfig.phone} immediately.
               </p>
             </section>
 
             <section>
               <h2 className="font-display font-semibold text-slate-900 text-base sm:text-lg mb-2">
-                3. Use of Health Information
+                3. Online Appointments &amp; Consultations
               </h2>
               <p>
-                All patient health records are strictly used for providing medical care, coordinating specialist consultations, emergency clinical interventions, and billing/TPA cashless insurance claim settlements as authorized by you or your legal representative.
+                Booking requests submitted through our web portal are subject to physician availability and confirmation by our hospital reception. We strive to honor confirmed time slots, but emergency surgeries and critical cases may occasionally cause schedule adjustments.
               </p>
             </section>
 
             <section>
               <h2 className="font-display font-semibold text-slate-900 text-base sm:text-lg mb-2">
-                4. Data Security &amp; Confidentiality
+                4. Intellectual Property
               </h2>
               <p>
-                We enforce technical, administrative, and physical safeguards in compliance with healthcare data protection standards. Your records are accessible exclusively by verified medical and administrative staff on a need-to-know basis.
+                All text, graphics, trademarks, logos, and digital assets published on this site are the property of {siteConfig.name} and protected by applicable copyright and intellectual property legislation.
               </p>
             </section>
 
             <section>
               <h2 className="font-display font-semibold text-slate-900 text-base sm:text-lg mb-2">
-                5. Contacting Our Data Grievance Desk
+                5. Contact Information
               </h2>
               <p>
-                For questions regarding your medical data or this privacy statement, please contact us at{' '}
+                If you have questions regarding these terms, reach our administrative office at{' '}
                 <a href={`mailto:${siteConfig.email}`} className="text-[#0E746D] font-medium hover:underline">
                   {siteConfig.email}
-                </a>{' '}
-                or reach our helpline at{' '}
-                <a href={`tel:${siteConfig.phoneRaw}`} className="text-[#0E746D] font-medium hover:underline">
-                  {siteConfig.phone}
                 </a>.
               </p>
             </section>

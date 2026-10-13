@@ -25,7 +25,7 @@ export default function GoogleReviewsSection() {
                   {'★'.repeat(5)}
                 </div>
               </div>
-              <p className="text-xs text-slate-500 mt-1 font-medium">
+              <p className="text-[13.5px] sm:text-xs text-slate-500 mt-1 font-medium">
                 Based on <span className="font-bold text-slate-700">{siteConfig.googleReviewCount}</span> authentic patient reviews on Google
               </p>
             </div>
@@ -66,7 +66,7 @@ export default function GoogleReviewsSection() {
                     {'★'.repeat(rev.rating)}
                   </div>
                 </div>
-                <p className="text-xs text-slate-600 leading-relaxed italic">
+                <p className="text-[14px] sm:text-xs text-slate-600 leading-relaxed italic">
                   &ldquo;{rev.review_text}&rdquo;
                 </p>
               </div>

@@ -25,7 +25,7 @@ export default function DonationEligibilityGuide() {
   const [openFaq, setOpenFaq] = useState<number | null>(0)
 
   return (
-    <section className="py-14 sm:py-20 bg-white">
+    <section className="py-14 sm:py-7 md:py-8 lg:py-20 bg-white">
       <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8 space-y-16 sm:space-y-24">
         {/* ── PART 1: ELIGIBILITY CHECKLIST ── */}
         <div>
@@ -36,7 +36,7 @@ export default function DonationEligibilityGuide() {
             <h2 className="font-display font-bold text-slate-900 text-2xl sm:text-3xl lg:text-4xl">
               Who Can Donate Blood?
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+            <p className="text-[14px] sm:text-sm text-slate-600 mt-2 leading-relaxed">
               Every donor undergoes a confidential on-site screening to ensure complete safety for both the donor and the patient receiving blood.
             </p>
           </div>
@@ -53,7 +53,7 @@ export default function DonationEligibilityGuide() {
                 <h3 className="font-display font-bold text-slate-900 text-base mb-1">
                   {crit.title}
                 </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <p className="text-[14px] sm:text-xs text-slate-600 leading-relaxed">
                   {crit.desc}
                 </p>
               </div>
@@ -78,7 +78,7 @@ export default function DonationEligibilityGuide() {
             <h2 className="font-display font-bold text-slate-900 text-2xl sm:text-3xl lg:text-4xl">
               Your 4-Step Donation Journey
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+            <p className="text-[14px] sm:text-sm text-slate-600 mt-2 leading-relaxed">
               The entire process takes under 30 minutes in our climate-controlled clinical donation suite in Bariatu.
             </p>
           </div>
@@ -99,7 +99,7 @@ export default function DonationEligibilityGuide() {
                   <h3 className="font-display font-bold text-slate-900 text-base mb-2">
                     {step.title}
                   </h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">
+                  <p className="text-[14px] sm:text-xs text-slate-600 leading-relaxed">
                     {step.desc}
                   </p>
                 </div>
@@ -173,7 +173,7 @@ export default function DonationEligibilityGuide() {
                   />
                 </button>
                 {openFaq === fIdx && (
-                  <div className="px-4 sm:px-5 pb-5 pt-0 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 mt-1">
+                  <div className="px-4 sm:px-5 pb-5 pt-0 text-[14px] sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 mt-1">
                     {faq.a}
                   </div>
                 )}

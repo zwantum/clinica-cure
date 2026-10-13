@@ -58,10 +58,10 @@ export default function BlogUpdatesSection() {
   const smallBlogs = BLOG_POSTS.slice(2, 5)
 
   return (
-    <section id="blog" className="py-8 sm:py-10 md:py-14 bg-white">
+    <section id="blog" className="py-8 sm:py-6 md:py-7 lg:py-14 bg-white">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8">
         {/* Header: Latest Blogs & View All Blogs */}
-        <div className="flex items-center justify-between border-b border-[#E2ECE9] pb-4 mb-6 sm:mb-8">
+        <div className="flex items-center justify-between border-b border-[#E2ECE9] pb-4 mb-6 sm:mb-5 md:mb-6 lg:mb-8">
           <h2 className="font-display font-semibold text-slate-900 text-[22px] sm:text-[30px] md:text-[30px] lg:text-3xl">
             Latest Blogs
           </h2>
@@ -101,7 +101,7 @@ export default function BlogUpdatesSection() {
                     {b.title}
                   </h4>
                 </Link>
-                <p className="text-xs sm:text-xs md:text-sm text-slate-600 mt-2 sm:mt-2.5 leading-relaxed flex-1">
+                <p className="text-[14px] sm:text-xs md:text-sm text-slate-600 mt-2 sm:mt-2.5 leading-relaxed flex-1">
                   {b.excerpt}
                 </p>
 
@@ -149,7 +149,7 @@ export default function BlogUpdatesSection() {
                         {b.title}
                       </h5>
                     </Link>
-                    <p className="text-[11px] sm:text-[11.5px] text-slate-600 mt-1 line-clamp-2 leading-relaxed">
+                    <p className="text-[13.5px] sm:text-[11.5px] text-slate-600 mt-1 line-clamp-2 leading-relaxed">
                       {b.excerpt}
                     </p>
                   </div>

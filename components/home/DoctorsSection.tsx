@@ -41,7 +41,7 @@ export default function DoctorsSection() {
             <h2 className="mt-2 font-display font-semibold text-slate-900 text-[22px] sm:text-[30px] md:text-3xl lg:text-4xl leading-tight">
               Experienced Doctors You Can Trust
             </h2>
-            <p className="mt-2.5 text-xs sm:text-sm text-slate-600 leading-relaxed">
+            <p className="mt-2.5 text-[14px] sm:text-sm text-slate-600 leading-relaxed">
               Our multidisciplinary team of qualified physicians and surgeons brings decades of clinical expertise across critical and general specialities.
             </p>
           </div>

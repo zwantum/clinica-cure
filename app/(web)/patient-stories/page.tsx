@@ -12,7 +12,7 @@ export default function PatientStoriesPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* ── HERO SECTION: PATIENT STORIES & TESTIMONIALS ── */}
-      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-10 sm:py-12 md:py-14 lg:py-16 min-h-[380px] sm:min-h-[420px] md:min-h-[460px] flex items-center">
+      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-10 sm:py-8 md:py-9 lg:py-16 min-h-[380px] sm:min-h-[380px] md:min-h-[400px] lg:min-h-[460px] flex items-center">
         {/* Doctor & Patient Photo with "Grateful for a Second Chance" quote */}
         <div className="absolute top-0 bottom-0 right-0 w-full sm:w-[85%] md:w-[70%] lg:w-[60%] xl:w-[54%] pointer-events-none select-none z-0">
           <img
@@ -40,7 +40,7 @@ export default function PatientStoriesPage() {
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-3.5 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-600 leading-relaxed max-w-xl">
+            <p className="mt-3.5 sm:mt-4 text-[14px] sm:text-sm md:text-base text-slate-600 leading-relaxed max-w-xl">
               Behind every surgery, consultation, and treatment at Clinica Cure Hospital is a personal story of trust, resilience, and recovery.
             </p>
           </div>

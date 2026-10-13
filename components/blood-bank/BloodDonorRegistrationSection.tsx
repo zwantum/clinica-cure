@@ -36,7 +36,7 @@ export default function BloodDonorRegistrationSection({
   }
 
   return (
-    <section id="register-donor" className="py-6 sm:py-10 bg-white scroll-mt-20">
+    <section id="register-donor" className="py-6 sm:py-6 md:py-7 lg:py-10 bg-white scroll-mt-20">
       <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
 
@@ -46,7 +46,7 @@ export default function BloodDonorRegistrationSection({
               <h2 className="font-display font-extrabold text-slate-900 text-2xl sm:text-3xl tracking-tight leading-tight">
                 Register as a Voluntary <span className="text-red-600">Blood Donor</span>
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed">
+              <p className="text-[14px] sm:text-sm text-slate-600 mt-2.5 leading-relaxed">
                 Join our community of life-savers. It only takes a few minutes to register and you could help save multiple lives.
               </p>
 
@@ -56,7 +56,7 @@ export default function BloodDonorRegistrationSection({
                     <CheckCircle2 className="w-6 h-6" />
                   </div>
                   <h3 className="font-display font-bold text-slate-900 text-lg">Thank You, Life Saver!</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">
+                  <p className="text-[14px] sm:text-xs text-slate-600 leading-relaxed">
                     Your donor profile for blood group <strong className="text-red-600 font-bold">{bloodGroup}</strong> has been registered. Our transfusion team will reach out whenever there is an urgent patient match in Ranchi.
                   </p>
                   <button
@@ -201,7 +201,7 @@ export default function BloodDonorRegistrationSection({
                     <h4 className="font-display font-bold text-slate-900 text-sm">
                       Save Lives
                     </h4>
-                    <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
+                    <p className="text-[14px] sm:text-xs text-slate-600 mt-0.5 leading-relaxed">
                       One donation can save up to 3 lives.
                     </p>
                   </div>
@@ -216,7 +216,7 @@ export default function BloodDonorRegistrationSection({
                     <h4 className="font-display font-bold text-slate-900 text-sm">
                       Safe Process
                     </h4>
-                    <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
+                    <p className="text-[14px] sm:text-xs text-slate-600 mt-0.5 leading-relaxed">
                       Takes only 15–20 minutes.
                     </p>
                   </div>
@@ -231,7 +231,7 @@ export default function BloodDonorRegistrationSection({
                     <h4 className="font-display font-bold text-slate-900 text-sm">
                       Better Health
                     </h4>
-                    <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
+                    <p className="text-[14px] sm:text-xs text-slate-600 mt-0.5 leading-relaxed">
                       Helps maintain good heart health.
                     </p>
                   </div>
@@ -246,7 +246,7 @@ export default function BloodDonorRegistrationSection({
                     <h4 className="font-display font-bold text-slate-900 text-sm">
                       Stronger Community
                     </h4>
-                    <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
+                    <p className="text-[14px] sm:text-xs text-slate-600 mt-0.5 leading-relaxed">
                       Supports patients in emergencies.
                     </p>
                   </div>

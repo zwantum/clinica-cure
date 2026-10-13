@@ -81,7 +81,7 @@ export default function CorePartnersPage() {
   return (
     <div className="bg-[#F8FAF9] min-h-screen">
       {/* ── 1. HERO SECTION: MEET OUR CORE PARTNERS ── */}
-      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-12 sm:py-14 md:py-16 lg:py-20 min-h-[380px] sm:min-h-[420px] md:min-h-[460px] lg:min-h-[480px] flex items-center">
+      <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-12 sm:py-8 md:py-9 lg:py-20 min-h-[380px] sm:min-h-[380px] md:min-h-[400px] lg:min-h-[480px] flex items-center">
         {/* Doctor Team Image — anchored to the complete right edge of the screen, starting right beside the text with zero right-side gap */}
         <div className="absolute top-0 bottom-0 right-0 w-full sm:w-[85%] md:w-[72%] lg:w-[66%] xl:w-[62%] 2xl:w-[58%] pointer-events-none select-none z-0">
           <img
@@ -117,21 +117,21 @@ export default function CorePartnersPage() {
             </h1>
 
             {/* Description */}
-            <p className="mt-3.5 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-600 leading-relaxed max-w-xl">
+            <p className="mt-3.5 sm:mt-4 text-[14px] sm:text-sm md:text-base text-slate-600 leading-relaxed max-w-xl">
               Our core partners are experienced and dedicated doctors who work together to provide the best possible care for our patients. Their expertise, collaboration and patient-centric approach are the foundation of Clinica Cure.
             </p>
 
             {/* Key highlights / quick trust stats */}
             <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-4 sm:gap-6 pt-4 border-t border-slate-200/80">
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-700 font-medium">
+              <div className="flex items-center gap-2 text-[14px] sm:text-sm text-slate-700 font-medium">
                 <ShieldCheck className="w-4 h-4 text-[#0E746D]" />
                 <span>Senior Consultants</span>
               </div>
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-700 font-medium">
+              <div className="flex items-center gap-2 text-[14px] sm:text-sm text-slate-700 font-medium">
                 <Award className="w-4 h-4 text-[#0E746D]" />
                 <span>Gold Medalist Surgeons</span>
               </div>
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-700 font-medium">
+              <div className="flex items-center gap-2 text-[14px] sm:text-sm text-slate-700 font-medium">
                 <Clock className="w-4 h-4 text-[#0E746D]" />
                 <span>24x7 Critical Support</span>
               </div>
@@ -141,7 +141,7 @@ export default function CorePartnersPage() {
       </section>
 
       {/* ── 2. DOCTOR PROFILES SECTION: A TEAM OF DEDICATED SPECIALISTS ── */}
-      <section className="py-12 sm:py-16 lg:py-20">
+      <section className="py-12 sm:py-7 md:py-8 lg:py-20">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           {/* Section Header */}
           <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
@@ -151,22 +151,22 @@ export default function CorePartnersPage() {
             <h2 className="mt-2 font-display font-semibold text-slate-900 text-2xl sm:text-3xl md:text-[34px] lg:text-4xl leading-tight">
               A Team of Dedicated Specialists
             </h2>
-            <p className="mt-3 text-xs sm:text-sm md:text-base text-slate-600 leading-relaxed">
+            <p className="mt-3 text-[14px] sm:text-sm md:text-base text-slate-600 leading-relaxed">
               Our core partners bring diverse expertise, working together to deliver comprehensive and high-quality care for every patient.
             </p>
           </div>
 
-          {/* 4 Doctor Cards Grid — Exact Doctor Page Card Design & Structure */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* 4 Doctor Cards Grid — Core Partners Card Layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-4.5">
             {coreDoctors.map((doc) => (
-              <DoctorCard key={doc.slug} doctor={doc} />
+              <DoctorCard key={doc.slug} doctor={doc} variant="core-partner" />
             ))}
           </div>
         </div>
       </section>
 
       {/* ── 3. A HOSPITAL BUILT AROUND PEOPLE SECTION (FROM CONTACT PAGE) ── */}
-      <section className="py-8 sm:py-10 lg:py-10 bg-[#F8FAF9] border-t border-[#DDEAE7] relative overflow-hidden">
+      <section className="py-8 sm:py-6 md:py-7 lg:py-10 bg-[#F8FAF9] border-t border-[#DDEAE7] relative overflow-hidden">
         {/* Light Faded Clinica Cure Favicon Watermark on Right Side Edge */}
         <div className="absolute top-1/2 -translate-y-1/2 -right-8 sm:-right-12 md:-right-8 lg:-right-6 w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-96 lg:h-96 pointer-events-none select-none z-0 opacity-[0.04]">
           <img
@@ -225,7 +225,7 @@ export default function CorePartnersPage() {
               </h2>
 
               {/* Subtext */}
-              <p className="mt-2.5 text-xs sm:text-sm md:text-sm lg:text-base text-slate-600 leading-relaxed max-w-xl">
+              <p className="mt-2.5 text-[14px] sm:text-sm md:text-sm lg:text-base text-slate-600 leading-relaxed max-w-xl">
                 Modern infrastructure, advanced technology and a compassionate team — all under one roof at Bariatu, Ranchi.
               </p>
 

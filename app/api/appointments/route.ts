@@ -36,24 +36,30 @@ export async function POST(request: Request) {
     }
 
     // Try Supabase insert if keys configured
-    const supabase = createAdminClient()
-    if (supabase) {
-      const { data, error } = await supabase
-        .from('appointments')
-        .insert({
-          patient_name: appointmentRecord.patient_name,
-          phone: appointmentRecord.phone,
-          email: appointmentRecord.email,
-          appointment_date: appointmentRecord.appointment_date,
-          appointment_time: appointmentRecord.appointment_time,
-          reason: appointmentRecord.reason,
-          status: 'pending',
-        })
-        .select()
-        .single()
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      try {
+        const supabase = createAdminClient()
+        if (supabase) {
+          const { data, error } = await supabase
+            .from('appointments')
+            .insert({
+              patient_name: appointmentRecord.patient_name,
+              phone: appointmentRecord.phone,
+              email: appointmentRecord.email,
+              appointment_date: appointmentRecord.appointment_date,
+              appointment_time: appointmentRecord.appointment_time,
+              reason: appointmentRecord.reason,
+              status: 'pending',
+            })
+            .select()
+            .single()
 
-      if (!error && data) {
-        return NextResponse.json({ success: true, data }, { status: 201 })
+          if (!error && data) {
+            return NextResponse.json({ success: true, data }, { status: 201 })
+          }
+        }
+      } catch (err) {
+        console.warn('Supabase insert skipped, using fallback store:', err)
       }
     }
 
@@ -69,6 +75,7 @@ export async function POST(request: Request) {
       { status: 201 }
     )
   } catch (error) {
+    console.error('API Error in /api/appointments:', error)
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { success: false, errors: error.issues },
@@ -76,22 +83,28 @@ export async function POST(request: Request) {
       )
     }
     return NextResponse.json(
-      { success: false, message: 'Internal server error' },
+      { success: false, message: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     )
   }
 }
 
 export async function GET() {
-  const supabase = createAdminClient()
-  if (supabase) {
-    const { data, error } = await supabase
-      .from('appointments')
-      .select('*')
-      .order('created_at', { ascending: false })
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    try {
+      const supabase = createAdminClient()
+      if (supabase) {
+        const { data, error } = await supabase
+          .from('appointments')
+          .select('*')
+          .order('created_at', { ascending: false })
 
-    if (!error && data) {
-      return NextResponse.json({ appointments: data })
+        if (!error && data) {
+          return NextResponse.json({ appointments: data })
+        }
+      }
+    } catch (err) {
+      console.warn('Supabase fetch skipped, using fallback store:', err)
     }
   }
 

@@ -3,8 +3,8 @@ import { siteConfig } from '@/config/site'
 
 export default function EmergencyBanner() {
   return (
-    <section className="pb-8 sm:pb-10 bg-white">
-      <div className="max-w-[1400px] mx-auto px-4 py-4 sm:py-6 md:px-8">
+    <section className="pb-8 sm:pb-5 md:pb-5 lg:pb-10 bg-white">
+      <div className="max-w-[1400px] mx-auto px-4 py-4 sm:py-3 md:py-3 lg:py-6 md:px-8">
         <div className="rounded-3xl overflow-hidden bg-[#0F6B5E] grid grid-cols-1 md:grid-cols-12 items-stretch gap-0 shadow-lg">
           {/* Column 1: Surgeon/Emergency Image with Fade Gradient */}
           <div className="relative w-full h-44 sm:h-52 md:h-auto md:col-span-4 lg:col-span-3 self-stretch overflow-hidden">
@@ -24,7 +24,7 @@ export default function EmergencyBanner() {
               Medical Emergency?<br />
               <span className="text-white/95">We&apos;re here 24x7.</span>
             </h3>
-            <p className="mt-2 text-white/85 text-xs sm:text-[13px] md:text-xs lg:text-sm leading-relaxed max-w-md">
+            <p className="mt-2 text-white/85 text-[14px] sm:text-[13px] md:text-xs lg:text-sm leading-relaxed max-w-md">
               Our emergency team is always ready to provide immediate care for you and your loved ones.
             </p>
           </div>

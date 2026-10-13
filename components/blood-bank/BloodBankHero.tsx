@@ -20,7 +20,7 @@ export default function BloodBankHero({
   onDonateClick,
 }: BloodBankHeroProps) {
   return (
-    <section className="relative bg-white overflow-hidden min-h-[460px] lg:min-h-[500px] flex items-center">
+    <section className="relative bg-white overflow-hidden min-h-[460px] sm:min-h-[400px] md:min-h-[420px] lg:min-h-[500px] flex items-center">
 
       {/* ── FULL RIGHT BACKGROUND IMAGE (NO SIDEWAYS BOX) ── */}
       <div className="absolute top-0 right-0 w-full lg:w-[58%] xl:w-[55%] h-full z-0">
@@ -43,7 +43,7 @@ export default function BloodBankHero({
       </div>
 
       {/* ── MAIN CONTENT CONTAINER (LEFT-ALIGNED) ── */}
-      <div className="w-full max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8 py-8 sm:py-10 lg:py-12 relative z-10">
+      <div className="w-full max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8 py-8 sm:py-6 md:py-7 lg:py-12 relative z-10">
         <div className="max-w-xl xl:max-w-2xl space-y-4 sm:space-y-5">
 
           {/* Top Pill Badge */}

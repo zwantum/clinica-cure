@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import { Sparkles, Clock, ShieldCheck, UserCheck, PhoneCall } from 'lucide-react'
+import { CalendarCheck, Clock, ShieldCheck, UserCheck, PhoneCall } from 'lucide-react'
 
 export default function AppointmentHeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-8 sm:py-10 md:py-12 lg:py-14">
+    <section className="relative overflow-hidden bg-[#F0F8FC] border-b border-slate-200/80 py-8 sm:py-6 md:py-7 lg:py-14">
       {/* Background Graphic / Hospital Ambient Image */}
       <div className="absolute right-0 top-0 bottom-0 w-full md:w-[48%] lg:w-[50%] xl:w-[52%] pointer-events-none select-none z-0">
         <div className="relative w-full h-full">
@@ -30,8 +30,7 @@ export default function AppointmentHeroSection() {
           </div>
 
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E2F5F0] border border-[#BCE1DB] text-[#0E746D] text-xs font-bold tracking-wide uppercase mb-3">
-            <span className="w-2 h-2 rounded-full bg-[#0E746D] animate-pulse" />
+          <div className="inline-flex items-center gap-2  py-1  text-[#0E746D] text-xs font-bold tracking-wide uppercase mb-1">
             OUTPATIENT CONSULTATION &amp; PRIORITY OPD
           </div>
 
@@ -42,15 +41,15 @@ export default function AppointmentHeroSection() {
           </h1>
 
           {/* Description */}
-          <p className="mt-2.5 text-xs sm:text-sm md:text-[15px] text-slate-600 leading-relaxed max-w-xl">
+          <p className="mt-2.5 text-[14px] sm:text-sm md:text-[15px] text-slate-600 leading-relaxed max-w-xl">
             Book guaranteed consultation slots with Ranchi&apos;s senior medical faculty across 20+ specialized clinical departments. Real-time digital token confirmation with no advance payment required.
           </p>
 
           {/* Open unboxed highlights with separators */}
           <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-y-2.5 gap-x-4 sm:gap-x-6 text-xs sm:text-[13px] text-slate-700 font-medium">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#0E746D] shrink-0" />
-              <span className="font-semibold text-slate-800">Instant OPD Token</span>
+              <CalendarCheck className="w-4 h-4 text-[#0E746D] shrink-0" />
+              <span className="font-semibold text-slate-800">Instant Confirmation</span>
             </div>
             <span className="text-slate-300 hidden sm:inline" aria-hidden="true">•</span>
             <div className="flex items-center gap-2">

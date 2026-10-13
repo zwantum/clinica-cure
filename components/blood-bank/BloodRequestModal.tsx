@@ -70,7 +70,7 @@ export default function BloodRequestModal({
             <h3 className="font-display font-bold text-slate-900 text-xl">
               Blood Request Dispatched
             </h3>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-md mx-auto">
+            <p className="text-[14px] sm:text-sm text-slate-600 leading-relaxed max-w-md mx-auto">
               We received your urgent request for <strong className="text-red-600">{unitsNeeded} Unit(s) of {bloodGroup}</strong>. Our on-duty blood bank medical officer has been alerted and will call <strong>{contactPhone}</strong> within 3 minutes.
             </p>
             <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-800 text-left">
@@ -97,7 +97,7 @@ export default function BloodRequestModal({
                 <h3 className="font-display font-extrabold text-slate-900 text-lg sm:text-xl">
                   Request Blood Units
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-[13.5px] sm:text-xs text-slate-500">
                   24×7 Rapid Clinical Cross-Match Desk
                 </p>
               </div>

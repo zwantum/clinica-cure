@@ -38,7 +38,7 @@ export default function BlogDirectory() {
   }, [searchQuery, selectedCategory])
 
   return (
-    <section className="py-8 sm:py-10 md:py-12 bg-[#F8FAF9]">
+    <section className="py-8 sm:py-6 md:py-7 lg:py-12 bg-[#F8FAF9]">
       <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8">
 
         {/* ── NORMAL CATEGORIES & SEARCH BAR ── */}
@@ -94,7 +94,7 @@ export default function BlogDirectory() {
               <h4 className="font-display font-bold text-slate-800 text-lg">
                 No health articles found
               </h4>
-              <p className="text-xs text-slate-500 mt-1 mb-5">
+              <p className="text-[14px] sm:text-xs text-slate-500 mt-1 mb-5">
                 Try searching for different symptoms, medical terms, or choose another category.
               </p>
               <button
@@ -126,7 +126,7 @@ export default function BlogDirectory() {
             <h3 className="font-display font-bold text-2xl sm:text-3xl text-white leading-tight">
               Consult Our Specialists at Clinica Cure Hospital
             </h3>
-            <p className="mt-2 text-xs sm:text-sm text-emerald-100 leading-relaxed">
+            <p className="mt-2 text-[14px] sm:text-sm text-emerald-100 leading-relaxed">
               If you or a family member are experiencing symptoms discussed in these health articles, book a priority OPD consultation with senior physicians in Bariatu, Ranchi.
             </p>
 

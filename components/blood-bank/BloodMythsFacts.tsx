@@ -28,7 +28,7 @@ const COMPARISONS = [
 
 export default function BloodMythsFacts() {
   return (
-    <section className="py-8 sm:py-12 bg-white">
+    <section className="py-8 sm:py-6 md:py-7 lg:py-12 bg-white">
       <div className="max-w-[1400px] mx-auto px-4 md:px-5 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 
@@ -50,7 +50,7 @@ export default function BloodMythsFacts() {
               <h2 className="font-display font-extrabold text-slate-900 text-2xl sm:text-3xl lg:text-4xl tracking-tight">
                 Blood Donation Myths vs. Facts
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+              <p className="text-[14px] sm:text-sm text-slate-600 mt-2 leading-relaxed">
                 Let&apos;s clear some common misconceptions about blood donation.
               </p>
             </div>
