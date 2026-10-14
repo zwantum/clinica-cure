@@ -293,3 +293,219 @@ VALUES
   TRUE
 )
 ON CONFLICT (slug) DO NOTHING;
+
+-- ==============================================================================
+-- 11. DOCTOR FAQS TABLE
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS doctor_faqs (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  doctor_id UUID REFERENCES doctors(id) ON DELETE CASCADE,
+  question TEXT NOT NULL,
+  answer TEXT NOT NULL,
+  sort_order INT DEFAULT 0,
+  is_published BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ==============================================================================
+-- 12. DOCTOR SCHEDULE EXCEPTIONS & LEAVE TABLE
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS doctor_schedule_exceptions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  doctor_id UUID REFERENCES doctors(id) ON DELETE CASCADE,
+  exception_date DATE NOT NULL,
+  start_time TIME,
+  end_time TIME,
+  is_leave BOOLEAN DEFAULT TRUE,
+  reason TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ==============================================================================
+-- 13. BLOOD BANK INVENTORY & AUDIT MOVEMENTS
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS blood_inventory (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  blood_group TEXT NOT NULL,
+  component_type TEXT NOT NULL DEFAULT 'Whole Blood',
+  available_units INT NOT NULL DEFAULT 0,
+  min_threshold INT NOT NULL DEFAULT 5,
+  last_updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE (blood_group, component_type)
+);
+
+CREATE TABLE IF NOT EXISTS blood_inventory_movements (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  blood_group TEXT NOT NULL,
+  component_type TEXT NOT NULL DEFAULT 'Whole Blood',
+  movement_type TEXT NOT NULL CHECK (movement_type IN ('inflow', 'outflow', 'correction')),
+  quantity INT NOT NULL,
+  reason TEXT NOT NULL,
+  recorded_by TEXT DEFAULT 'Hospital Staff',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS blood_requests (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  reference_no TEXT UNIQUE NOT NULL,
+  requester_name TEXT NOT NULL,
+  patient_name TEXT,
+  blood_group TEXT NOT NULL,
+  component_type TEXT NOT NULL DEFAULT 'Whole Blood',
+  units_needed INT NOT NULL DEFAULT 1,
+  hospital_ward TEXT,
+  urgency_level TEXT DEFAULT 'Urgent',
+  contact_phone TEXT NOT NULL,
+  status TEXT DEFAULT 'received' CHECK (status IN ('received', 'under_review', 'fulfilled', 'rejected', 'cancelled')),
+  assigned_staff TEXT,
+  internal_notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS blood_donations (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  reference_no TEXT UNIQUE NOT NULL,
+  donor_name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  blood_group TEXT NOT NULL,
+  component_type TEXT DEFAULT 'Whole Blood',
+  units_donated INT DEFAULT 1,
+  donation_date DATE NOT NULL,
+  status TEXT DEFAULT 'tested_quarantined',
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ==============================================================================
+-- 14. ENQUIRY NOTES TABLE
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS enquiry_notes (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  enquiry_id UUID REFERENCES contact_submissions(id) ON DELETE CASCADE,
+  author_name TEXT NOT NULL,
+  note TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Extend contact_submissions with status and assigned_staff if not present
+ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'new' CHECK (status IN ('new', 'in_progress', 'waiting', 'resolved', 'closed'));
+ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS assigned_to TEXT;
+
+-- ==============================================================================
+-- 15. RBAC & SETTINGS TABLES
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS roles (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  is_system BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS role_permissions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  role_id UUID REFERENCES roles(id) ON DELETE CASCADE,
+  module TEXT NOT NULL,
+  can_view BOOLEAN DEFAULT FALSE,
+  can_create BOOLEAN DEFAULT FALSE,
+  can_edit BOOLEAN DEFAULT FALSE,
+  can_delete BOOLEAN DEFAULT FALSE,
+  UNIQUE (role_id, module)
+);
+
+CREATE TABLE IF NOT EXISTS admin_profiles (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  full_name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  role_id UUID REFERENCES roles(id),
+  role_slug TEXT DEFAULT 'admin',
+  custom_permissions JSONB DEFAULT '{}'::jsonb,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS hospital_booking_config (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  min_advance_hours INT DEFAULT 2,
+  max_advance_days INT DEFAULT 30,
+  default_slot_minutes INT DEFAULT 20,
+  booking_cutoff_hours INT DEFAULT 1,
+  allow_walk_in BOOLEAN DEFAULT TRUE,
+  emergency_hotline TEXT DEFAULT '+91 651 228 0000',
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS hospital_notification_config (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  channel TEXT NOT NULL,
+  event_type TEXT NOT NULL,
+  is_enabled BOOLEAN DEFAULT TRUE,
+  recipient_emails TEXT[] DEFAULT '{"admin@clinicacure.in"}',
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ==============================================================================
+-- ENABLE RLS & POLICIES FOR NEW TABLES
+-- ==============================================================================
+ALTER TABLE doctor_faqs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE doctor_schedule_exceptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE blood_inventory ENABLE ROW LEVEL SECURITY;
+ALTER TABLE blood_inventory_movements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE blood_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE blood_donations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE enquiry_notes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE roles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE role_permissions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE admin_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE hospital_booking_config ENABLE ROW LEVEL SECURITY;
+ALTER TABLE hospital_notification_config ENABLE ROW LEVEL SECURITY;
+
+-- Public can view published doctor FAQs & blood inventory
+CREATE POLICY "Public can view active faqs" ON doctor_faqs FOR SELECT USING (is_published = TRUE);
+CREATE POLICY "Public can view blood inventory" ON blood_inventory FOR SELECT USING (TRUE);
+CREATE POLICY "Public can insert blood requests" ON blood_requests FOR INSERT WITH CHECK (TRUE);
+CREATE POLICY "Public can insert blood donations" ON blood_donations FOR INSERT WITH CHECK (TRUE);
+
+-- Privileged Staff has full access
+CREATE POLICY "Staff all doctor faqs" ON doctor_faqs FOR ALL USING (TRUE);
+CREATE POLICY "Staff all exceptions" ON doctor_schedule_exceptions FOR ALL USING (TRUE);
+CREATE POLICY "Staff all blood inventory" ON blood_inventory FOR ALL USING (TRUE);
+CREATE POLICY "Staff all blood movements" ON blood_inventory_movements FOR ALL USING (TRUE);
+CREATE POLICY "Staff all blood requests" ON blood_requests FOR ALL USING (TRUE);
+CREATE POLICY "Staff all blood donations" ON blood_donations FOR ALL USING (TRUE);
+CREATE POLICY "Staff all enquiry notes" ON enquiry_notes FOR ALL USING (TRUE);
+CREATE POLICY "Staff all roles" ON roles FOR ALL USING (TRUE);
+CREATE POLICY "Staff all role permissions" ON role_permissions FOR ALL USING (TRUE);
+CREATE POLICY "Staff all admin profiles" ON admin_profiles FOR ALL USING (TRUE);
+CREATE POLICY "Staff all booking config" ON hospital_booking_config FOR ALL USING (TRUE);
+CREATE POLICY "Staff all notification config" ON hospital_notification_config FOR ALL USING (TRUE);
+
+-- ==============================================================================
+-- SEED INITIAL BLOOD INVENTORY & ROLES
+-- ==============================================================================
+INSERT INTO blood_inventory (blood_group, component_type, available_units, min_threshold)
+VALUES
+  ('A+', 'Whole Blood', 14, 5),
+  ('A-', 'Whole Blood', 4, 3),
+  ('B+', 'Whole Blood', 22, 6),
+  ('B-', 'Whole Blood', 6, 3),
+  ('AB+', 'Whole Blood', 9, 4),
+  ('AB-', 'Whole Blood', 2, 3),
+  ('O+', 'Whole Blood', 31, 8),
+  ('O-', 'Whole Blood', 3, 4)
+ON CONFLICT (blood_group, component_type) DO NOTHING;
+
+INSERT INTO roles (name, slug, description, is_system)
+VALUES
+  ('Super Administrator', 'super_admin', 'Full access to all hospital operations, staff accounts, and configurations', TRUE),
+  ('Appointment Staff', 'appointment_staff', 'Manage patient OPD queue, verify appointments and handle walk-ins', TRUE),
+  ('Doctor & Availability Manager', 'doctor_manager', 'Manage specialist roster, consultation sessions and leave exceptions', TRUE),
+  ('Blood Bank Officer', 'blood_bank_staff', 'Manage blood stock inventory, movements, requests and donations', TRUE),
+  ('Enquiries Desk', 'enquiries_staff', 'Handle patient contact inquiries, assign tickets and write internal notes', TRUE)
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO hospital_booking_config (min_advance_hours, max_advance_days, default_slot_minutes, booking_cutoff_hours, emergency_hotline)
+VALUES (2, 30, 20, 1, '+91 651 228 0000')
+ON CONFLICT DO NOTHING;
+

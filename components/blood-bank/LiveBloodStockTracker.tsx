@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Droplet,
   RotateCw,
@@ -8,23 +8,26 @@ import {
   ArrowRight,
   AlertCircle,
 } from 'lucide-react'
+import { fetchBloodStock } from '@/app/admin/services/blood-bank'
+import { BloodStockRecord } from '@/app/admin/types'
 
 export interface BloodStockRow {
-  group: 'A+' | 'A-' | 'B+' | 'B-' | 'O+' | 'O-' | 'AB+' | 'AB-'
+  group: string
   units: number
   status: 'Good Stock' | 'Available' | 'Low Stock' | 'Critical Stock'
   percentage: number
 }
 
-const STOCK_DATA: BloodStockRow[] = [
-  { group: 'A+', units: 24, status: 'Good Stock', percentage: 65 },
-  { group: 'A-', units: 6, status: 'Low Stock', percentage: 30 },
-  { group: 'B+', units: 18, status: 'Available', percentage: 55 },
-  { group: 'B-', units: 4, status: 'Critical Stock', percentage: 18 },
-  { group: 'O+', units: 32, status: 'Good Stock', percentage: 85 },
-  { group: 'O-', units: 8, status: 'Low Stock', percentage: 25 },
-  { group: 'AB+', units: 12, status: 'Available', percentage: 45 },
-  { group: 'AB-', units: 3, status: 'Critical Stock', percentage: 8 },
+const DEFAULT_STOCK_ROWS: BloodStockRow[] = [
+  { group: 'A+', units: 14, status: 'Good Stock', percentage: 55 },
+  { group: 'A-', units: 4, status: 'Low Stock', percentage: 25 },
+  { group: 'B+', units: 22, status: 'Good Stock', percentage: 70 },
+  { group: 'B-', units: 6, status: 'Available', percentage: 35 },
+  { group: 'O+', units: 31, status: 'Good Stock', percentage: 85 },
+  { group: 'O-', units: 3, status: 'Critical Stock', percentage: 15 },
+  { group: 'AB+', units: 9, status: 'Available', percentage: 40 },
+  { group: 'AB-', units: 2, status: 'Critical Stock', percentage: 10 },
+  { group: 'BOMBAY (HH)', units: 1, status: 'Critical Stock', percentage: 10 },
 ]
 
 interface LiveBloodStockTrackerProps {
@@ -36,39 +39,79 @@ export default function LiveBloodStockTracker({
 }: LiveBloodStockTrackerProps) {
   const [unitMode, setUnitMode] = useState<'Units' | 'Bags'>('Units')
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [stockRows, setStockRows] = useState<BloodStockRow[]>(DEFAULT_STOCK_ROWS)
 
-  const handleRefresh = () => {
+  const loadStock = async () => {
+    try {
+      const records = await fetchBloodStock()
+      if (records && records.length > 0) {
+        const mapped: BloodStockRow[] = records.map((r) => {
+          let statusText: BloodStockRow['status'] = 'Available'
+          if (r.status === 'adequate') statusText = 'Good Stock'
+          else if (r.status === 'moderate') statusText = 'Available'
+          else statusText = 'Critical Stock'
+
+          return {
+            group: r.blood_group,
+            units: r.available_units,
+            status: statusText,
+            percentage: Math.min(100, Math.max(10, Math.round((r.available_units / 35) * 100))),
+          }
+        })
+        setStockRows(mapped)
+      }
+    } catch {
+      // fallback
+    }
+  }
+
+  useEffect(() => {
+    loadStock()
+
+    const onUpdate = () => {
+      loadStock()
+    }
+
+    window.addEventListener('clinicacure_blood_stock_updated', onUpdate)
+    window.addEventListener('storage', onUpdate)
+    window.addEventListener('focus', onUpdate)
+
+    return () => {
+      window.removeEventListener('clinicacure_blood_stock_updated', onUpdate)
+      window.removeEventListener('storage', onUpdate)
+      window.removeEventListener('focus', onUpdate)
+    }
+  }, [])
+
+  const handleRefresh = async () => {
     setIsRefreshing(true)
-    setTimeout(() => setIsRefreshing(false), 600)
+    await loadStock()
+    setTimeout(() => setIsRefreshing(false), 500)
   }
 
   const getStatusBadge = (status: BloodStockRow['status']) => {
     switch (status) {
       case 'Good Stock':
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200/80">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+          <span className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200/80">
             Good Stock
           </span>
         )
       case 'Available':
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 text-[#0E746D] text-xs font-bold border border-teal-200/80">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0E746D]" />
+          <span className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-teal-50 text-[#0E746D] text-xs font-bold border border-teal-200/80">
             Available
           </span>
         )
       case 'Low Stock':
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-bold border border-amber-200/80">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          <span className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-bold border border-amber-200/80">
             Low Stock
           </span>
         )
       case 'Critical Stock':
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-bold border border-rose-200/80">
-            <span className="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse" />
+          <span className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-bold border border-rose-200/80">
             Critical Stock
           </span>
         )
@@ -155,10 +198,10 @@ export default function LiveBloodStockTracker({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
-                {STOCK_DATA.map((row) => (
+                {stockRows.map((row) => (
                   <tr key={row.group} className="hover:bg-slate-50/60 transition-colors">
                     {/* Blood Group with Drop Icon */}
-                    <td className="py-4 px-6 font-display font-extrabold text-slate-900">
+                    <td className="py-4 px-6 font-display font-semibold text-slate-900">
                       <div className="flex items-center gap-2">
                         <Droplet className="w-4 h-4 fill-red-600 text-red-600" />
                         <span className="text-base">{row.group}</span>
@@ -200,7 +243,7 @@ export default function LiveBloodStockTracker({
                         onClick={() => onRequestBlood(row.group)}
                         className="py-1.5 px-4 rounded-xl border border-teal-600 text-[#0E746D] hover:bg-[#0E746D] hover:text-white font-bold text-xs transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-2xs"
                       >
-                        <Droplet className="w-3.5 h-3.5 fill-current" />
+
                         <span>Request Blood</span>
                       </button>
                     </td>

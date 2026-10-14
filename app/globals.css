@@ -18,6 +18,25 @@
   --color-primary: #26B09A;
   --color-primary-dark: #0E6B60;
 
+  /* Clinica Cure Admin Brand Colors */
+  --color-admin-primary: #FFCC00;
+  --color-admin-primary-dark: #E6B800;
+  --color-admin-primary-deep: #806600;
+  --color-admin-primary-light: #FFF2B3;
+  --color-admin-primary-soft: #FFF9DB;
+  --color-admin-mist: #F7F8FA;
+  --color-admin-heading: #172033;
+  --color-admin-body: #5F6B7A;
+  --color-admin-border: #E5EAF0;
+  --color-admin-success: #16A34A;
+  --color-admin-success-light: #DCFCE7;
+  --color-admin-warning: #D97706;
+  --color-admin-warning-light: #FEF3C7;
+  --color-admin-emergency: #DC2626;
+  --color-admin-emergency-light: #FEE2E2;
+  --color-admin-info: #2563EB;
+  --color-admin-info-light: #DBEAFE;
+
   /* Box Shadows */
   --shadow-soft: 0 4px 28px -6px rgba(18,48,44,0.10);
   --shadow-card: 0 2px 14px -4px rgba(18,48,44,0.07);

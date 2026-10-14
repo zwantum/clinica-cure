@@ -181,7 +181,21 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/50">
-          <p>© 2026 Clinica Cure Hospital. All rights reserved.</p>
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-center sm:text-left">
+            <p>© 2026 Clinica Cure Hospital. All rights reserved.</p>
+            <span className="hidden sm:inline text-white/20">•</span>
+            <p>
+              Designed &amp; Developed by{' '}
+              <a
+                href="https://zwantum.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#26B09A] hover:underline font-semibold tracking-wide transition-colors"
+              >
+                Zwantum
+              </a>
+            </p>
+          </div>
           <div className="flex gap-5">
             <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="/terms-of-use" className="hover:text-white transition-colors">Terms of Use</Link>

@@ -9,6 +9,8 @@ export interface DoctorSchedule {
     morning: string[]
     evening: string[]
   }
+  shift1Label?: string
+  shift2Label?: string
 }
 
 const DEFAULT_SLOTS = {
@@ -82,7 +84,150 @@ export const DEFAULT_DOCTOR_SCHEDULE: DoctorSchedule = {
   slots: DEFAULT_SLOTS,
 }
 
-export function getDoctorSchedule(slugOrName?: string): DoctorSchedule {
+// Parse time string (e.g. "10:00 AM", "10 AM", "1 PM", "1:00 PM", "10:00am") to total minutes from midnight
+function parseTimeToMinutes(tStr: string): number | null {
+  const clean = tStr.trim().replace(/\./g, ':')
+  const m = clean.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?$/i)
+  if (!m) return null
+  let hours = parseInt(m[1], 10)
+  const minutes = m[2] ? parseInt(m[2], 10) : 0
+  const ampm = m[3]?.toUpperCase()
+  if (ampm === 'PM' && hours < 12) hours += 12
+  if (ampm === 'AM' && hours === 12) hours = 0
+  return hours * 60 + minutes
+}
+
+function formatMinutesToTime(totalMin: number): string {
+  let hours = Math.floor(totalMin / 60)
+  const minutes = totalMin % 60
+  const ampm = hours >= 12 ? 'PM' : 'AM'
+  if (hours > 12) hours -= 12
+  if (hours === 0) hours = 12
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`
+}
+
+export function generateSlotsBetween(startStr: string, endStr: string): string[] {
+  const startMin = parseTimeToMinutes(startStr)
+  const endMin = parseTimeToMinutes(endStr)
+  if (startMin === null || endMin === null || startMin > endMin) return []
+  const slots: string[] = []
+  // Inclusive of endMin (e.g. 10:00 AM to 1:00 PM includes 01:00 PM; 4:00 PM to 6:00 PM includes 06:00 PM)
+  for (let min = startMin; min <= endMin; min += 30) {
+    slots.push(formatMinutesToTime(min))
+  }
+  return slots
+}
+
+export function parseDaysString(dayStr: string): number[] {
+  const clean = dayStr.toLowerCase().trim()
+  const days: Set<number> = new Set()
+
+  // Full range: monday - saturday / mon - sat
+  if (clean.includes('mon') && clean.includes('sat') && (clean.includes('-') || clean.includes('–') || clean.includes('to'))) {
+    return [1, 2, 3, 4, 5, 6]
+  }
+  // Range: monday - friday / mon - fri
+  if (clean.includes('mon') && clean.includes('fri') && (clean.includes('-') || clean.includes('–') || clean.includes('to'))) {
+    return [1, 2, 3, 4, 5]
+  }
+  // Range: monday - thursday
+  if (clean.includes('mon') && clean.includes('thu') && (clean.includes('-') || clean.includes('–') || clean.includes('to'))) {
+    return [1, 2, 3, 4]
+  }
+  // Range: tuesday - saturday
+  if (clean.includes('tue') && clean.includes('sat') && (clean.includes('-') || clean.includes('–') || clean.includes('to'))) {
+    return [2, 3, 4, 5, 6]
+  }
+
+  // Individual days
+  if (clean.includes('sun')) days.add(0)
+  if (clean.includes('mon')) days.add(1)
+  if (clean.includes('tue')) days.add(2)
+  if (clean.includes('wed')) days.add(3)
+  if (clean.includes('thu')) days.add(4)
+  if (clean.includes('fri')) days.add(5)
+  if (clean.includes('sat')) days.add(6)
+
+  return Array.from(days).sort((a, b) => a - b)
+}
+
+export function parseSessionsToSchedule(sessions?: Array<{ day: string; timings: string; status?: string }>): DoctorSchedule | null {
+  if (!sessions || sessions.length === 0) return null
+
+  const availableDaysSet = new Set<number>()
+  const validSessions = sessions.filter((s) => s.status !== 'Unavailable' && s.status !== 'On Leave')
+
+  if (validSessions.length === 0) {
+    return {
+      availableDays: [],
+      daysLabel: 'Unavailable / On Leave',
+      timingsLabel: 'Not Available',
+      slots: { morning: [], evening: [] },
+    }
+  }
+
+  const daysLabels: string[] = []
+  const timingsLabels: string[] = []
+
+  validSessions.forEach((sess) => {
+    const dList = parseDaysString(sess.day)
+    dList.forEach((d) => availableDaysSet.add(d))
+    if (!daysLabels.includes(sess.day)) daysLabels.push(sess.day)
+    if (!timingsLabels.includes(sess.timings)) timingsLabels.push(sess.timings)
+  })
+
+  // Slots generation
+  const morningSlots: string[] = []
+  const eveningSlots: string[] = []
+  let shift1Label = ''
+  let shift2Label = ''
+
+  validSessions.forEach((sess) => {
+    // Handle multiple shifts separated by '&' (e.g. "10:00 AM – 01:00 PM & 04:00 PM – 07:00 PM")
+    const shiftStrings = sess.timings.split('&').map((s) => s.trim()).filter(Boolean)
+    shiftStrings.forEach((shift, sIdx) => {
+      const raw = shift.replace(/–|—/g, '-').replace(/\bto\b/i, '-').trim()
+      const parts = raw.split('-').map((p) => p.trim())
+      if (parts.length === 2) {
+        const startMin = parseTimeToMinutes(parts[0])
+        const generated = generateSlotsBetween(parts[0], parts[1])
+        // If first shift and starts before 2:00 PM (840 min), categorize as morning
+        const isMorning = sIdx === 0 && (startMin === null || startMin < 840)
+
+        if (isMorning) {
+          if (!shift1Label) shift1Label = shift
+          generated.forEach((slot) => {
+            if (!morningSlots.includes(slot)) morningSlots.push(slot)
+          })
+        } else {
+          if (!shift2Label) shift2Label = shift
+          generated.forEach((slot) => {
+            if (!eveningSlots.includes(slot)) eveningSlots.push(slot)
+          })
+        }
+      }
+    })
+  })
+
+  return {
+    availableDays: Array.from(availableDaysSet).sort((a, b) => a - b),
+    daysLabel: daysLabels.join(', '),
+    timingsLabel: timingsLabels.join(' & '),
+    slots: {
+      morning: morningSlots,
+      evening: eveningSlots,
+    },
+    shift1Label,
+    shift2Label,
+  }
+}
+
+export function getDoctorSchedule(slugOrName?: string, customSessions?: Array<{ day: string; timings: string; status?: string }>): DoctorSchedule {
+  if (customSessions && customSessions.length > 0) {
+    const fromCustom = parseSessionsToSchedule(customSessions)
+    if (fromCustom) return fromCustom
+  }
+
   if (!slugOrName) return DEFAULT_DOCTOR_SCHEDULE
   const clean = slugOrName
     .toLowerCase()

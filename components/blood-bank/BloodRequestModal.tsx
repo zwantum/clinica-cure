@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   X,
   Droplet,
@@ -11,8 +11,7 @@ import {
   Send,
 } from 'lucide-react'
 import { siteConfig } from '@/config/site'
-
-const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
+import { createBloodRequest, getAvailableBloodGroups, BASE_BLOOD_GROUPS } from '@/app/admin/services/blood-bank'
 
 interface BloodRequestModalProps {
   isOpen: boolean
@@ -25,23 +24,82 @@ export default function BloodRequestModal({
   onClose,
   initialBloodGroup = 'O+',
 }: BloodRequestModalProps) {
+  const [bloodGroups, setBloodGroups] = useState<string[]>(BASE_BLOOD_GROUPS)
   const [bloodGroup, setBloodGroup] = useState(initialBloodGroup || 'O+')
+  const [customGroup, setCustomGroup] = useState('')
   const [patientName, setPatientName] = useState('')
   const [hospitalName, setHospitalName] = useState('Clinica Cure Hospital, Bariatu')
   const [unitsNeeded, setUnitsNeeded] = useState('1')
   const [urgency, setUrgency] = useState<'Immediate (Emergency)' | 'Within 2-4 Hours' | 'Scheduled / Tomorrow'>('Immediate (Emergency)')
   const [contactPhone, setContactPhone] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [referenceNo, setReferenceNo] = useState('')
+
+  const loadGroups = async () => {
+    const list = await getAvailableBloodGroups()
+    if (list && list.length > 0) {
+      setBloodGroups(list)
+    }
+  }
+
+  useEffect(() => {
+    loadGroups()
+
+    const onUpdate = () => {
+      loadGroups()
+    }
+
+    window.addEventListener('clinicacure_blood_stock_updated', onUpdate)
+    window.addEventListener('storage', onUpdate)
+    window.addEventListener('focus', onUpdate)
+
+    return () => {
+      window.removeEventListener('clinicacure_blood_stock_updated', onUpdate)
+      window.removeEventListener('storage', onUpdate)
+      window.removeEventListener('focus', onUpdate)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (initialBloodGroup) {
+      setBloodGroup(initialBloodGroup)
+    }
+  }, [initialBloodGroup])
 
   if (!isOpen) return null
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!patientName || !contactPhone) {
       alert('Please fill out patient name and contact phone.')
       return
     }
-    setSubmitted(true)
+
+    const chosenGroup = bloodGroup === 'Other' ? (customGroup.trim().toUpperCase() || 'Other') : bloodGroup
+
+    setSubmitting(true)
+    try {
+      const urgencyMap: Record<string, 'Emergency' | 'Urgent' | 'Routine'> = {
+        'Immediate (Emergency)': 'Emergency',
+        'Within 2-4 Hours': 'Urgent',
+        'Scheduled / Tomorrow': 'Routine',
+      }
+      const res = await createBloodRequest({
+        patient_name: patientName,
+        contact_phone: contactPhone,
+        blood_group: chosenGroup,
+        units_needed: Number(unitsNeeded) || 1,
+        hospital_ward: hospitalName || 'Clinica Cure Emergency / Ward',
+        urgency_level: urgencyMap[urgency] || 'Urgent',
+      })
+      if (res.data?.reference_no) {
+        setReferenceNo(res.data.reference_no)
+      }
+      setSubmitted(true)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const handleReset = () => {
@@ -70,6 +128,11 @@ export default function BloodRequestModal({
             <h3 className="font-display font-bold text-slate-900 text-xl">
               Blood Request Dispatched
             </h3>
+            {referenceNo && (
+              <div className="inline-block px-3 py-1 bg-slate-100 border border-slate-300 rounded-lg text-xs font-mono font-bold text-slate-800">
+                Requisition Ref: {referenceNo}
+              </div>
+            )}
             <p className="text-[14px] sm:text-sm text-slate-600 leading-relaxed max-w-md mx-auto">
               We received your urgent request for <strong className="text-red-600">{unitsNeeded} Unit(s) of {bloodGroup}</strong>. Our on-duty blood bank medical officer has been alerted and will call <strong>{contactPhone}</strong> within 3 minutes.
             </p>
@@ -128,15 +191,27 @@ export default function BloodRequestModal({
                   <select
                     value={bloodGroup}
                     onChange={(e) => setBloodGroup(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 cursor-pointer"
                     required
                   >
-                    {BLOOD_GROUPS.map((grp) => (
+                    {bloodGroups.map((grp) => (
                       <option key={grp} value={grp}>
                         {grp}
                       </option>
                     ))}
+                    <option value="Other">Other / Rare Group</option>
                   </select>
+
+                  {bloodGroup === 'Other' && (
+                    <input
+                      type="text"
+                      required
+                      value={customGroup}
+                      onChange={(e) => setCustomGroup(e.target.value)}
+                      placeholder="Specify (e.g. Bombay hh)"
+                      className="w-full mt-2 px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-800 focus:outline-none focus:border-red-500"
+                    />
+                  )}
                 </div>
 
                 {/* Units Needed */}

@@ -47,8 +47,8 @@ export default function BloodBankHero({
         <div className="max-w-xl xl:max-w-2xl space-y-4 sm:space-y-5">
 
           {/* Top Pill Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 text-red-600 text-xs font-bold uppercase tracking-wider ">
-            <Droplet className="w-3.5 h-3.5 fill-red-600 text-red-600" />
+          <div className="inline-flex items-center gap-2 py-1 text-red-600 text-xs font-bold uppercase tracking-wider ">
+
             <span>CLINICA CURE BLOOD BANK</span>
           </div>
 
@@ -71,7 +71,7 @@ export default function BloodBankHero({
               onClick={onDonateClick}
               className="py-3 px-6 rounded-xl bg-red-600 hover:bg-red-700 text-white font-display font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md shadow-red-600/20 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
             >
-              <Heart className="w-4 h-4 fill-white" />
+
               <span>Donate Blood</span>
             </button>
 
@@ -80,7 +80,7 @@ export default function BloodBankHero({
               onClick={() => onRequestBlood()}
               className="py-3 px-6 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-display font-bold text-sm flex items-center justify-center gap-2 transition-all border border-slate-300 shadow-2xs hover:border-slate-400 cursor-pointer"
             >
-              <Droplet className="w-4 h-4 text-[#0E746D] fill-[#0E746D]/20" />
+
               <span>Request Blood</span>
             </button>
           </div>

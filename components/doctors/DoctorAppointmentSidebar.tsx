@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   CalendarDays,
@@ -10,15 +10,20 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowRight,
+  Sun,
+  Moon,
+  Clock,
 } from 'lucide-react'
 import { siteConfig } from '@/config/site'
 import { getDoctorSchedule } from '@/config/doctor-schedules'
+import { getDepartmentData } from '@/config/department-details'
 
 interface DoctorAppointmentSidebarProps {
   doctorName: string
   doctorSlug: string
   departmentName: string
   departmentSlug: string
+  scheduleSessions?: Array<{ day: string; timings: string; status?: string }>
 }
 
 export function DoctorAppointmentSidebar({
@@ -26,8 +31,10 @@ export function DoctorAppointmentSidebar({
   doctorSlug,
   departmentName,
   departmentSlug,
+  scheduleSessions,
 }: DoctorAppointmentSidebarProps) {
-  const doctorSchedule = getDoctorSchedule(doctorSlug)
+  const doctorSchedule = getDoctorSchedule(doctorSlug, scheduleSessions)
+  const deptData = getDepartmentData(departmentSlug, departmentName)
   const today = new Date()
 
   // Calendar state based on current date
@@ -39,6 +46,12 @@ export function DoctorAppointmentSidebar({
     ...doctorSchedule.slots.evening,
   ]
   const [selectedSlot, setSelectedSlot] = useState(timeSlots[0] || '10:00 AM')
+
+  useEffect(() => {
+    if (timeSlots.length > 0 && !timeSlots.includes(selectedSlot)) {
+      setSelectedSlot(timeSlots[0])
+    }
+  }, [timeSlots, selectedSlot])
 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -59,6 +72,41 @@ export function DoctorAppointmentSidebar({
   // Get total days in month and starting day index (0 = Sun, 1 = Mon...)
   const firstDayIndex = new Date(year, month, 1).getDay()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
+
+  // Auto-select first upcoming available day in this month if currently selectedDay is unavailable
+  useEffect(() => {
+    if (doctorSchedule.availableDays.length > 0) {
+      const selectedDate = new Date(year, month, selectedDay)
+      if (!doctorSchedule.availableDays.includes(selectedDate.getDay())) {
+        let nextDay: number | null = null
+        // First look forward from today
+        const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month
+        const startDay = isCurrentMonth ? today.getDate() : 1
+        for (let d = startDay; d <= daysInMonth; d++) {
+          const testDate = new Date(year, month, d)
+          if (doctorSchedule.availableDays.includes(testDate.getDay())) {
+            nextDay = d
+            break
+          }
+        }
+        // If not found, look from start of month
+        if (!nextDay) {
+          for (let d = 1; d <= daysInMonth; d++) {
+            const testDate = new Date(year, month, d)
+            if (doctorSchedule.availableDays.includes(testDate.getDay())) {
+              nextDay = d
+              break
+            }
+          }
+        }
+        if (nextDay) {
+          setSelectedDay(nextDay)
+        }
+      }
+    }
+  }, [doctorSchedule.availableDays, year, month, daysInMonth])
+  const selectedDateObj = new Date(year, month, selectedDay)
+  const isSelectedDayAvailable = doctorSchedule.availableDays.includes(selectedDateObj.getDay())
 
   const calendarDays: (number | null)[] = []
   for (let i = 0; i < firstDayIndex; i++) {
@@ -193,7 +241,11 @@ export function DoctorAppointmentSidebar({
                     type="button"
                     disabled={!isAvailable}
                     onClick={() => isAvailable && setSelectedDay(day)}
-                    title={isAvailable ? `Available on ${monthNames[month]} ${day}` : `Dr. ${doctorName} is not scheduled on this day`}
+                    title={
+                      isAvailable
+                        ? `Available on ${monthNames[month]} ${day}`
+                        : `${doctorName.startsWith('Dr.') ? doctorName : `Dr. ${doctorName}`} is not scheduled on this day`
+                    }
                     className={`h-7 w-7 mx-auto rounded-full text-xs flex items-center justify-center font-medium transition-all ${
                       isSelected
                         ? 'bg-[#0E746D] text-white font-bold shadow-md shadow-[#0E746D]/20 scale-105'
@@ -210,31 +262,91 @@ export function DoctorAppointmentSidebar({
           </div>
 
           {/* Select Time Slot */}
-          <div className="pt-4 border-t border-slate-100">
-            <div className="mb-3">
+          <div className="pt-4 border-t border-slate-100 space-y-3">
+            <div>
               <span className="font-display font-bold text-slate-900 text-xs sm:text-sm">
                 Select Time Slot
               </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
-              {timeSlots.map((slot) => {
-                const isSelected = slot === selectedSlot
-                return (
-                  <button
-                    key={slot}
-                    type="button"
-                    onClick={() => setSelectedSlot(slot)}
-                    className={`py-2 px-1 text-[11px] font-semibold rounded-xl border text-center transition-all cursor-pointer ${isSelected
-                        ? 'bg-white border-1 border-[#0E746D] text-[#0E746D] shadow-xs font-bold'
-                        : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
-                      }`}
-                  >
-                    {slot}
-                  </button>
-                )
-              })}
-            </div>
+            {!isSelectedDayAvailable ? (
+              <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-center space-y-1">
+                <p className="text-xs font-bold text-amber-900">
+                  Not Scheduled on {monthNames[month]} {selectedDay}
+                </p>
+                <p className="text-[11px] text-amber-700">
+                  {doctorName.startsWith('Dr.') ? doctorName : `Dr. ${doctorName}`} is available on{' '}
+                  <span className="font-semibold underline">{doctorSchedule.daysLabel}</span>.
+                  Please select an active date above.
+                </p>
+              </div>
+            ) : timeSlots.length === 0 ? (
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-xs text-slate-500">
+                No consultation timings on this day.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {/* 1. Morning Shift Slots */}
+                {doctorSchedule.slots.morning.length > 0 && (
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <Sun className="w-3.5 h-3.5 text-amber-600" />
+                      <span className="font-bold text-amber-800">Morning Shift</span>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                      {doctorSchedule.slots.morning.map((slot) => {
+                        const isSelected = slot === selectedSlot
+                        return (
+                          <button
+                            key={slot}
+                            type="button"
+                            onClick={() => setSelectedSlot(slot)}
+                            className={`py-2 px-1 text-[11px] font-semibold rounded-xl border text-center transition-all cursor-pointer ${
+                              isSelected
+                                ? 'bg-[#0E746D] border-[#0E746D] text-white shadow-xs font-bold'
+                                : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
+                            }`}
+                          >
+                            {slot}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* 2. Evening Shift Slots */}
+                {doctorSchedule.slots.evening.length > 0 && (
+                  <div className="space-y-1.5 pt-1">
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <Moon className="w-3.5 h-3.5 text-indigo-600" />
+                      <span className="font-bold text-indigo-900">Evening Shift</span>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                      {doctorSchedule.slots.evening.map((slot) => {
+                        const isSelected = slot === selectedSlot
+                        return (
+                          <button
+                            key={slot}
+                            type="button"
+                            onClick={() => setSelectedSlot(slot)}
+                            className={`py-2 px-1 text-[11px] font-semibold rounded-xl border text-center transition-all cursor-pointer ${
+                              isSelected
+                                ? 'bg-[#0E746D] border-[#0E746D] text-white shadow-xs font-bold'
+                                : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
+                            }`}
+                          >
+                            {slot}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Buttons INSIDE the box */}
@@ -283,13 +395,13 @@ export function DoctorAppointmentSidebar({
           DEPARTMENT
         </span>
         <h3 className="font-display font-bold text-slate-900 text-base sm:text-lg mt-0.5">
-          {departmentName || 'Radiology & Imaging'}
+          {departmentName}
         </h3>
         <p className="text-[14px] sm:text-xs text-slate-600 mt-2 leading-relaxed">
-          Comprehensive diagnostic imaging services with advanced technology and expert interpretation.
+          {deptData.subtitle || `Comprehensive clinical care, advanced diagnostics, and specialist consultations in ${departmentName}.`}
         </p>
         <Link
-          href={`/departments/${departmentSlug || 'radiology'}`}
+          href={`/departments/${departmentSlug}`}
           className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0E746D] hover:underline mt-4 group"
         >
           <span>Explore Department</span>
@@ -307,16 +419,16 @@ export function DoctorAppointmentSidebar({
         </span>
         <div className="mt-3 rounded-2xl overflow-hidden aspect-[16/10] bg-slate-100 border border-slate-100">
           <img
-            src="/images/facilities/mri-scanner-suite.jpg"
-            alt="Hospital Facilities"
+            src={deptData.aboutImage || deptData.heroImage || '/images/facilities/mri-scanner-suite.jpg'}
+            alt={`${departmentName} Facilities`}
             className="w-full h-full object-cover"
           />
         </div>
         <p className="text-[14px] sm:text-xs text-slate-600 mt-3 leading-relaxed">
-          Advanced imaging technology for accurate and timely diagnosis.
+          {`Advanced medical equipment and clinical facilities for ${departmentName} at Clinica Cure Hospital.`}
         </p>
         <Link
-          href="/contact"
+          href={`/departments/${departmentSlug}`}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0E746D] bg-[#EAF7F4] hover:bg-[#ddf2ed] px-3.5 py-1.5 rounded-xl transition-colors mt-3"
         >
           <span>View Our Facilities</span>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Heart,
   Droplet,
@@ -18,8 +18,7 @@ import {
   MessageCircle,
 } from 'lucide-react'
 import { siteConfig } from '@/config/site'
-
-const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
+import { createBloodDonation, getAvailableBloodGroups, BASE_BLOOD_GROUPS } from '@/app/admin/services/blood-bank'
 
 const RANCHI_LOCALITIES = [
   'Bariatu (Hospital Vicinity)',
@@ -43,6 +42,8 @@ interface BloodDonorRegistrationFormProps {
 export default function BloodDonorRegistrationForm({
   initialBloodGroup,
 }: BloodDonorRegistrationFormProps) {
+  const [bloodGroups, setBloodGroups] = useState<string[]>(BASE_BLOOD_GROUPS)
+  const [customGroup, setCustomGroup] = useState('')
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -58,15 +59,68 @@ export default function BloodDonorRegistrationForm({
     healthDeclared: true,
   })
 
+  const loadGroups = async () => {
+    const list = await getAvailableBloodGroups()
+    if (list && list.length > 0) {
+      setBloodGroups(list)
+    }
+  }
+
+  useEffect(() => {
+    loadGroups()
+
+    const onUpdate = () => {
+      loadGroups()
+    }
+
+    window.addEventListener('clinicacure_blood_stock_updated', onUpdate)
+    window.addEventListener('storage', onUpdate)
+    window.addEventListener('focus', onUpdate)
+
+    return () => {
+      window.removeEventListener('clinicacure_blood_stock_updated', onUpdate)
+      window.removeEventListener('storage', onUpdate)
+      window.removeEventListener('focus', onUpdate)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (initialBloodGroup) {
+      setFormData((prev) => ({ ...prev, bloodGroup: initialBloodGroup }))
+    }
+  }, [initialBloodGroup])
+
+  const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [donorId, setDonorId] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Generate donor token
-    const generatedId = `CC-DONOR-${Math.floor(100000 + Math.random() * 900000)}`
-    setDonorId(generatedId)
-    setSubmitted(true)
+    const chosenGroup =
+      formData.bloodGroup === 'Other'
+        ? customGroup.trim().toUpperCase() || 'Other'
+        : formData.bloodGroup
+
+    setSubmitting(true)
+    try {
+      const res = await createBloodDonation({
+        fullName: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        bloodGroup: chosenGroup,
+        gender: formData.gender,
+        age: formData.age,
+        weight: formData.weight,
+        locality: formData.locality,
+        donorType: formData.donorType,
+      })
+      const generatedId =
+        res.data?.reference_no || `CC-DONOR-${Math.floor(100000 + Math.random() * 900000)}`
+      setDonorId(generatedId)
+      setSubmitted(true)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const handlePrint = () => {
@@ -102,22 +156,46 @@ export default function BloodDonorRegistrationForm({
                 <label className="block text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">
                   1. Select Your Blood Group <span className="text-red-500">*</span>
                 </label>
-                <div className="grid grid-cols-4 sm:grid-cols-8 gap-2.5">
-                  {BLOOD_GROUPS.map((bg) => (
+                <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-2.5">
+                  {bloodGroups.map((bg) => (
                     <button
                       key={bg}
                       type="button"
                       onClick={() => setFormData({ ...formData, bloodGroup: bg })}
-                      className={`h-14 rounded-2xl font-display font-extrabold text-base transition-all flex flex-col items-center justify-center cursor-pointer ${
+                      className={`min-h-[52px] px-2 py-2 rounded-2xl font-display font-extrabold text-xs sm:text-sm transition-all flex flex-col items-center justify-center text-center cursor-pointer ${
                         formData.bloodGroup === bg
                           ? 'bg-gradient-to-br from-red-600 to-rose-700 text-white shadow-md shadow-red-600/30 ring-2 ring-red-600 ring-offset-2'
                           : 'bg-white border border-slate-200 text-slate-800 hover:border-red-400 hover:bg-red-50/50'
                       }`}
                     >
-                      <span>{bg}</span>
+                      <span className="truncate">{bg}</span>
                     </button>
                   ))}
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, bloodGroup: 'Other' })}
+                    className={`min-h-[52px] px-2 py-2 rounded-2xl font-display font-extrabold text-xs sm:text-xs transition-all flex flex-col items-center justify-center text-center cursor-pointer ${
+                      formData.bloodGroup === 'Other'
+                        ? 'bg-gradient-to-br from-red-600 to-rose-700 text-white shadow-md shadow-red-600/30 ring-2 ring-red-600 ring-offset-2'
+                        : 'bg-white border border-slate-200 text-slate-800 hover:border-red-400 hover:bg-red-50/50'
+                    }`}
+                  >
+                    <span>Other</span>
+                  </button>
                 </div>
+
+                {formData.bloodGroup === 'Other' && (
+                  <div className="mt-3">
+                    <input
+                      type="text"
+                      required
+                      value={customGroup}
+                      onChange={(e) => setCustomGroup(e.target.value)}
+                      placeholder="Specify your rare blood group (e.g. Bombay Phenotype, Rh-null)"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:border-[#0E746D]"
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Step 2: Personal & Contact Information */}

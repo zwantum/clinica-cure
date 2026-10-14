@@ -103,6 +103,33 @@ export default function DoctorsPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  const [doctorsList, setDoctorsList] = useState<any[]>(SEED_DOCTORS)
+
+  // Hydrate custom doctors from admin storage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('clinicacure_admin_doctors')
+        if (cached) {
+          const list = JSON.parse(cached)
+          if (Array.isArray(list) && list.length > 0) {
+            const map = new Map<string, any>()
+            SEED_DOCTORS.forEach((d) => map.set(d.slug, d))
+            list.forEach((d: any) => {
+              if (d.slug) {
+                const prev = map.get(d.slug) || {}
+                map.set(d.slug, { ...prev, ...d })
+              }
+            })
+            setDoctorsList(Array.from(map.values()))
+          }
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  }, [])
+
   // Filter doctors based on query, department, and gender
   const q = searchQuery.trim().toLowerCase()
   const selectedDeptItem = departments.find((d) => d.slug === selectedDept)
@@ -110,16 +137,17 @@ export default function DoctorsPage() {
     ? [selectedDeptItem.slug, ...(selectedDeptItem.aliases || [])]
     : [selectedDept]
 
-  const filteredDoctors = SEED_DOCTORS.filter((doc) => {
+  const filteredDoctors = doctorsList.filter((doc) => {
     const matchesQ =
       !q ||
       doc.name.toLowerCase().includes(q) ||
       doc.designation.toLowerCase().includes(q) ||
-      doc.qualifications.some((qual) => qual.toLowerCase().includes(q)) ||
-      doc.specializations.some((tag) => tag.toLowerCase().includes(q))
+      (doc.qualifications || []).some((qual: string) => qual.toLowerCase().includes(q)) ||
+      (doc.specializations || []).some((tag: string) => tag.toLowerCase().includes(q)) ||
+      (doc.expertise || []).some((e: any) => (e.title || '').toLowerCase().includes(q))
 
     const matchesDept =
-      !selectedDept || doc.departments.some((d) => selectedDeptSlugs.includes(d))
+      !selectedDept || (doc.departments || []).some((d: string) => selectedDeptSlugs.includes(d))
     const matchesGender = !selectedGender || doc.gender === selectedGender
 
     return matchesQ && matchesDept && matchesGender

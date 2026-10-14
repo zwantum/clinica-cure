@@ -52,10 +52,24 @@ export default function ContactPageSection() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
-      if (!res.ok) throw new Error('Submission failed')
+      const result = await res.json()
+      if (!res.ok) throw new Error(result?.message || 'Submission failed')
 
+      if (typeof window !== 'undefined' && result?.data) {
+        try {
+          const cached = localStorage.getItem('clinicacure_admin_enquiries')
+          const current = cached ? JSON.parse(cached) : []
+          current.unshift(result.data)
+          localStorage.setItem('clinicacure_admin_enquiries', JSON.stringify(current))
+          window.dispatchEvent(new CustomEvent('clinicacure_enquiry_created'))
+        } catch {
+          // ignore
+        }
+      }
+
+      const refText = result?.reference_no ? ` (Ref: ${result.reference_no})` : ''
       setStatus('success')
-      setMsg('Thank you! Your message has been received. Our medical team will get back to you promptly.')
+      setMsg(`Thank you, ${formData.name}! Your enquiry${refText} has been received. Our medical team has been notified and will contact you promptly.`)
       setFormData({ name: '', phone: '', email: '', department: '', subject: '', message: '' })
     } catch {
       setStatus('success')

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Heart,
   ArrowRight,
@@ -10,29 +10,81 @@ import {
   Users,
   CheckCircle2,
 } from 'lucide-react'
-
-const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
+import { getAvailableBloodGroups, createBloodDonation, BASE_BLOOD_GROUPS } from '@/app/admin/services/blood-bank'
 
 interface BloodDonorRegistrationSectionProps {
   initialBloodGroup?: string
 }
 
 export default function BloodDonorRegistrationSection({
-  initialBloodGroup = 'A+',
+  initialBloodGroup = 'O+',
 }: BloodDonorRegistrationSectionProps) {
-  const [bloodGroup, setBloodGroup] = useState(initialBloodGroup)
+  const [bloodGroups, setBloodGroups] = useState<string[]>(BASE_BLOOD_GROUPS)
+  const [bloodGroup, setBloodGroup] = useState(initialBloodGroup || 'O+')
+  const [customGroup, setCustomGroup] = useState('')
+
+  useEffect(() => {
+    if (initialBloodGroup) {
+      setBloodGroup(initialBloodGroup)
+    }
+  }, [initialBloodGroup])
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [donorRef, setDonorRef] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const loadGroups = async () => {
+    const list = await getAvailableBloodGroups()
+    if (list && list.length > 0) {
+      setBloodGroups(list)
+    }
+  }
+
+  useEffect(() => {
+    loadGroups()
+
+    const onUpdate = () => {
+      loadGroups()
+    }
+
+    window.addEventListener('clinicacure_blood_stock_updated', onUpdate)
+    window.addEventListener('storage', onUpdate)
+    window.addEventListener('focus', onUpdate)
+
+    return () => {
+      window.removeEventListener('clinicacure_blood_stock_updated', onUpdate)
+      window.removeEventListener('storage', onUpdate)
+      window.removeEventListener('focus', onUpdate)
+    }
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!fullName || !phone) {
       alert('Please enter your full name and contact number.')
       return
     }
-    setIsSubmitted(true)
+
+    const chosenGroup = bloodGroup === 'Other' ? (customGroup.trim().toUpperCase() || 'Other') : bloodGroup
+
+    setIsSubmitting(true)
+    try {
+      const res = await createBloodDonation({
+        fullName,
+        phone,
+        email,
+        bloodGroup: chosenGroup,
+        donorType: 'Voluntary Quick Donor Registration',
+      })
+      if (res.data?.reference_no) {
+        setDonorRef(res.data.reference_no)
+      }
+      setIsSubmitted(true)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -56,8 +108,13 @@ export default function BloodDonorRegistrationSection({
                     <CheckCircle2 className="w-6 h-6" />
                   </div>
                   <h3 className="font-display font-bold text-slate-900 text-lg">Thank You, Life Saver!</h3>
+                  {donorRef && (
+                    <div className="inline-block px-3 py-1 bg-white border border-emerald-300 rounded-lg text-xs font-mono font-bold text-emerald-800">
+                      Registration ID: {donorRef}
+                    </div>
+                  )}
                   <p className="text-[14px] sm:text-xs text-slate-600 leading-relaxed">
-                    Your donor profile for blood group <strong className="text-red-600 font-bold">{bloodGroup}</strong> has been registered. Our transfusion team will reach out whenever there is an urgent patient match in Ranchi.
+                    Your donor profile for blood group <strong className="text-red-600 font-bold">{bloodGroup === 'Other' ? customGroup : bloodGroup}</strong> has been recorded in the Clinica Cure hospital donor register. Our transfusion team will reach out whenever there is an urgent patient match in Ranchi.
                   </p>
                   <button
                     type="button"
@@ -66,6 +123,7 @@ export default function BloodDonorRegistrationSection({
                       setFullName('')
                       setPhone('')
                       setEmail('')
+                      setCustomGroup('')
                     }}
                     className="mt-2 text-xs font-bold text-[#0E746D] hover:underline cursor-pointer"
                   >
@@ -86,12 +144,24 @@ export default function BloodDonorRegistrationSection({
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm font-semibold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-[#0E746D]/20 focus:border-[#0E746D] transition-all cursor-pointer"
                         required
                       >
-                        {BLOOD_GROUPS.map((grp) => (
+                        {bloodGroups.map((grp) => (
                           <option key={grp} value={grp}>
                             {grp}
                           </option>
                         ))}
+                        <option value="Other">Other / Rare Group</option>
                       </select>
+
+                      {bloodGroup === 'Other' && (
+                        <input
+                          type="text"
+                          required
+                          value={customGroup}
+                          onChange={(e) => setCustomGroup(e.target.value)}
+                          placeholder="Specify group (e.g. Bombay Phenotype)"
+                          className="w-full mt-2 px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#0E746D]"
+                        />
+                      )}
                     </div>
 
                     {/* Full Name */}

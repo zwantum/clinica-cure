@@ -36,6 +36,8 @@ import {
   getUpcomingDaysForDoctor,
   DEFAULT_DOCTOR_SCHEDULE,
 } from '@/config/doctor-schedules'
+import { OpdPrintSlipModal } from '@/app/admin/components/OpdPrintSlipModal'
+import { AppointmentRecord } from '@/app/admin/types'
 
 
 const COMMON_REASONS = [
@@ -57,6 +59,7 @@ export default function AppointmentBookingEngine() {
 
   const isDirectDoctor = Boolean(initialDoctorSlug)
   const [isWizardMode, setIsWizardMode] = useState(false)
+  const [showPrintModal, setShowPrintModal] = useState(false)
 
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
@@ -234,18 +237,91 @@ export default function AppointmentBookingEngine() {
       const res = await fetch('/api/appointments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          doctor_slug: selectedDoctorObj?.slug || '',
+        }),
       })
       const data = await res.json()
       if (data.success) {
-        setAppointmentId(data.data?.id || `APT-${Date.now().toString().slice(-6)}`)
+        const refId =
+          data.data?.booking_reference ||
+          data.data?.id ||
+          `CC-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
+        setAppointmentId(refId)
+
+        // Real-time synchronization with Admin Dashboard appointments store
+        if (typeof window !== 'undefined') {
+          try {
+            const cached = localStorage.getItem('clinicacure_admin_appointments')
+            const list = cached ? JSON.parse(cached) : []
+            const record = {
+              id: data.data?.id || `apt-${Date.now()}`,
+              booking_reference: refId,
+              patient_name: formData.name,
+              phone: formData.phone.startsWith('+91') ? formData.phone : `+91 ${formData.phone}`,
+              email: formData.email || '',
+              gender: 'Not specified',
+              age: 35,
+              department_name: formData.department || 'General OPD',
+              doctor_name: formData.doctor || 'Attending Consultant',
+              doctor_slug: selectedDoctorObj?.slug || '',
+              appointment_date: formData.date,
+              appointment_time: formData.time,
+              reason: formData.reason || 'General Medical Consultation',
+              status: 'pending' as const,
+              admin_notes: '',
+              created_at: new Date().toISOString(),
+            }
+            const updated = [
+              record,
+              ...list.filter(
+                (item: any) =>
+                  item.id !== record.id && item.booking_reference !== record.booking_reference
+              ),
+            ]
+            localStorage.setItem('clinicacure_admin_appointments', JSON.stringify(updated))
+            window.dispatchEvent(new Event('clinicacure_appointment_booked'))
+          } catch (e) {
+            console.error('LocalStorage sync error:', e)
+          }
+        }
+
         setStep(4)
       } else {
         throw new Error(data.message || 'Submission failed')
       }
     } catch {
-      // Graceful fallback for preview / offline environments
-      setAppointmentId(`APT-${Date.now().toString().slice(-6)}`)
+      // Graceful fallback for offline / preview
+      const refId = `CC-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
+      setAppointmentId(refId)
+      if (typeof window !== 'undefined') {
+        try {
+          const cached = localStorage.getItem('clinicacure_admin_appointments')
+          const list = cached ? JSON.parse(cached) : []
+          const record = {
+            id: `apt-${Date.now()}`,
+            booking_reference: refId,
+            patient_name: formData.name,
+            phone: formData.phone.startsWith('+91') ? formData.phone : `+91 ${formData.phone}`,
+            email: formData.email || '',
+            gender: 'Not specified',
+            age: 35,
+            department_name: formData.department || 'General OPD',
+            doctor_name: formData.doctor || 'Attending Consultant',
+            doctor_slug: selectedDoctorObj?.slug || '',
+            appointment_date: formData.date,
+            appointment_time: formData.time,
+            reason: formData.reason || 'General Medical Consultation',
+            status: 'pending' as const,
+            admin_notes: '',
+            created_at: new Date().toISOString(),
+          }
+          const updated = [record, ...list]
+          localStorage.setItem('clinicacure_admin_appointments', JSON.stringify(updated))
+          window.dispatchEvent(new Event('clinicacure_appointment_booked'))
+        } catch {}
+      }
       setStep(4)
     } finally {
       setSubmitting(false)
@@ -266,9 +342,23 @@ export default function AppointmentBookingEngine() {
   }
 
   const handlePrintSlip = () => {
-    if (typeof window !== 'undefined') {
-      window.print()
-    }
+    setShowPrintModal(true)
+  }
+
+  const printAppointmentData: AppointmentRecord = {
+    id: appointmentId || `CC-${new Date().getFullYear()}-0001`,
+    booking_reference: appointmentId || `CC-${new Date().getFullYear()}-0001`,
+    patient_name: formData.name,
+    phone: formData.phone,
+    email: formData.email,
+    department_name: formData.department || 'General OPD',
+    doctor_name: formData.doctor || 'Attending Consultant',
+    doctor_slug: selectedDoctorObj?.slug || '',
+    appointment_date: formData.date,
+    appointment_time: formData.time,
+    reason: formData.reason,
+    status: 'confirmed',
+    created_at: new Date().toISOString(),
   }
 
   return (
@@ -1164,6 +1254,12 @@ export default function AppointmentBookingEngine() {
           </div>
         </div>
       </div>
+
+      {/* Printable OPD Consultation Slip Modal */}
+      <OpdPrintSlipModal
+        appointment={showPrintModal ? printAppointmentData : null}
+        onClose={() => setShowPrintModal(false)}
+      />
     </section>
   )
 }
