@@ -5,7 +5,24 @@ export type AdminModule =
   | 'availability'
   | 'blood-bank'
   | 'enquiries'
+  | 'reviews'
+  | 'patient-stories'
+  | 'blog'
   | 'settings'
+
+export interface PatientStoryRecord {
+  id: string
+  patient_name: string
+  condition: string
+  outcome: string
+  department?: string
+  description?: string
+  video_url: string
+  thumbnail?: string
+  is_active: boolean
+  sort_order: number
+  created_at?: string
+}
 
 export type RoleSlug =
   | 'super_admin'
@@ -164,4 +181,18 @@ export interface EnquiryRecord {
   assigned_to?: string
   internal_notes?: Array<{ id: string; author: string; note: string; date: string }>
   created_at: string
+}
+
+export interface GoogleReviewRecord {
+  id: string
+  name: string
+  time: string
+  initials?: string
+  avatarBg?: string
+  rating: number
+  text: string
+  verified?: boolean
+  hasReadMore?: boolean
+  source?: 'google' | 'manual'
+  created_at?: string
 }

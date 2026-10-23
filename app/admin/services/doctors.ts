@@ -1,5 +1,6 @@
 import { DoctorRecord } from '../types'
 import { SEED_DOCTORS } from '@/config/constants'
+import { safeSetItem, safeGetItem } from '../lib/safeStorage'
 
 // Map existing 35 specialists into DoctorRecord format
 const INITIAL_DOCTORS: DoctorRecord[] = SEED_DOCTORS.map((doc: any, idx: number) => {
@@ -94,14 +95,12 @@ const INITIAL_DOCTORS: DoctorRecord[] = SEED_DOCTORS.map((doc: any, idx: number)
 let doctorsStore: DoctorRecord[] = [...INITIAL_DOCTORS]
 
 export async function fetchDoctors(): Promise<DoctorRecord[]> {
-  if (typeof window !== 'undefined') {
-    const cached = localStorage.getItem('clinicacure_admin_doctors')
-    if (cached) {
-      try {
-        return JSON.parse(cached)
-      } catch {
-        // fallback
-      }
+  const cached = safeGetItem('clinicacure_admin_doctors')
+  if (cached) {
+    try {
+      return JSON.parse(cached)
+    } catch {
+      // fallback
     }
   }
   return doctorsStore
@@ -116,8 +115,8 @@ export async function toggleDoctorLeave(slug: string): Promise<boolean> {
   doctorsStore = doctorsStore.map((doc) =>
     doc.slug === slug ? { ...doc, is_on_leave: !doc.is_on_leave } : doc
   )
+  safeSetItem('clinicacure_admin_doctors', JSON.stringify(doctorsStore))
   if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_doctors', JSON.stringify(doctorsStore))
     window.dispatchEvent(new CustomEvent('clinicacure_doctor_updated'))
   }
   return true
@@ -127,8 +126,8 @@ export async function toggleDoctorActive(slug: string): Promise<boolean> {
   doctorsStore = doctorsStore.map((doc) =>
     doc.slug === slug ? { ...doc, is_active: !doc.is_active } : doc
   )
+  safeSetItem('clinicacure_admin_doctors', JSON.stringify(doctorsStore))
   if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_doctors', JSON.stringify(doctorsStore))
     window.dispatchEvent(new CustomEvent('clinicacure_doctor_updated'))
   }
   return true
@@ -139,10 +138,22 @@ export async function saveDoctor(
 ): Promise<DoctorRecord> {
   const existingIdx = doctorsStore.findIndex((d) => d.slug === data.slug)
 
+  const deptSlug = data.department_slug || (existingIdx >= 0 ? doctorsStore[existingIdx].department_slug : 'general-medicine')
+  const deptList = (data.departments && data.departments.length > 0)
+    ? data.departments
+    : (existingIdx >= 0 && doctorsStore[existingIdx].departments?.length)
+      ? doctorsStore[existingIdx].departments
+      : [deptSlug]
+
   let savedDoc: DoctorRecord
 
   if (existingIdx >= 0) {
-    savedDoc = { ...doctorsStore[existingIdx], ...data }
+    savedDoc = {
+      ...doctorsStore[existingIdx],
+      ...data,
+      department_slug: deptSlug,
+      departments: deptList,
+    }
     doctorsStore[existingIdx] = savedDoc
   } else {
     savedDoc = {
@@ -151,7 +162,8 @@ export async function saveDoctor(
       slug: data.slug,
       designation: data.designation || 'Consultant Specialist',
       department_name: data.department_name || 'General Medicine',
-      department_slug: data.department_slug || 'general-medicine',
+      department_slug: deptSlug,
+      departments: deptList,
       seniority_badge: data.seniority_badge || 'Senior Consultant',
       experience_years: data.experience_years || '10+ Years',
       procedures_count: data.procedures_count || '5,000+',
@@ -188,8 +200,8 @@ export async function saveDoctor(
     doctorsStore = [savedDoc, ...doctorsStore]
   }
 
+  safeSetItem('clinicacure_admin_doctors', JSON.stringify(doctorsStore))
   if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_doctors', JSON.stringify(doctorsStore))
     window.dispatchEvent(new CustomEvent('clinicacure_doctor_updated'))
   }
 

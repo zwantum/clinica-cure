@@ -1,4 +1,5 @@
 import { AdminModule, PermissionMatrix, RoleSlug } from '../types'
+import { safeSetItem, safeGetItem } from './safeStorage'
 
 export const SYSTEM_ROLE_PERMISSIONS: Record<RoleSlug, PermissionMatrix> = {
   super_admin: {
@@ -8,6 +9,9 @@ export const SYSTEM_ROLE_PERMISSIONS: Record<RoleSlug, PermissionMatrix> = {
     availability: { can_view: true, can_create: true, can_edit: true, can_delete: true },
     'blood-bank': { can_view: true, can_create: true, can_edit: true, can_delete: true },
     enquiries: { can_view: true, can_create: true, can_edit: true, can_delete: true },
+    reviews: { can_view: true, can_create: true, can_edit: true, can_delete: true },
+    'patient-stories': { can_view: true, can_create: true, can_edit: true, can_delete: true },
+    blog: { can_view: true, can_create: true, can_edit: true, can_delete: true },
     settings: { can_view: true, can_create: true, can_edit: true, can_delete: true },
   },
   appointment_staff: {
@@ -17,6 +21,9 @@ export const SYSTEM_ROLE_PERMISSIONS: Record<RoleSlug, PermissionMatrix> = {
     availability: { can_view: true, can_create: false, can_edit: false, can_delete: false },
     'blood-bank': { can_view: false, can_create: false, can_edit: false, can_delete: false },
     enquiries: { can_view: false, can_create: false, can_edit: false, can_delete: false },
+    reviews: { can_view: true, can_create: false, can_edit: false, can_delete: false },
+    'patient-stories': { can_view: true, can_create: false, can_edit: false, can_delete: false },
+    blog: { can_view: true, can_create: false, can_edit: false, can_delete: false },
     settings: { can_view: false, can_create: false, can_edit: false, can_delete: false },
   },
   doctor_manager: {
@@ -26,6 +33,9 @@ export const SYSTEM_ROLE_PERMISSIONS: Record<RoleSlug, PermissionMatrix> = {
     availability: { can_view: true, can_create: true, can_edit: true, can_delete: true },
     'blood-bank': { can_view: false, can_create: false, can_edit: false, can_delete: false },
     enquiries: { can_view: false, can_create: false, can_edit: false, can_delete: false },
+    reviews: { can_view: true, can_create: false, can_edit: false, can_delete: false },
+    'patient-stories': { can_view: true, can_create: false, can_edit: false, can_delete: false },
+    blog: { can_view: true, can_create: false, can_edit: false, can_delete: false },
     settings: { can_view: false, can_create: false, can_edit: false, can_delete: false },
   },
   blood_bank_staff: {
@@ -35,6 +45,9 @@ export const SYSTEM_ROLE_PERMISSIONS: Record<RoleSlug, PermissionMatrix> = {
     availability: { can_view: false, can_create: false, can_edit: false, can_delete: false },
     'blood-bank': { can_view: true, can_create: true, can_edit: true, can_delete: true },
     enquiries: { can_view: false, can_create: false, can_edit: false, can_delete: false },
+    reviews: { can_view: true, can_create: false, can_edit: false, can_delete: false },
+    'patient-stories': { can_view: true, can_create: false, can_edit: false, can_delete: false },
+    blog: { can_view: true, can_create: false, can_edit: false, can_delete: false },
     settings: { can_view: false, can_create: false, can_edit: false, can_delete: false },
   },
   enquiries_staff: {
@@ -44,35 +57,34 @@ export const SYSTEM_ROLE_PERMISSIONS: Record<RoleSlug, PermissionMatrix> = {
     availability: { can_view: false, can_create: false, can_edit: false, can_delete: false },
     'blood-bank': { can_view: false, can_create: false, can_edit: false, can_delete: false },
     enquiries: { can_view: true, can_create: false, can_edit: true, can_delete: false },
+    reviews: { can_view: true, can_create: true, can_edit: true, can_delete: false },
+    'patient-stories': { can_view: true, can_create: true, can_edit: true, can_delete: false },
+    blog: { can_view: true, can_create: true, can_edit: true, can_delete: false },
     settings: { can_view: false, can_create: false, can_edit: false, can_delete: false },
   },
 }
 
 export function getRolePermissions(role: RoleSlug): PermissionMatrix {
-  if (typeof window !== 'undefined') {
-    const customMatrix = localStorage.getItem('clinicacure_admin_roles_matrix')
-    if (customMatrix) {
-      try {
-        const parsed = JSON.parse(customMatrix)
-        if (parsed[role]) return parsed[role]
-      } catch {}
-    }
+  const customMatrix = safeGetItem('clinicacure_admin_roles_matrix')
+  if (customMatrix) {
+    try {
+      const parsed = JSON.parse(customMatrix)
+      if (parsed[role]) return parsed[role]
+    } catch {}
   }
   return SYSTEM_ROLE_PERMISSIONS[role] || SYSTEM_ROLE_PERMISSIONS.appointment_staff
 }
 
 export function saveRolePermissions(role: RoleSlug, matrix: PermissionMatrix): void {
-  if (typeof window !== 'undefined') {
-    let allMatrix: Record<string, PermissionMatrix> = { ...SYSTEM_ROLE_PERMISSIONS }
-    const customMatrix = localStorage.getItem('clinicacure_admin_roles_matrix')
-    if (customMatrix) {
-      try {
-        allMatrix = { ...allMatrix, ...JSON.parse(customMatrix) }
-      } catch {}
-    }
-    allMatrix[role] = matrix
-    localStorage.setItem('clinicacure_admin_roles_matrix', JSON.stringify(allMatrix))
+  let allMatrix: Record<string, PermissionMatrix> = { ...SYSTEM_ROLE_PERMISSIONS }
+  const customMatrix = safeGetItem('clinicacure_admin_roles_matrix')
+  if (customMatrix) {
+    try {
+      allMatrix = { ...allMatrix, ...JSON.parse(customMatrix) }
+    } catch {}
   }
+  allMatrix[role] = matrix
+  safeSetItem('clinicacure_admin_roles_matrix', JSON.stringify(allMatrix))
 }
 
 export function hasPermission(

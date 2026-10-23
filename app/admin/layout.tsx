@@ -14,6 +14,9 @@ function getRequiredModule(path: string): AdminModule | null {
   if (path.startsWith('/admin/doctors')) return 'doctors'
   if (path.startsWith('/admin/blood-bank')) return 'blood-bank'
   if (path.startsWith('/admin/enquiries')) return 'enquiries'
+  if (path.startsWith('/admin/reviews')) return 'reviews'
+  if (path.startsWith('/admin/patient-stories')) return 'patient-stories'
+  if (path.startsWith('/admin/blog')) return 'blog'
   if (path.startsWith('/admin/settings')) return 'settings'
   return null
 }
@@ -26,6 +29,9 @@ function getFirstAllowedRoute(user: StaffUser | null): string {
     { id: 'doctors', path: '/admin/doctors' },
     { id: 'blood-bank', path: '/admin/blood-bank' },
     { id: 'enquiries', path: '/admin/enquiries' },
+    { id: 'reviews', path: '/admin/reviews' },
+    { id: 'patient-stories', path: '/admin/patient-stories' },
+    { id: 'blog', path: '/admin/blog' },
     { id: 'settings', path: '/admin/settings' },
   ]
   for (const m of modules) {

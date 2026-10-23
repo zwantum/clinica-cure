@@ -15,7 +15,6 @@ import {
   Scissors,
   Smile,
   Zap,
-  Sparkles,
   HeartPulse,
   Syringe,
   type LucideIcon,

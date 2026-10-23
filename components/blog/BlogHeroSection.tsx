@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Sparkles, ShieldCheck, HeartHandshake, BookOpen, Stethoscope } from 'lucide-react'
+import { ShieldCheck, HeartHandshake, BookOpen, Stethoscope } from 'lucide-react'
 
 export default function BlogHeroSection() {
   return (

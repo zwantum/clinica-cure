@@ -14,12 +14,11 @@ import {
   ArrowRight,
   ChevronRight,
   HelpCircle,
-  Users,
 } from 'lucide-react'
 import { departments } from '@/config/navigation'
 import { SEED_DOCTORS } from '@/config/constants'
 import { siteConfig } from '@/config/site'
-import DepartmentDoctorCard from '@/components/departments/DepartmentDoctorCard'
+import DepartmentDoctorsSection from '@/components/departments/DepartmentDoctorsSection'
 import DepartmentFaqAccordion from '@/components/departments/DepartmentFaqAccordion'
 import {
   getDepartmentData,
@@ -52,19 +51,11 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
   // Curated department data with fallbacks
   const deptData = getDepartmentData(dept.slug, dept.name)
 
-  // Find doctors associated with this department or its aliases
-  const allDeptSlugs = [dept.slug, ...(dept.aliases || [])]
-  let deptDoctors = SEED_DOCTORS.filter((doc) =>
-    doc.departments.some((d) => allDeptSlugs.includes(d))
+  // Find doctors associated strictly with this department or its aliases (no cross-department fillers)
+  const allDeptSlugs = [dept.slug, ...(dept.aliases || [])].map((s) => s.toLowerCase())
+  const initialDeptDoctors = SEED_DOCTORS.filter((doc) =>
+    doc.departments?.some((d) => allDeptSlugs.includes(d.toLowerCase()))
   )
-
-  // Ensure at least 4 doctors are displayed in the grid to match the reference design
-  if (deptDoctors.length < 4) {
-    const filler = SEED_DOCTORS.filter(
-      (doc) => !deptDoctors.some((d) => d.slug === doc.slug)
-    ).slice(0, 4 - deptDoctors.length)
-    deptDoctors = [...deptDoctors, ...filler]
-  }
 
   // Related departments list
   const relatedSlugs = deptData.relatedSlugs || []
@@ -250,52 +241,13 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
                 </div>
               </div>
 
-              {/* 2. Our Doctors in Department Section (Matching reference card) */}
-              <div>
-                <div className="flex items-start justify-between gap-4 mb-1">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#EAF7F4] text-[#0E746D] flex items-center justify-center shrink-0">
-                      <Users className="w-4.5 h-4.5" strokeWidth={2} />
-                    </div>
-                    <div>
-                      <h2 className="font-display font-bold text-slate-900 text-xl sm:text-2xl">
-                        Our Doctors in {dept.name}
-                      </h2>
-                    </div>
-                  </div>
-
-                  {/* Desktop / Tablet Sideways Link */}
-                  <Link
-                    href="/doctors"
-                    className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-[#0E746D] hover:underline shrink-0 pt-1"
-                  >
-                    <span>View All Doctors</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-
-                <p className="text-[13px] sm:text-sm text-slate-500 mt-1 mb-2.5 sm:mb-6 ml-12">
-                  You may also like to consult these specialists:
-                </p>
-
-                {/* Mobile View Link: Displayed Below Paragraph */}
-                <div className="sm:hidden mb-5 ml-12">
-                  <Link
-                    href="/doctors"
-                    className="text-[13px] font-semibold text-[#0E746D] hover:underline inline-flex items-center gap-1.5"
-                  >
-                    <span>View All Doctors</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-
-                {/* Doctor Cards Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4">
-                  {deptDoctors.slice(0, 4).map((doc) => (
-                    <DepartmentDoctorCard key={doc.slug} doctor={doc} />
-                  ))}
-                </div>
-              </div>
+              {/* 2. Our Doctors in Department Section (Dynamic & Live) */}
+              <DepartmentDoctorsSection
+                departmentName={dept.name}
+                departmentSlug={dept.slug}
+                aliases={dept.aliases}
+                initialDoctors={initialDeptDoctors}
+              />
 
               {/* 3. Conditions We Treat */}
               <div>

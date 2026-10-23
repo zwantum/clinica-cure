@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { BloodDonationRecord } from '@/app/admin/types'
+import { sendBloodDonorNotificationEmail } from '@/lib/email'
 
 const INITIAL_DONATIONS: BloodDonationRecord[] = [
   {
@@ -95,6 +96,24 @@ export async function POST(request: Request) {
     }
 
     inMemoryDonations.unshift(newDonation)
+
+    // Send email notification to Admin & Blood Bank officers
+    sendBloodDonorNotificationEmail({
+      reference_no: newDonation.reference_no,
+      donor_name: newDonation.donor_name,
+      phone: newDonation.phone,
+      email: newDonation.email,
+      blood_group: newDonation.blood_group,
+      gender: newDonation.gender,
+      age: newDonation.age,
+      weight: newDonation.weight,
+      locality: newDonation.locality,
+      donor_type: newDonation.donor_type,
+      donation_date: newDonation.donation_date,
+      created_at: new Date().toISOString(),
+    }).catch((emailErr) => {
+      console.warn('[Blood Donations API] Failed to dispatch admin email:', emailErr)
+    })
 
     return NextResponse.json({
       success: true,

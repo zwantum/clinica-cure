@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { ChevronRight, Calendar, Clock } from 'lucide-react'
 import type { SEED_DOCTORS } from '@/config/constants'
@@ -8,7 +8,9 @@ import type { SEED_DOCTORS } from '@/config/constants'
 export type DoctorType = (typeof SEED_DOCTORS)[number] & {
   schedule_sessions?: Array<{
     day: string
-    timings: string
+    timings?: string
+    shift1?: string
+    shift2?: string
     status?: string
     type?: string
   }>
@@ -24,120 +26,140 @@ interface DoctorCardProps {
   variant?: 'default' | 'core-partner'
 }
 
-// Clean and shorten day strings (e.g. Monday -> Mon, Monday – Friday -> Mon – Fri)
-function toShortDay(d: string): string {
-  return d
-    .replace(/Monday/gi, 'Mon')
-    .replace(/Tuesday/gi, 'Tue')
-    .replace(/Wednesday/gi, 'Wed')
-    .replace(/Thursday/gi, 'Thu')
-    .replace(/Friday/gi, 'Fri')
-    .replace(/Saturday/gi, 'Sat')
-    .replace(/Sunday/gi, 'Sun')
-    .replace(/\s*-\s*/g, ' – ')
-    .trim()
+export const WEEK_DAYS = [
+  { key: 'Monday', label: 'Mo', full: 'Monday' },
+  { key: 'Tuesday', label: 'Tu', full: 'Tuesday' },
+  { key: 'Wednesday', label: 'We', full: 'Wednesday' },
+  { key: 'Thursday', label: 'Th', full: 'Thursday' },
+  { key: 'Friday', label: 'Fr', full: 'Friday' },
+  { key: 'Saturday', label: 'Sa', full: 'Saturday' },
+  { key: 'Sunday', label: 'Su', full: 'Sunday' },
+]
+
+export interface DayScheduleDetail {
+  dayName: string
+  isAvailable: boolean
+  shift1?: string
+  shift2?: string
+  timings?: string
+  type?: string
 }
 
-// Clean timing strings (e.g. 04:00 PM -> 4:00 PM)
-function cleanTimings(t: string): string {
+export function cleanTimings(t?: string): string {
+  if (!t) return ''
   return t
     .replace(/\b0([1-9]:)/g, '$1')
     .replace(/\s*-\s*/g, ' – ')
     .trim()
 }
 
-// Condense schedule into a single short summary row so cards NEVER grow tall
-function getScheduleSummary(
-  sessions?: Array<{ day: string; timings: string; status?: string }>
-): { days: string; timings: string } {
-  const DEFAULT = {
-    days: 'Mon – Sat',
-    timings: '10:00 AM – 4:00 PM',
+export function resolveDoctorDaySchedules(
+  sessions?: Array<{
+    day: string
+    timings?: string
+    shift1?: string
+    shift2?: string
+    status?: string
+    type?: string
+  }>
+): Record<string, DayScheduleDetail> {
+  type ScheduleItem = {
+    day: string
+    timings?: string
+    shift1?: string
+    shift2?: string
+    status?: string
+    type?: string
   }
 
-  if (!sessions || sessions.length === 0) {
-    return DEFAULT
-  }
+  const DEFAULT_SESSIONS: ScheduleItem[] = [
+    { day: 'Monday – Friday', timings: '10:00 AM – 4:00 PM', shift1: '10:00 AM – 4:00 PM', shift2: '', status: 'Available', type: 'Regular OPD Consultation' },
+    { day: 'Saturday', timings: '10:00 AM – 2:00 PM', shift1: '10:00 AM – 2:00 PM', shift2: '', status: 'Available', type: 'Specialist & Review Clinic' },
+    { day: 'Sunday', timings: 'Not Available', shift1: '', shift2: '', status: 'Unavailable', type: '—' },
+  ]
 
-  // Filter out unavailable/off sessions
-  const available = sessions.filter((s) => {
-    if (!s || !s.timings) return false
-    const status = (s.status || '').toLowerCase()
-    const timings = s.timings.toLowerCase()
-    if (status === 'unavailable' || status === 'off') return false
-    if (timings.includes('not available') || timings.includes('off') || timings.trim() === '—') return false
-    return true
-  })
+  const activeSessions: ScheduleItem[] = sessions && sessions.length > 0 ? (sessions as ScheduleItem[]) : DEFAULT_SESSIONS
+  const result: Record<string, DayScheduleDetail> = {}
 
-  if (available.length === 0) {
-    return { days: 'On Call', timings: 'Emergency Care' }
-  }
+  for (const day of WEEK_DAYS) {
+    const cleanDay = day.full.toLowerCase()
 
-  // If only 1 session (e.g. Dr. Abid Raza: Monday 10:00 AM – 1:00 PM & 4:00 PM – 6:00 PM)
-  if (available.length === 1) {
-    return {
-      days: toShortDay(available[0].day),
-      timings: cleanTimings(available[0].timings),
-    }
-  }
+    // Find direct or range match in sessions
+    const matched = activeSessions.find((s) => {
+      if (!s || !s.day) return false
+      const sDay = s.day.toLowerCase().trim()
 
-  // Collect all days across available sessions
-  const allDaysRaw = available.map((s) => s.day.toLowerCase())
-  const hasMon = allDaysRaw.some((d) => d.includes('mon'))
-  const hasTue = allDaysRaw.some((d) => d.includes('tue'))
-  const hasWed = allDaysRaw.some((d) => d.includes('wed'))
-  const hasThu = allDaysRaw.some((d) => d.includes('thu'))
-  const hasFri = allDaysRaw.some((d) => d.includes('fri'))
-  const hasSat = allDaysRaw.some((d) => d.includes('sat'))
-  const hasSun = allDaysRaw.some((d) => d.includes('sun'))
-
-  let days = 'Mon – Sat'
-
-  // If doctor comes all 7 days
-  if (hasMon && hasTue && hasWed && hasThu && hasFri && hasSat && hasSun) {
-    days = 'Mon – Sun'
-  } else if (hasMon && hasSat && !hasSun) {
-    days = 'Mon – Sat'
-  } else if (hasMon && hasFri && !hasSat && !hasSun) {
-    days = 'Mon – Fri'
-  } else {
-    // Specific custom days (e.g. Mon, Wed, Fri)
-    const activeDayList: string[] = []
-    const DAY_CHECKS = [
-      { ok: hasMon, name: 'Mon' },
-      { ok: hasTue, name: 'Tue' },
-      { ok: hasWed, name: 'Wed' },
-      { ok: hasThu, name: 'Thu' },
-      { ok: hasFri, name: 'Fri' },
-      { ok: hasSat, name: 'Sat' },
-      { ok: hasSun, name: 'Sun' },
-    ]
-    DAY_CHECKS.forEach((d) => {
-      if (d.ok) activeDayList.push(d.name)
+      if (sDay === cleanDay) return true
+      if (sDay.includes('mon') && sDay.includes('fri') && ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].includes(cleanDay)) return true
+      if (sDay.includes('mon') && sDay.includes('sat') && ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].includes(cleanDay)) return true
+      if ((sDay.includes('mon') && sDay.includes('sun')) || sDay.includes('daily') || sDay.includes('all days')) return true
+      if (sDay.includes(cleanDay.slice(0, 3))) return true
+      return false
     })
 
-    if (activeDayList.length === 7) {
-      days = 'Mon – Sun'
-    } else if (activeDayList.length === 6 && !hasSun) {
-      days = 'Mon – Sat'
-    } else if (activeDayList.length === 5 && !hasSat && !hasSun) {
-      days = 'Mon – Fri'
-    } else if (activeDayList.length > 0 && activeDayList.length <= 3) {
-      days = activeDayList.join(', ')
-    } else if (activeDayList.length > 3) {
-      days = `${activeDayList[0]} – ${activeDayList[activeDayList.length - 1]}`
-    } else {
-      days = toShortDay(available[0].day)
+    if (!matched) {
+      result[day.full] = {
+        dayName: day.full,
+        isAvailable: false,
+        timings: 'Not Available',
+        type: 'Regular OPD Consultation',
+      }
+      continue
+    }
+
+    const status = (matched.status || '').toLowerCase()
+    const rawTimings = (matched.timings || '').toLowerCase()
+    const isUnavailable =
+      status === 'unavailable' ||
+      status === 'off' ||
+      status === 'on leave' ||
+      rawTimings.includes('not available') ||
+      rawTimings.includes('off') ||
+      rawTimings.trim() === '—' ||
+      rawTimings.trim() === '-' ||
+      rawTimings.trim() === ''
+
+    if (isUnavailable) {
+      result[day.full] = {
+        dayName: day.full,
+        isAvailable: false,
+        timings: 'Not Available',
+        type: matched.type || 'Regular OPD Consultation',
+      }
+      continue
+    }
+
+    let shift1 = matched.shift1 ? cleanTimings(matched.shift1) : ''
+    let shift2 = matched.shift2 ? cleanTimings(matched.shift2) : ''
+    let timings = matched.timings ? cleanTimings(matched.timings) : ''
+
+    // If shift1 is not explicitly set, split timings by '&' or ','
+    if (!shift1 && timings) {
+      const parts = timings.split(/[&,]/).map(cleanTimings).filter(Boolean)
+      shift1 = parts[0] || timings
+      if (parts.length > 1) {
+        shift2 = parts[1]
+      }
+    }
+
+    // Standardize combined timings
+    if (shift1 && shift2 && (!timings || timings === shift1)) {
+      timings = `${shift1} & ${shift2}`
+    } else if (!timings && shift1) {
+      timings = shift1
+    }
+
+    result[day.full] = {
+      dayName: day.full,
+      isAvailable: true,
+      shift1,
+      shift2,
+      timings: timings || '10:00 AM – 4:00 PM',
+      type: matched.type || 'Regular OPD Consultation',
     }
   }
 
-  // Primary timings (weekday or primary shift timings)
-  const primaryTimings = cleanTimings(available[0].timings)
-
-  return {
-    days: days || 'Mon – Sat',
-    timings: primaryTimings || '10:00 AM – 4:00 PM',
-  }
+  return result
 }
 
 export default function DoctorCard({ doctor: doc, variant = 'default' }: DoctorCardProps) {
@@ -147,23 +169,60 @@ export default function DoctorCard({ doctor: doc, variant = 'default' }: DoctorC
 
   // Hydrate full doctor data if customized in admin roster
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const cached = localStorage.getItem('clinicacure_admin_doctors')
-        if (cached) {
-          const list = JSON.parse(cached)
-          const match = list.find((d: any) => d.slug === doc.slug || d.id === (doc as any).id)
-          if (match) {
-            setCurrentDoc((prev: any) => ({ ...prev, ...match }))
-            return
+    const hydrateDoc = () => {
+      if (typeof window !== 'undefined') {
+        try {
+          const cached = localStorage.getItem('clinicacure_admin_doctors')
+          if (cached) {
+            const list = JSON.parse(cached)
+            const match = list.find((d: any) => d.slug === doc.slug || d.id === (doc as any).id)
+            if (match) {
+              setCurrentDoc((prev: any) => ({ ...prev, ...match }))
+              return
+            }
           }
-        }
-      } catch { }
+        } catch { }
+      }
+      setCurrentDoc(doc)
     }
-    setCurrentDoc(doc)
+
+    hydrateDoc()
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'clinicacure_admin_doctors') {
+        hydrateDoc()
+      }
+    }
+    window.addEventListener('storage', handleStorage)
+    window.addEventListener('clinicacure_doctors_updated', hydrateDoc)
+    return () => {
+      window.removeEventListener('storage', handleStorage)
+      window.removeEventListener('clinicacure_doctors_updated', hydrateDoc)
+    }
   }, [doc.slug, (doc as any).id])
 
-  const schedule = getScheduleSummary(currentDoc.schedule_sessions)
+  // Resolve daily schedules dynamically
+  const daySchedules = useMemo(
+    () => resolveDoctorDaySchedules(currentDoc.schedule_sessions),
+    [currentDoc.schedule_sessions]
+  )
+
+  const availableDaysCount = useMemo(
+    () => Object.values(daySchedules).filter((d) => d.isAvailable).length,
+    [daySchedules]
+  )
+
+  // No day selected by default
+  const [selectedDay, setSelectedDay] = useState<string | null>(null)
+
+  // If currently selected day becomes unavailable after edit, reset it
+  useEffect(() => {
+    if (selectedDay && !daySchedules[selectedDay]?.isAvailable) {
+      setSelectedDay(null)
+    }
+  }, [daySchedules, selectedDay])
+
+  const currentDaySchedule = selectedDay ? daySchedules[selectedDay] : null
 
   // Extract expertise titles dynamically (only title from admin expertise cards or specializations)
   const expertiseTitles: string[] =
@@ -222,9 +281,77 @@ export default function DoctorCard({ doctor: doc, variant = 'default' }: DoctorC
         </div>
       </div>
 
+      {/* OPD Schedule & Interactive Day Selector */}
+      <div className={`border-t border-[#DDEAE7]/70 ${isCore ? 'mt-3.5 pt-3' : 'mt-4 pt-3.5'}`}>
+        <p className="text-[10.5px] sm:text-[11px] font-display font-bold text-slate-700/80 uppercase tracking-wider mb-1.5">
+          OPD Timings
+        </p>
+
+        {availableDaysCount === 0 ? (
+          <div className="text-slate-500 py-0.5 text-xs font-semibold flex items-center gap-2">
+            <span>On Call • 24x7 Emergency Consultations</span>
+          </div>
+        ) : (
+          <>
+            {/* 7 Days Row - Tight clean gap without capsules */}
+            <div className="flex items-center gap-2 sm:gap-2.5 py-0.5">
+              {WEEK_DAYS.map((day) => {
+                const daySched = daySchedules[day.full]
+                const isAvail = daySched?.isAvailable
+                const isSelected = selectedDay === day.full
+
+                return (
+                  <button
+                    key={day.full}
+                    type="button"
+                    onClick={() => {
+                      if (!isAvail) return
+                      setSelectedDay((prev) => (prev === day.full ? null : day.full))
+                    }}
+                    disabled={!isAvail}
+                    title={`${day.full}: ${isAvail ? daySched.timings : 'Not Available (Off Day)'}`}
+                    className={`flex flex-col items-center justify-center min-w-[24px] py-1 transition-all select-none ${
+                      isAvail
+                        ? isSelected
+                          ? 'text-[#0E746D] font-bold cursor-pointer'
+                          : 'text-[#0E746D] font-semibold hover:text-[#0b5c57] cursor-pointer'
+                        : 'text-slate-300 font-normal cursor-not-allowed'
+                    }`}
+                  >
+                    <span className="text-xs sm:text-[13px] leading-tight">
+                      {day.label}
+                    </span>
+                    <span
+                      className={`w-3.5 h-0.5 rounded-full mt-0.5 transition-all ${
+                        isSelected ? 'bg-[#0E746D]' : 'bg-transparent'
+                      }`}
+                    />
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Dynamic Timings Display - Appears only when day is clicked */}
+            {selectedDay && currentDaySchedule?.isAvailable && (
+              <div className="mt-1.5 text-xs text-slate-700 flex flex-wrap items-center gap-1.5">
+                <span className="font-bold text-[#0E746D]">{selectedDay}:</span>
+                {currentDaySchedule.shift1 && currentDaySchedule.shift2 ? (
+                  <span className="font-mono text-slate-800 text-[11.5px]">
+                    {currentDaySchedule.shift1} & {currentDaySchedule.shift2}
+                  </span>
+                ) : (
+                  <span className="font-mono text-slate-800 text-[11.5px]">
+                    {currentDaySchedule.timings || currentDaySchedule.shift1 || '10:00 AM – 4:00 PM'}
+                  </span>
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
 
       {/* Qualifications */}
-      <div className={`border-t border-[#DDEAE7]/70 ${isCore ? 'mt-4 pt-3.5' : 'mt-5 pt-4'}`}>
+      <div className={`border-t border-[#DDEAE7]/70 ${isCore ? 'mt-3.5 pt-3' : 'mt-4 pt-3.5'}`}>
         <p className="text-[10.5px] sm:text-[11px] font-display font-bold text-slate-700/70 uppercase tracking-wider">
           Qualifications
         </p>
@@ -236,24 +363,6 @@ export default function DoctorCard({ doctor: doc, variant = 'default' }: DoctorC
             ? currentDoc.qualifications.join(', ')
             : currentDoc.qualifications}
         </p>
-      </div>
-
-
-      {/* OPD Schedule / Availability (Single compact row) */}
-      <div className={`border-t border-[#DDEAE7]/70 ${isCore ? 'mt-3.5 pt-3' : 'mt-4 pt-3.5'}`}>
-        <p className="text-[10.5px] sm:text-[11px] font-display font-bold text-slate-700/70 uppercase tracking-wider flex items-center gap-1.5">
-          <Clock className="w-3.5 h-3.5 text-[#0E746D]" />
-          <span>OPD Timings</span>
-        </p>
-        <div className="mt-2">
-          <span
-            className={`inline-flex items-center gap-1.5 bg-[#EEF9F7] text-slate-800 border border-[#26B09A]/20 rounded-lg max-w-full ${isCore ? 'text-[10.5px] px-2 py-0.5' : 'text-[11px] sm:text-[11.5px] px-2.5 py-1'
-              }`}
-          >
-            <span className="font-bold text-slate-900 shrink-0">{schedule.days}:</span>
-            <span className="font-mono text-[#0E746D] font-semibold truncate">{schedule.timings}</span>
-          </span>
-        </div>
       </div>
 
       {/* Areas of Expertise */}

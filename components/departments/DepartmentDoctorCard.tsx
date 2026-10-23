@@ -4,10 +4,10 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import type { SEED_DOCTORS } from '@/config/constants'
 
-export type DoctorType = (typeof SEED_DOCTORS)[number]
+export type DoctorType = (typeof SEED_DOCTORS)[number] | any
 
 interface Props {
-  doctor: DoctorType
+  doctor: any
 }
 
 export default function DepartmentDoctorCard({ doctor: doc }: Props) {

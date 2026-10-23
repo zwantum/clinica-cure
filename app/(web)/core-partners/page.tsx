@@ -19,8 +19,7 @@ import {
   Stethoscope,
 } from 'lucide-react'
 import { siteConfig } from '@/config/site'
-import { SEED_DOCTORS, CORE_PARTNER_SLUGS } from '@/config/constants'
-import DoctorCard from '@/components/doctors/DoctorCard'
+import CorePartnersShowcase from '@/components/core-partners/CorePartnersShowcase'
 
 export const metadata: Metadata = {
   title: 'Our Core Partners | Clinica Cure Hospital Ranchi',
@@ -73,10 +72,6 @@ const CORE_SERVICES = [
 ]
 
 export default function CorePartnersPage() {
-  // Retrieve the 4 core partner doctors in exact order
-  const coreDoctors = CORE_PARTNER_SLUGS.map((slug) =>
-    SEED_DOCTORS.find((doc) => doc.slug === slug)
-  ).filter(Boolean) as (typeof SEED_DOCTORS)[number][]
 
   return (
     <div className="bg-[#F8FAF9] min-h-screen">
@@ -129,7 +124,7 @@ export default function CorePartnersPage() {
               </div>
               <div className="flex items-center gap-2 text-[14px] sm:text-sm text-slate-700 font-medium">
                 <Award className="w-4 h-4 text-[#0E746D]" />
-                <span>Gold Medalist Surgeons</span>
+                <span>Experienced Specialists</span>
               </div>
               <div className="flex items-center gap-2 text-[14px] sm:text-sm text-slate-700 font-medium">
                 <Clock className="w-4 h-4 text-[#0E746D]" />
@@ -140,8 +135,8 @@ export default function CorePartnersPage() {
         </div>
       </section>
 
-      {/* ── 2. DOCTOR PROFILES SECTION: A TEAM OF DEDICATED SPECIALISTS ── */}
-      <section className="py-12 sm:py-7 md:py-8 lg:py-20">
+      {/* ── 2. CORE PARTNERS SECTION ── */}
+      <section className="py-12 sm:py-14 md:py-16 lg:py-20 bg-white border-b border-[#DDEAE7]">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           {/* Section Header */}
           <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
@@ -152,16 +147,12 @@ export default function CorePartnersPage() {
               A Team of Dedicated Specialists
             </h2>
             <p className="mt-3 text-[14px] sm:text-sm md:text-base text-slate-600 leading-relaxed">
-              Our core partners bring diverse expertise, working together to deliver comprehensive and high-quality care for every patient.
+              Our core partners bring diverse clinical expertise, working together to deliver comprehensive and high-quality care for every patient.
             </p>
           </div>
 
-          {/* 4 Doctor Cards Grid — Core Partners Card Layout */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-4.5">
-            {coreDoctors.map((doc) => (
-              <DoctorCard key={doc.slug} doctor={doc} variant="core-partner" />
-            ))}
-          </div>
+          {/* Clean Core Partners Showcase */}
+          <CorePartnersShowcase />
         </div>
       </section>
 

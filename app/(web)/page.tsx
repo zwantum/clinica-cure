@@ -11,6 +11,8 @@ import BlogUpdatesSection from '@/components/home/BlogUpdatesSection'
 import FaqSection from '@/components/home/FaqSection'
 import ContactSection from '@/components/home/ContactSection'
 
+export const revalidate = 0
+
 export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">

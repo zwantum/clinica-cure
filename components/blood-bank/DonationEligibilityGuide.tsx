@@ -9,7 +9,6 @@ import {
   Droplet,
   ChevronDown,
   AlertCircle,
-  Sparkles,
   Coffee,
   Activity,
   Calendar,

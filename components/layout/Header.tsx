@@ -19,11 +19,17 @@ import DepartmentMegaMenu from './DepartmentMegaMenu'
 import SearchModal from './SearchModal'
 
 export default function Header() {
+  const [mounted, setMounted] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [megaMenuOpen, setMegaMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const megaMenuRef = useRef<HTMLDivElement>(null)
+
+  // Mark as mounted after hydration to avoid SSR/client class mismatches
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10)
@@ -31,12 +37,15 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Keyboard shortcut Ctrl+K / Cmd+K to open search
+  // Keyboard shortcut Ctrl+K / Cmd+K to open search, Escape to close overlays
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
         setSearchOpen((prev) => !prev)
+      } else if (e.key === 'Escape') {
+        setMegaMenuOpen(false)
+        setSearchOpen(false)
       }
     }
     window.addEventListener('keydown', handleKeyDown)
@@ -58,7 +67,7 @@ export default function Header() {
     <>
       <header
         id="site-header"
-        className={`sticky top-0 z-50 bg-white border-b border-slate-200/80 transition-shadow ${scrolled ? 'shadow-[0_2px_12px_rgba(0,0,0,0.08)]' : 'shadow-[0_2px_12px_rgba(0,0,0,0.04)]'
+        className={`sticky top-0 z-50 bg-white border-b border-slate-200/80 transition-shadow ${mounted && scrolled ? 'shadow-[0_2px_12px_rgba(0,0,0,0.08)]' : 'shadow-[0_2px_12px_rgba(0,0,0,0.04)]'
           }`}
       >
         {/* ── Top Bar: Brand + Utility Actions ── */}
@@ -173,8 +182,8 @@ export default function Header() {
             {/* Mobile toggle */}
             <button
               id="mobile-menu-btn"
-              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={mobileOpen}
+              aria-label={mounted && mobileOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mounted ? mobileOpen : false}
               onClick={() => setMobileOpen(true)}
               className="xl:hidden p-1.5 sm:p-2 rounded-xl text-slate-700 hover:bg-slate-100 focus:outline-none shrink-0 transition-colors"
             >
@@ -184,63 +193,105 @@ export default function Header() {
         </div>
 
         {/* ── Bottom Nav Row: Desktop (xl+) ── */}
-        <div className="hidden xl:block border-t border-slate-100 bg-white relative w-full">
+        <div
+          ref={megaMenuRef}
+          className="hidden xl:block border-t border-slate-100 bg-white relative w-full"
+        >
           <div className="max-w-[1400px] mx-auto px-6 lg:px-8 flex items-center justify-center py-3.5">
             <nav
               className="flex items-center justify-center gap-4 xl:gap-6 2xl:gap-8 text-[14px] xl:text-[14.5px] font-normal text-slate-700 whitespace-nowrap"
               aria-label="Main navigation"
             >
-              <Link href="/" className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors">
+              <Link
+                href="/"
+                onMouseEnter={() => setMegaMenuOpen(false)}
+                className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors"
+              >
                 Home
               </Link>
-              <Link href="/about" className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors">
+              <Link
+                href="/about"
+                onMouseEnter={() => setMegaMenuOpen(false)}
+                className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors"
+              >
                 About Us
               </Link>
-              <Link href="/doctors" className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors">
+              <Link
+                href="/doctors"
+                onMouseEnter={() => setMegaMenuOpen(false)}
+                className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors"
+              >
                 Doctors
               </Link>
 
-              {/* Departments Mega Menu */}
-              <div ref={megaMenuRef} className="relative shrink-0 whitespace-normal">
+              {/* Departments Mega Menu Trigger */}
+              <div className="shrink-0 whitespace-normal">
                 <button
                   onClick={() => setMegaMenuOpen((v) => !v)}
                   onMouseEnter={() => setMegaMenuOpen(true)}
-                  className="px-1.5 py-1 hover:text-[#0E6B60] flex items-center gap-1.5 font-medium transition-colors cursor-pointer"
-                  aria-expanded={megaMenuOpen}
+                  className={`px-1.5 py-1 flex items-center gap-1.5 font-medium transition-colors cursor-pointer ${
+                    mounted && megaMenuOpen ? 'text-[#0E6B60]' : 'hover:text-[#0E6B60]'
+                  }`}
+                  aria-expanded={mounted ? megaMenuOpen : false}
                   aria-haspopup="true"
                 >
                   <span>Departments</span>
-                  <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${megaMenuOpen ? 'rotate-180' : ''}`} />
-                </button>
-
-                {megaMenuOpen && (
-                  <DepartmentMegaMenu
-                    departments={departments}
-                    onClose={() => setMegaMenuOpen(false)}
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
+                      mounted && megaMenuOpen ? 'rotate-180 text-[#0E6B60]' : ''
+                    }`}
                   />
-                )}
+                </button>
               </div>
 
-              <Link href="/patient-stories" className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors">
+              <Link
+                href="/patient-stories"
+                onMouseEnter={() => setMegaMenuOpen(false)}
+                className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors"
+              >
                 Patient Stories
               </Link>
-              <Link href="/core-partners" className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors">
+              <Link
+                href="/core-partners"
+                onMouseEnter={() => setMegaMenuOpen(false)}
+                className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors"
+              >
                 Core Partners
               </Link>
 
-              <Link href="/blood-bank" className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors">
+              <Link
+                href="/blood-bank"
+                onMouseEnter={() => setMegaMenuOpen(false)}
+                className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors"
+              >
                 Blood Bank &amp; Donation
               </Link>
 
-              <Link href="/blog" className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors">
+              <Link
+                href="/blog"
+                onMouseEnter={() => setMegaMenuOpen(false)}
+                className="px-1.5 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors"
+              >
                 Blog
               </Link>
 
-              <Link href="/contact" className="px-2 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors">
+              <Link
+                href="/contact"
+                onMouseEnter={() => setMegaMenuOpen(false)}
+                className="px-2 py-1 hover:text-[#0E6B60] shrink-0 font-medium transition-colors"
+              >
                 Contact Us
               </Link>
             </nav>
           </div>
+
+          {/* Centered Mega Menu Overlay */}
+          {mounted && megaMenuOpen && (
+            <DepartmentMegaMenu
+              departments={departments}
+              onClose={() => setMegaMenuOpen(false)}
+            />
+          )}
         </div>
       </header>
 

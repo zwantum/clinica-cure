@@ -1,4 +1,5 @@
 import { PermissionMatrix } from '../types'
+import { safeSetItem, safeGetItem } from '../lib/safeStorage'
 
 export interface TeamMember {
   id: string
@@ -76,15 +77,17 @@ const INITIAL_CONFIG: BookingConfig = {
   maxAdvanceDays: 30,
   defaultSlotMinutes: 20,
   bookingCutoffHours: 1,
-  emergencyHotline: '+91 651 228 0000',
+  emergencyHotline: '+91 92633 97076',
   allowWalkIn: true,
 }
 
 const INITIAL_NOTIFICATIONS: NotificationChannel[] = [
-  { channel: 'Email', eventType: 'New OPD Booking Token', isEnabled: true, recipients: ['admin@clinicacure.in', 'reception@clinicacure.in'] },
-  { channel: 'SMS', eventType: 'Patient Token Confirmation', isEnabled: true, recipients: ['+91 94311 00000'] },
+  { channel: 'Email', eventType: 'New OPD Booking Token', isEnabled: true, recipients: ['admin@clinicacure.in', 'care@clinicacure.in'] },
+  { channel: 'Email', eventType: 'New Website Patient Enquiry', isEnabled: true, recipients: ['admin@clinicacure.in', 'care@clinicacure.in'] },
+  { channel: 'Email', eventType: 'Urgent Blood Requisition Alert', isEnabled: true, recipients: ['admin@clinicacure.in', 'bloodbank@clinicacure.in'] },
+  { channel: 'Email', eventType: 'Voluntary Blood Donor Registration', isEnabled: true, recipients: ['admin@clinicacure.in', 'bloodbank@clinicacure.in'] },
   { channel: 'Email', eventType: 'Critical Blood Stock Alert (<3 units)', isEnabled: true, recipients: ['bloodbank@clinicacure.in'] },
-  { channel: 'Email', eventType: 'New Website Patient Enquiry', isEnabled: true, recipients: ['support@clinicacure.in'] },
+  { channel: 'SMS', eventType: 'Patient Token Confirmation', isEnabled: true, recipients: ['+91 92633 97076'] },
 ]
 
 let membersStore: TeamMember[] = [...INITIAL_MEMBERS]
@@ -92,13 +95,11 @@ let configStore = { ...INITIAL_CONFIG }
 let notificationsStore = [...INITIAL_NOTIFICATIONS]
 
 export async function fetchTeamMembers(): Promise<TeamMember[]> {
-  if (typeof window !== 'undefined') {
-    const cached = localStorage.getItem('clinicacure_admin_team_members')
-    if (cached) {
-      try {
-        membersStore = JSON.parse(cached)
-      } catch {}
-    }
+  const cached = safeGetItem('clinicacure_admin_team_members')
+  if (cached) {
+    try {
+      membersStore = JSON.parse(cached)
+    } catch {}
   }
   return membersStore
 }
@@ -112,9 +113,7 @@ export async function createTeamMember(
     lastActive: 'Just registered',
   }
   membersStore = [...membersStore, newMember]
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_team_members', JSON.stringify(membersStore))
-  }
+  safeSetItem('clinicacure_admin_team_members', JSON.stringify(membersStore))
   return newMember
 }
 
@@ -130,17 +129,13 @@ export async function updateTeamMember(
     }
     return m
   })
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_team_members', JSON.stringify(membersStore))
-  }
+  safeSetItem('clinicacure_admin_team_members', JSON.stringify(membersStore))
   return updatedMember
 }
 
 export async function deleteTeamMember(id: string): Promise<boolean> {
   membersStore = membersStore.filter((m) => m.id !== id)
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_team_members', JSON.stringify(membersStore))
-  }
+  safeSetItem('clinicacure_admin_team_members', JSON.stringify(membersStore))
   return true
 }
 
@@ -148,9 +143,7 @@ export async function toggleMemberActive(id: string): Promise<boolean> {
   membersStore = membersStore.map((m) =>
     m.id === id ? { ...m, isActive: !m.isActive } : m
   )
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_team_members', JSON.stringify(membersStore))
-  }
+  safeSetItem('clinicacure_admin_team_members', JSON.stringify(membersStore))
   return true
 }
 

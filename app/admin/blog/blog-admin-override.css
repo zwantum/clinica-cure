@@ -1,0 +1,29 @@
+/* ==========================================================================
+   Clinica Cure Hospital Admin: Embedded Blog Module Overrides
+   Ensures the blog module integrates seamlessly into the main hospital admin layout.
+   ========================================================================== */
+
+.clinicacure-integrated-blog {
+  width: 100%;
+  min-height: 550px;
+}
+
+/* 1. Hide any duplicate inner sidebar or footer if rendered by any legacy wrapper */
+.clinicacure-integrated-blog > aside,
+.zw-blog-admin-root > aside,
+.clinicacure-integrated-blog footer,
+.zw-blog-admin-root footer {
+  display: none !important;
+}
+
+/* 2. Make inner content container take full width without nested scroll bars */
+.clinicacure-integrated-blog .zw-admin-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* 3. Ensure tables, buttons and form controls inside blog module align with admin UI */
+.clinicacure-integrated-blog table {
+  width: 100%;
+}

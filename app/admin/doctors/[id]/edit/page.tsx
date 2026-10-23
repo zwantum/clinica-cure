@@ -430,8 +430,17 @@ export default function EditDoctorPage() {
       .map((q) => q.trim())
       .filter(Boolean)
 
+    const deptSlug = doctor.department_slug || 'general-medicine'
+    const matchedDept = departments.find((d) => d.slug === deptSlug)
+    const allDepts = Array.from(
+      new Set([deptSlug, ...(matchedDept?.aliases || []), ...(doctor.departments || [])])
+    )
+
     const payload: DoctorRecord = {
       ...doctor,
+      department_slug: deptSlug,
+      department_name: doctor.department_name || matchedDept?.name || 'General Medicine',
+      departments: allDepts,
       qualifications: parsedQualifications.length > 0 ? parsedQualifications : doctor.qualifications,
     }
 

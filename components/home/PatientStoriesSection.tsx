@@ -12,6 +12,8 @@ import {
   Activity,
   Award,
 } from 'lucide-react'
+import { fetchGoogleReviews } from '@/app/admin/services/reviews'
+import { extractYouTubeId, getYouTubeThumbnail, getYouTubeEmbedUrl } from '@/lib/youtube'
 
 interface Testimonial {
   id: string
@@ -21,53 +23,70 @@ interface Testimonial {
   duration: string
   image: string
   videoUrl: string
+  department?: string
+  description?: string
 }
 
-const TESTIMONIALS: Testimonial[] = [
+const INITIAL_PATIENT_STORIES: Testimonial[] = [
   {
-    id: 'rajesh',
-    name: 'Mr. Rajesh Kumar',
-    condition: 'Knee Replacement Surgery',
-    badge: 'Recovered in 6 Weeks',
-    duration: '1:12',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=250&q=80',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-senior-man-resting-his-chin-on-his-hands-40118-large.mp4',
+    id: 'story-01',
+    name: 'Dr. Tarique Jameel Hasan',
+    condition: 'Brain & Spine Problems Solutions',
+    badge: 'Advanced Neurosurgery',
+    duration: 'Watch',
+    image: 'https://img.youtube.com/vi/NhdTWMe1sbk/hqdefault.jpg',
+    videoUrl: 'https://youtu.be/NhdTWMe1sbk',
+    department: 'Neurosurgery',
   },
   {
-    id: 'amit',
-    name: 'Mr. Amit Sharma',
-    condition: 'Spine Rehabilitation',
-    badge: 'Fully Restored in 8 Weeks',
-    duration: '0:58',
-    image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=400&h=250&q=80',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-man-walking-and-smiling-in-the-city-40763-large.mp4',
+    id: 'story-02',
+    name: 'Dr. Syed Altamash',
+    condition: 'Inside Modular OT Complex',
+    badge: 'Zero Infection Rate',
+    duration: 'Watch',
+    image: 'https://img.youtube.com/vi/l1g9AWc7OUk/hqdefault.jpg',
+    videoUrl: 'https://youtu.be/l1g9AWc7OUk',
+    department: 'Advanced Surgery',
   },
   {
-    id: 'savitri',
-    name: 'Mrs. Savitri Devi',
-    condition: 'Cardiology Care',
-    badge: 'Successful Angioplasty',
-    duration: '1:05',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=250&q=80',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-senior-man-resting-his-chin-on-his-hands-40118-large.mp4',
+    id: 'story-03',
+    name: 'Clinica Cure Care Team',
+    condition: '4 Years of Healthcare Trust',
+    badge: '10,000+ Recoveries',
+    duration: 'Watch',
+    image: 'https://img.youtube.com/vi/Sj2wIDZ4ecA/hqdefault.jpg',
+    videoUrl: 'https://youtu.be/Sj2wIDZ4ecA',
+    department: 'Hospital Highlights',
   },
   {
-    id: 'priya',
-    name: 'Mrs. Priya Singh',
-    condition: 'High-Risk Pregnancy Care',
-    badge: 'Safe Delivery of Baby Girl',
-    duration: '0:48',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&h=250&q=80',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-young-mother-holding-her-sleeping-baby-41662-large.mp4',
+    id: 'story-04',
+    name: 'Dr. Aftab Alam',
+    condition: 'Clinical Excellence & Care',
+    badge: 'Patient-First Care',
+    duration: 'Watch',
+    image: 'https://img.youtube.com/vi/cRH_947GqeU/hqdefault.jpg',
+    videoUrl: 'https://youtu.be/cRH_947GqeU',
+    department: 'Critical Care',
   },
   {
-    id: 'aarohi',
-    name: 'Baby Aarohi & Mother',
-    condition: 'Paediatric Recovery',
-    badge: 'Cared for in 5 Days',
-    duration: '0:59',
-    image: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=400&h=250&q=80',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-young-mother-holding-her-sleeping-baby-41662-large.mp4',
+    id: 'story-05',
+    name: 'Emergency & Critical Care Team',
+    condition: '24x7 Emergency & ICU Care',
+    badge: 'Rapid Trauma Care',
+    duration: 'Watch',
+    image: 'https://img.youtube.com/vi/V4Ew8qV7Mvk/hqdefault.jpg',
+    videoUrl: 'https://youtu.be/V4Ew8qV7Mvk',
+    department: 'Emergency & Trauma',
+  },
+  {
+    id: 'story-06',
+    name: 'Dr. Aftab Alam & Clinical Team',
+    condition: 'Comprehensive Consultation & Care',
+    badge: 'Compassionate Care',
+    duration: 'Watch',
+    image: 'https://img.youtube.com/vi/JggjqS2Z40c/hqdefault.jpg',
+    videoUrl: 'https://youtu.be/JggjqS2Z40c',
+    department: 'General Care',
   },
 ]
 
@@ -284,21 +303,119 @@ export default function PatientStoriesSection({
   showHeading = true,
   showHospitalSection = false,
 }: PatientStoriesSectionProps = {}) {
-  const [activeStory, setActiveStory] = useState<Testimonial>(TESTIMONIALS[0])
+  const [stories, setStories] = useState<Testimonial[]>(INITIAL_PATIENT_STORIES)
+  const [activeStory, setActiveStory] = useState<Testimonial>(INITIAL_PATIENT_STORIES[0])
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
+  const [googleReviews, setGoogleReviews] = useState<GoogleReviewItem[]>(GOOGLE_REVIEWS_MASONRY)
   const videoRef = useRef<HTMLVideoElement>(null)
+
+  // 1. Fetch dynamic stories from database
+  useEffect(() => {
+    let isMounted = true
+    const loadDynamicStories = async () => {
+      try {
+        const res = await fetch('/api/patient-stories', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          if (isMounted && Array.isArray(data?.stories) && data.stories.length > 0) {
+            const mapped: Testimonial[] = data.stories
+              .filter((s: any) => s.is_active !== false)
+              .map((s: any, idx: number) => {
+                const ytId = extractYouTubeId(s.video_url)
+                return {
+                  id: s.id || `story-${idx}`,
+                  name: s.patient_name,
+                  condition: s.condition,
+                  badge: s.outcome || 'Recovered',
+                  duration: 'Watch',
+                  image: s.thumbnail || (ytId ? getYouTubeThumbnail(ytId) : '/images/patient-stories-hero-clean.webp'),
+                  videoUrl: s.video_url,
+                  department: s.department,
+                  description: s.description,
+                }
+              })
+            if (mapped.length > 0) {
+              setStories(mapped)
+              setActiveStory((prev) => mapped.find((m) => m.id === prev.id) || mapped[0])
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Could not load dynamic patient stories:', err)
+      }
+    }
+
+    loadDynamicStories()
+
+    const onStoriesUpdate = () => {
+      loadDynamicStories()
+    }
+    window.addEventListener('clinicacure_stories_updated', onStoriesUpdate)
+    window.addEventListener('storage', onStoriesUpdate)
+
+    return () => {
+      isMounted = false
+      window.removeEventListener('clinicacure_stories_updated', onStoriesUpdate)
+      window.removeEventListener('storage', onStoriesUpdate)
+    }
+  }, [])
+
+  // 2. Fetch dynamic reviews
+  useEffect(() => {
+    let isMounted = true
+    const loadDynamicReviews = async () => {
+      try {
+        const data = await fetchGoogleReviews()
+        if (isMounted && Array.isArray(data) && data.length > 0) {
+          const mapped: GoogleReviewItem[] = data.map((item) => ({
+            name: item.name,
+            time: item.time,
+            initials: item.initials || item.name.slice(0, 2).toUpperCase(),
+            avatarBg: item.avatarBg || 'bg-[#2563EB]',
+            rating: item.rating || 5,
+            text: item.text,
+            hasReadMore: item.hasReadMore,
+          }))
+          setGoogleReviews(mapped)
+        }
+      } catch (err) {
+        console.warn('Could not load dynamic Google reviews:', err)
+      }
+    }
+
+    loadDynamicReviews()
+
+    const onUpdate = () => {
+      loadDynamicReviews()
+    }
+
+    window.addEventListener('clinicacure_reviews_updated', onUpdate)
+    window.addEventListener('storage', onUpdate)
+    window.addEventListener('focus', onUpdate)
+
+    return () => {
+      isMounted = false
+      window.removeEventListener('clinicacure_reviews_updated', onUpdate)
+      window.removeEventListener('storage', onUpdate)
+      window.removeEventListener('focus', onUpdate)
+    }
+  }, [])
 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.currentTime = 0
-      setIsPlaying(false)
     }
+    setIsPlaying(false)
   }, [activeStory])
 
   const togglePlay = () => {
+    if (isYouTube) {
+      setIsPlaying((prev) => !prev)
+      return
+    }
     if (!videoRef.current) return
     if (videoRef.current.paused) {
       videoRef.current.play()
@@ -349,14 +466,19 @@ export default function PatientStoriesSection({
     return `${mins}:${rem < 10 ? '0' : ''}${rem}`
   }
 
+  const isYouTube = Boolean(extractYouTubeId(activeStory.videoUrl))
+  const youtubeId = extractYouTubeId(activeStory.videoUrl)
+
   const handleSelectStory = (item: Testimonial) => {
     setActiveStory(item)
-    setTimeout(() => {
-      if (videoRef.current) {
-        videoRef.current.play()
-        setIsPlaying(true)
-      }
-    }, 150)
+    setIsPlaying(true)
+    if (!extractYouTubeId(item.videoUrl)) {
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.play()
+        }
+      }, 150)
+    }
   }
 
   return (
@@ -381,89 +503,131 @@ export default function PatientStoriesSection({
           {/* Left Column: The Custom Video Player & Mobile Playlist */}
           <div className="flex flex-col gap-3 w-full">
             <div className="relative w-full aspect-video rounded-2xl sm:rounded-3xl overflow-hidden bg-black shadow-md border border-[#E2ECE9] flex items-center justify-center group">
-            <video
-              ref={videoRef}
-              src={activeStory.videoUrl}
-              poster={activeStory.image}
-              onTimeUpdate={handleTimeUpdate}
-              onLoadedMetadata={handleLoadedMetadata}
-              className="w-full h-full object-cover"
-              onClick={togglePlay}
-            />
+              {isYouTube ? (
+                <div className="w-full h-full relative">
+                  {isPlaying && youtubeId ? (
+                    <iframe
+                      src={getYouTubeEmbedUrl(activeStory.videoUrl, true)}
+                      title={activeStory.name}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      className="w-full h-full border-0 absolute inset-0 z-20"
+                    />
+                  ) : (
+                    <>
+                      <img
+                        src={activeStory.image}
+                        alt={activeStory.name}
+                        className="w-full h-full object-cover"
+                      />
 
-            {/* Big Circular Play Button (Centered overlay) */}
-            {!isPlaying && (
-              <button
-                type="button"
-                onClick={togglePlay}
-                aria-label="Play testimonial video"
-                className="absolute w-14 h-14 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full bg-white/95 text-[#00A88F] flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 z-20 cursor-pointer focus:outline-none"
-              >
-                <Play className="w-6 h-6 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-9 lg:h-9 translate-x-0.5 fill-current" />
-              </button>
-            )}
+                      {/* Big Circular Play Button (Centered overlay) */}
+                      <button
+                        type="button"
+                        onClick={() => setIsPlaying(true)}
+                        aria-label="Play patient story video"
+                        className="absolute inset-0 m-auto w-14 h-14 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full bg-white/95 text-[#00A88F] flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 z-20 cursor-pointer focus:outline-none"
+                      >
+                        <Play className="w-6 h-6 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-9 lg:h-9 translate-x-0.5 fill-current" />
+                      </button>
 
-            {/* Custom Controls Overlay Panel (At the bottom) */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/55 to-transparent p-3 sm:p-3.5 md:p-4 flex flex-col gap-2 z-10 transition-opacity duration-300 group-hover:opacity-100 opacity-90">
-              {/* Progress Slider */}
-              <input
-                type="range"
-                min={0}
-                max={duration || 100}
-                value={currentTime}
-                onChange={handleSeek}
-                className="w-full h-1 bg-white/30 rounded-lg appearance-none cursor-pointer accent-[#00A88F]"
-              />
-
-              <div className="flex items-center justify-between text-white">
-                <div className="flex items-center gap-2.5 sm:gap-3">
-                  {/* Play/Pause Toggle Button */}
-                  <button
-                    type="button"
+                      {/* Bottom Info Overlay */}
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3.5 sm:p-5 text-white z-10 flex items-end justify-between pointer-events-none">
+                        <div>
+                          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#00A88F] bg-white/90 px-2.5 py-0.5 rounded-full">
+                            {activeStory.badge}
+                          </span>
+                          <h4 className="text-base sm:text-lg font-bold mt-1.5 text-white drop-shadow-sm">
+                            {activeStory.name}
+                          </h4>
+                          <p className="text-xs sm:text-sm text-white/90 line-clamp-1">{activeStory.condition}</p>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <video
+                    ref={videoRef}
+                    src={activeStory.videoUrl}
+                    poster={activeStory.image}
+                    onTimeUpdate={handleTimeUpdate}
+                    onLoadedMetadata={handleLoadedMetadata}
+                    className="w-full h-full object-cover"
                     onClick={togglePlay}
-                    className="text-white hover:text-[#00A88F] transition-colors focus:outline-none cursor-pointer"
-                  >
-                    {isPlaying ? (
-                      <Pause className="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-current" />
-                    ) : (
-                      <Play className="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-current" />
-                    )}
-                  </button>
+                  />
 
-                  {/* Time Display */}
-                  <span className="text-[11px] sm:text-[11px] md:text-xs text-white/95 font-display font-medium">
-                    {formatTime(currentTime)} / {formatTime(duration)}
-                  </span>
-                </div>
+                  {/* Big Circular Play Button (Centered overlay) */}
+                  {!isPlaying && (
+                    <button
+                      type="button"
+                      onClick={togglePlay}
+                      aria-label="Play testimonial video"
+                      className="absolute w-14 h-14 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full bg-white/95 text-[#00A88F] flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 z-20 cursor-pointer focus:outline-none"
+                    >
+                      <Play className="w-6 h-6 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-9 lg:h-9 translate-x-0.5 fill-current" />
+                    </button>
+                  )}
 
-                <div className="flex items-center gap-2.5 sm:gap-3 text-white">
-                  {/* Mute/Volume Button */}
-                  <button
-                    type="button"
-                    onClick={toggleMute}
-                    aria-label="Toggle mute"
-                    className="hover:text-[#00A88F] transition-colors focus:outline-none cursor-pointer"
-                  >
-                    {isMuted ? (
-                      <VolumeX className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
-                    ) : (
-                      <Volume2 className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
-                    )}
-                  </button>
+                  {/* Custom Controls Overlay Panel (At the bottom) */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/55 to-transparent p-3 sm:p-3.5 md:p-4 flex flex-col gap-2 z-10 transition-opacity duration-300 group-hover:opacity-100 opacity-90">
+                    <input
+                      type="range"
+                      min={0}
+                      max={duration || 100}
+                      value={currentTime}
+                      onChange={handleSeek}
+                      className="w-full h-1 bg-white/30 rounded-lg appearance-none cursor-pointer accent-[#00A88F]"
+                    />
 
-                  {/* Fullscreen Button */}
-                  <button
-                    type="button"
-                    onClick={toggleFullscreen}
-                    aria-label="Fullscreen"
-                    className="hover:text-[#00A88F] transition-colors focus:outline-none cursor-pointer"
-                  >
-                    <Maximize className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
-                  </button>
-                </div>
-              </div>
+                    <div className="flex items-center justify-between text-white">
+                      <div className="flex items-center gap-2.5 sm:gap-3">
+                        <button
+                          type="button"
+                          onClick={togglePlay}
+                          className="text-white hover:text-[#00A88F] transition-colors focus:outline-none cursor-pointer"
+                        >
+                          {isPlaying ? (
+                            <Pause className="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-current" />
+                          ) : (
+                            <Play className="w-4.5 h-4.5 sm:w-5 sm:h-5 fill-current" />
+                          )}
+                        </button>
+
+                        <span className="text-[11px] sm:text-[11px] md:text-xs text-white/95 font-display font-medium">
+                          {formatTime(currentTime)} / {formatTime(duration)}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2.5 sm:gap-3 text-white">
+                        <button
+                          type="button"
+                          onClick={toggleMute}
+                          aria-label="Toggle mute"
+                          className="hover:text-[#00A88F] transition-colors focus:outline-none cursor-pointer"
+                        >
+                          {isMuted ? (
+                            <VolumeX className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+                          ) : (
+                            <Volume2 className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+                          )}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={toggleFullscreen}
+                          aria-label="Fullscreen"
+                          className="hover:text-[#00A88F] transition-colors focus:outline-none cursor-pointer"
+                        >
+                          <Maximize className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
-          </div>
 
             {/* Mobile-Only Playlist: Compact Horizontal Thumbnails Only (< sm) */}
             <div className="sm:hidden w-full mt-3">
@@ -471,7 +635,7 @@ export default function PatientStoriesSection({
                 <span className="text-[14px] sm:text-xs font-bold text-slate-800">Other Patient Stories</span>
               </div>
               <div className="flex items-center gap-2.5 overflow-x-auto px-1.5 py-1 pb-2 scrollbar-none snap-x">
-                {TESTIMONIALS.map((t) => {
+                {stories.map((t) => {
                   const isActive = t.id === activeStory.id
                   return (
                     <button
@@ -519,7 +683,7 @@ export default function PatientStoriesSection({
 
             {/* Playlist Items Container */}
             <div className="flex flex-col gap-2.5 sm:gap-3 md:gap-3.5 z-10 w-full max-h-[280px] sm:max-h-[280px] md:max-h-[320px] lg:max-h-[360px] xl:max-h-[400px] overflow-y-auto pr-1.5 py-1">
-              {TESTIMONIALS.map((t) => {
+              {stories.map((t) => {
                 const isActive = t.id === activeStory.id
                 return (
                   <div key={t.id} className="flex items-center gap-2.5 sm:gap-2.5 md:gap-3.5 w-full">
@@ -725,7 +889,7 @@ export default function PatientStoriesSection({
                     {'★'.repeat(5)}
                   </div>
                   <span className="text-xs sm:text-sm font-bold text-[#1E293B]">4.8 / 5.0</span>
-                  <span className="text-[13px] sm:text-sm text-[#64748B]">• Based on 874+ reviews on Google</span>
+                  <span className="text-[13px] sm:text-sm text-[#64748B]">• Based on {874 + Math.max(0, googleReviews.length - 22)}+ reviews on Google</span>
                 </div>
               </div>
             </div>
@@ -733,7 +897,7 @@ export default function PatientStoriesSection({
 
           {/* Masonry Columns Grid (Compact gap) */}
           <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-3.5 sm:gap-4 [column-fill:_balance]">
-            {GOOGLE_REVIEWS_MASONRY.map((r, idx) => (
+            {googleReviews.map((r, idx) => (
               <div
                 key={idx}
                 className="break-inside-avoid mb-3.5 sm:mb-4 bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-[#E2ECE9] shadow-[0_3px_14px_-3px_rgba(18,48,44,0.05)] hover:shadow-md transition-all duration-200"
@@ -742,9 +906,9 @@ export default function PatientStoriesSection({
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                     <div
-                      className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full ${r.avatarBg} text-white font-display font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 shadow-xs`}
+                      className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full ${r.avatarBg || 'bg-[#2563EB]'} text-white font-display font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 shadow-xs`}
                     >
-                      <span>{r.initials}</span>
+                      <span>{r.initials || r.name.slice(0, 2).toUpperCase()}</span>
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1">
@@ -768,7 +932,7 @@ export default function PatientStoriesSection({
                 </div>
 
                 <div className="flex items-center gap-0.5 text-amber-400 text-xs my-2.5">
-                  {'★'.repeat(r.rating)}
+                  {'★'.repeat(r.rating || 5)}
                 </div>
 
                 <p className="text-[14px] sm:text-[13px] text-[#475569] leading-relaxed">{r.text}</p>

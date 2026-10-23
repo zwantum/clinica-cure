@@ -4,8 +4,8 @@ export const siteConfig = {
   tagline: 'Passion For Cure',
   phone: '+91 92633 97076',
   phoneRaw: '+919263397076',
-  phoneSecondary: '+91 91031 61328',
-  phoneSecondaryRaw: '+919103161328',
+  phoneSecondary: '+91 92633 97076',
+  phoneSecondaryRaw: '+919263397076',
   whatsapp: 'https://wa.me/919263397076',
   email: 'care@clinicacure.in',
   address: 'Bariatu Road, Ranchi, Jharkhand - 834009',
@@ -21,9 +21,9 @@ export const siteConfig = {
   blogUrl: '/blog',
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://clinicacure.in',
   social: {
-    facebook: '#',
-    instagram: '#',
-    youtube: '#',
+    facebook: 'https://www.facebook.com/Clinicacurehospital/',
+    instagram: 'https://www.instagram.com/clinicacurehospital/',
+    youtube: 'https://www.youtube.com/@CLINICACUREHOSPITAL',
     whatsapp: 'https://wa.me/919263397076',
   },
 }

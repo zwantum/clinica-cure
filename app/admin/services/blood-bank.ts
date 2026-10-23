@@ -1,4 +1,5 @@
 import { BloodStockRecord, BloodRequestRecord, BloodDonationRecord } from '../types'
+import { safeSetItem, safeGetItem } from '../lib/safeStorage'
 
 const INITIAL_STOCK: BloodStockRecord[] = [
   { blood_group: 'A+', component_type: 'Whole Blood', available_units: 14, min_threshold: 5, last_updated_at: new Date().toISOString(), status: 'adequate' },
@@ -88,9 +89,7 @@ export async function fetchBloodStock(): Promise<BloodStockRecord[]> {
     if (res.ok) {
       const data = await res.json()
       if (Array.isArray(data?.stock)) {
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('clinicacure_admin_blood_stock', JSON.stringify(data.stock))
-        }
+        safeSetItem('clinicacure_admin_blood_stock', JSON.stringify(data.stock))
         return data.stock
       }
     }
@@ -98,14 +97,12 @@ export async function fetchBloodStock(): Promise<BloodStockRecord[]> {
     console.warn('Could not fetch stock from API, falling back to local storage:', err)
   }
 
-  if (typeof window !== 'undefined') {
-    const cached = localStorage.getItem('clinicacure_admin_blood_stock')
-    if (cached) {
-      try {
-        return JSON.parse(cached)
-      } catch {
-        // fallback
-      }
+  const cached = safeGetItem('clinicacure_admin_blood_stock')
+  if (cached) {
+    try {
+      return JSON.parse(cached)
+    } catch {
+      // fallback
     }
   }
   return [...INITIAL_STOCK]
@@ -131,8 +128,8 @@ export async function adjustBloodStock(
     if (res.ok) {
       const data = await res.json()
       if (Array.isArray(data?.stock)) {
+        safeSetItem('clinicacure_admin_blood_stock', JSON.stringify(data.stock))
         if (typeof window !== 'undefined') {
-          localStorage.setItem('clinicacure_admin_blood_stock', JSON.stringify(data.stock))
           window.dispatchEvent(new CustomEvent('clinicacure_blood_stock_updated'))
         }
         return data.stock
@@ -161,8 +158,8 @@ export async function adjustBloodStock(
     return item
   })
 
+  safeSetItem('clinicacure_admin_blood_stock', JSON.stringify(updated))
   if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_blood_stock', JSON.stringify(updated))
     window.dispatchEvent(new CustomEvent('clinicacure_blood_stock_updated'))
   }
 
@@ -184,8 +181,8 @@ export async function addBloodStockGroup(params: {
     if (res.ok) {
       const data = await res.json()
       if (Array.isArray(data?.stock)) {
+        safeSetItem('clinicacure_admin_blood_stock', JSON.stringify(data.stock))
         if (typeof window !== 'undefined') {
-          localStorage.setItem('clinicacure_admin_blood_stock', JSON.stringify(data.stock))
           window.dispatchEvent(new CustomEvent('clinicacure_blood_stock_updated'))
         }
         return { success: true, stock: data.stock }
@@ -223,8 +220,8 @@ export async function addBloodStockGroup(params: {
     current.push(newRecord)
   }
 
+  safeSetItem('clinicacure_admin_blood_stock', JSON.stringify(current))
   if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_blood_stock', JSON.stringify(current))
     window.dispatchEvent(new CustomEvent('clinicacure_blood_stock_updated'))
   }
 
@@ -250,14 +247,12 @@ export async function fetchBloodRequests(): Promise<BloodRequestRecord[]> {
   }
 
   let localRequests: BloodRequestRecord[] = []
-  if (typeof window !== 'undefined') {
-    const cached = localStorage.getItem('clinicacure_admin_blood_requests')
-    if (cached) {
-      try {
-        localRequests = JSON.parse(cached)
-      } catch {
-        // fallback
-      }
+  const cached = safeGetItem('clinicacure_admin_blood_requests')
+  if (cached) {
+    try {
+      localRequests = JSON.parse(cached)
+    } catch {
+      // fallback
     }
   }
 
@@ -271,9 +266,7 @@ export async function fetchBloodRequests(): Promise<BloodRequestRecord[]> {
     (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   )
 
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_blood_requests', JSON.stringify(merged))
-  }
+  safeSetItem('clinicacure_admin_blood_requests', JSON.stringify(merged))
 
   return merged
 }
@@ -297,11 +290,11 @@ export async function createBloodRequest(reqData: {
     if (res.ok) {
       const json = await res.json()
       if (json.data) {
+        const cached = safeGetItem('clinicacure_admin_blood_requests')
+        const current: BloodRequestRecord[] = cached ? JSON.parse(cached) : []
+        current.unshift(json.data)
+        safeSetItem('clinicacure_admin_blood_requests', JSON.stringify(current))
         if (typeof window !== 'undefined') {
-          const cached = localStorage.getItem('clinicacure_admin_blood_requests')
-          const current: BloodRequestRecord[] = cached ? JSON.parse(cached) : []
-          current.unshift(json.data)
-          localStorage.setItem('clinicacure_admin_blood_requests', JSON.stringify(current))
           window.dispatchEvent(new CustomEvent('clinicacure_blood_request_created'))
         }
         return { success: true, data: json.data }
@@ -328,11 +321,11 @@ export async function createBloodRequest(reqData: {
     created_at: new Date().toISOString(),
   }
 
+  const cached = safeGetItem('clinicacure_admin_blood_requests')
+  const current: BloodRequestRecord[] = cached ? JSON.parse(cached) : []
+  current.unshift(newReq)
+  safeSetItem('clinicacure_admin_blood_requests', JSON.stringify(current))
   if (typeof window !== 'undefined') {
-    const cached = localStorage.getItem('clinicacure_admin_blood_requests')
-    const current: BloodRequestRecord[] = cached ? JSON.parse(cached) : []
-    current.unshift(newReq)
-    localStorage.setItem('clinicacure_admin_blood_requests', JSON.stringify(current))
     window.dispatchEvent(new CustomEvent('clinicacure_blood_request_created'))
   }
 
@@ -353,19 +346,19 @@ export async function updateBloodRequestStatus(
     // ignore
   }
 
-  if (typeof window !== 'undefined') {
-    const cached = localStorage.getItem('clinicacure_admin_blood_requests')
-    if (cached) {
-      try {
-        const current: BloodRequestRecord[] = JSON.parse(cached)
-        const updated = current.map((r) =>
-          r.id === id || r.reference_no === id ? { ...r, status } : r
-        )
-        localStorage.setItem('clinicacure_admin_blood_requests', JSON.stringify(updated))
+  const cached = safeGetItem('clinicacure_admin_blood_requests')
+  if (cached) {
+    try {
+      const current: BloodRequestRecord[] = JSON.parse(cached)
+      const updated = current.map((r) =>
+        r.id === id || r.reference_no === id ? { ...r, status } : r
+      )
+      safeSetItem('clinicacure_admin_blood_requests', JSON.stringify(updated))
+      if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('clinicacure_blood_request_created'))
-      } catch {
-        // ignore
       }
+    } catch {
+      // ignore
     }
   }
 
@@ -391,14 +384,12 @@ export async function fetchBloodDonations(): Promise<BloodDonationRecord[]> {
   }
 
   let localDonations: BloodDonationRecord[] = []
-  if (typeof window !== 'undefined') {
-    const cached = localStorage.getItem('clinicacure_admin_blood_donations')
-    if (cached) {
-      try {
-        localDonations = JSON.parse(cached)
-      } catch {
-        // fallback
-      }
+  const cached = safeGetItem('clinicacure_admin_blood_donations')
+  if (cached) {
+    try {
+      localDonations = JSON.parse(cached)
+    } catch {
+      // fallback
     }
   }
 
@@ -410,9 +401,7 @@ export async function fetchBloodDonations(): Promise<BloodDonationRecord[]> {
 
   const merged = Array.from(map.values())
 
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_blood_donations', JSON.stringify(merged))
-  }
+  safeSetItem('clinicacure_admin_blood_donations', JSON.stringify(merged))
 
   return merged
 }
@@ -437,11 +426,11 @@ export async function createBloodDonation(donorData: {
     if (res.ok) {
       const json = await res.json()
       if (json.data) {
+        const cached = safeGetItem('clinicacure_admin_blood_donations')
+        const current: BloodDonationRecord[] = cached ? JSON.parse(cached) : []
+        current.unshift(json.data)
+        safeSetItem('clinicacure_admin_blood_donations', JSON.stringify(current))
         if (typeof window !== 'undefined') {
-          const cached = localStorage.getItem('clinicacure_admin_blood_donations')
-          const current: BloodDonationRecord[] = cached ? JSON.parse(cached) : []
-          current.unshift(json.data)
-          localStorage.setItem('clinicacure_admin_blood_donations', JSON.stringify(current))
           window.dispatchEvent(new CustomEvent('clinicacure_blood_donation_created'))
         }
         return { success: true, data: json.data }
@@ -470,11 +459,11 @@ export async function createBloodDonation(donorData: {
     status: 'tested_quarantined',
   }
 
+  const cached = safeGetItem('clinicacure_admin_blood_donations')
+  const current: BloodDonationRecord[] = cached ? JSON.parse(cached) : []
+  current.unshift(newDonation)
+  safeSetItem('clinicacure_admin_blood_donations', JSON.stringify(current))
   if (typeof window !== 'undefined') {
-    const cached = localStorage.getItem('clinicacure_admin_blood_donations')
-    const current: BloodDonationRecord[] = cached ? JSON.parse(cached) : []
-    current.unshift(newDonation)
-    localStorage.setItem('clinicacure_admin_blood_donations', JSON.stringify(current))
     window.dispatchEvent(new CustomEvent('clinicacure_blood_donation_created'))
   }
 
@@ -495,19 +484,19 @@ export async function updateBloodDonationStatus(
     // ignore
   }
 
-  if (typeof window !== 'undefined') {
-    const cached = localStorage.getItem('clinicacure_admin_blood_donations')
-    if (cached) {
-      try {
-        const current: BloodDonationRecord[] = JSON.parse(cached)
-        const updated = current.map((d) =>
-          d.id === id || d.reference_no === id ? { ...d, status } : d
-        )
-        localStorage.setItem('clinicacure_admin_blood_donations', JSON.stringify(updated))
+  const cached = safeGetItem('clinicacure_admin_blood_donations')
+  if (cached) {
+    try {
+      const current: BloodDonationRecord[] = JSON.parse(cached)
+      const updated = current.map((d) =>
+        d.id === id || d.reference_no === id ? { ...d, status } : d
+      )
+      safeSetItem('clinicacure_admin_blood_donations', JSON.stringify(updated))
+      if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('clinicacure_blood_donation_created'))
-      } catch {
-        // ignore
       }
+    } catch {
+      // ignore
     }
   }
 

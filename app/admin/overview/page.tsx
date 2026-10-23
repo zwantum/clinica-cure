@@ -14,6 +14,8 @@ import {
   ArrowRight,
   UserCheck,
   Building,
+  Star,
+  BookOpen,
 } from 'lucide-react'
 import { Breadcrumbs } from '../components/Breadcrumbs'
 import { PageHeader } from '../components/PageHeader'
@@ -347,6 +349,28 @@ export default function OverviewPage() {
                 <div className="flex items-center gap-2.5">
                   <Mail className="w-4 h-4 text-[#2563EB]" />
                   <span>Review Patient Enquiries</span>
+                </div>
+                <ArrowRight className="w-3.5 h-3.5 text-[#5F6B7A]" />
+              </Link>
+
+              <Link
+                href="/admin/reviews"
+                className="flex items-center justify-between p-2.5 rounded-lg border border-[#E5EAF0] hover:bg-[#F7F8FA] transition-colors text-xs font-semibold text-[#172033]"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Star className="w-4 h-4 text-[#EAB308]" />
+                  <span>Manage Google Reviews</span>
+                </div>
+                <ArrowRight className="w-3.5 h-3.5 text-[#5F6B7A]" />
+              </Link>
+
+              <Link
+                href="/admin/blog"
+                className="flex items-center justify-between p-2.5 rounded-lg border border-[#E5EAF0] hover:bg-[#F7F8FA] transition-colors text-xs font-semibold text-[#172033]"
+              >
+                <div className="flex items-center gap-2.5">
+                  <BookOpen className="w-4 h-4 text-[#0E746D]" />
+                  <span>Blog &amp; Medical Articles</span>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-[#5F6B7A]" />
               </Link>

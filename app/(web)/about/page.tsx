@@ -33,28 +33,7 @@ export const metadata: Metadata = {
     'Discover Clinica Cure Hospital in Bariatu, Ranchi — a premier multi-speciality healthcare institution combining 11+ acres campus, modular OTs, 24x7 ICU, and expert medical faculty.',
 }
 
-const HERO_FEATURES = [
-  {
-    title: 'Multi-Speciality',
-    subtitle: 'Hospital',
-    icon: Building2,
-  },
-  {
-    title: 'Experienced',
-    subtitle: 'Doctors',
-    icon: Users,
-  },
-  {
-    title: 'Advanced',
-    subtitle: 'Technology',
-    icon: Scan,
-  },
-  {
-    title: 'Patient-Centric',
-    subtitle: 'Care',
-    icon: Heart,
-  },
-]
+
 
 const CORE_VALUES = [
   {
@@ -193,28 +172,7 @@ export default function AboutPage() {
               </Link>
             </div>
 
-            {/* 4 Feature Badges in a Single Row (Grid on mobile, flex on desktop) */}
-            <div className="mt-8 pt-6 border-t border-slate-200/80 grid grid-cols-4 gap-1.5 sm:gap-6 md:gap-7 lg:gap-8 w-full sm:w-fit max-w-lg sm:max-w-none">
-              {HERO_FEATURES.map((item) => {
-                const IconComp = item.icon
-                return (
-                  <div
-                    key={item.title}
-                    className="flex flex-col items-center text-center group min-w-0"
-                  >
-                    <div className="w-9.5 h-9.5 sm:w-11 sm:h-11 rounded-full bg-[#EAF7F4] text-[#0E746D] flex items-center justify-center mb-1.5 sm:mb-2 shadow-2xs border border-[#26B09A]/20 group-hover:scale-105 transition-transform shrink-0">
-                      <IconComp className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-[#0E746D]" strokeWidth={2} />
-                    </div>
-                    <div className="font-display font-bold text-[10px] sm:text-xs text-slate-900 leading-tight sm:whitespace-nowrap text-center">
-                      {item.title}
-                    </div>
-                    <div className="text-[9.5px] sm:text-[11px] text-slate-500 font-medium leading-tight mt-0.5 sm:whitespace-nowrap text-center">
-                      {item.subtitle}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
+
           </div>
         </div>
       </section>

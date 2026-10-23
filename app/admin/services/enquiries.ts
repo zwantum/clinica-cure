@@ -1,4 +1,5 @@
 import { EnquiryRecord } from '../types'
+import { safeSetItem, safeGetItem } from '../lib/safeStorage'
 
 const INITIAL_ENQUIRIES: EnquiryRecord[] = [
   {
@@ -57,9 +58,7 @@ export async function fetchEnquiries(): Promise<EnquiryRecord[]> {
       const data = await res.json()
       if (Array.isArray(data?.enquiries)) {
         enquiriesStore = data.enquiries
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('clinicacure_admin_enquiries', JSON.stringify(data.enquiries))
-        }
+        safeSetItem('clinicacure_admin_enquiries', JSON.stringify(data.enquiries))
         return data.enquiries
       }
     }
@@ -67,18 +66,16 @@ export async function fetchEnquiries(): Promise<EnquiryRecord[]> {
     console.warn('Could not fetch enquiries from /api/contact, using local storage:', err)
   }
 
-  if (typeof window !== 'undefined') {
-    const cached = localStorage.getItem('clinicacure_admin_enquiries')
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached)
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          enquiriesStore = parsed
-          return parsed
-        }
-      } catch {
-        // fallback
+  const cached = safeGetItem('clinicacure_admin_enquiries')
+  if (cached) {
+    try {
+      const parsed = JSON.parse(cached)
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        enquiriesStore = parsed
+        return parsed
       }
+    } catch {
+      // fallback
     }
   }
   return enquiriesStore
@@ -99,8 +96,8 @@ export async function updateEnquiryStatus(
   }
 
   enquiriesStore = enquiriesStore.map((enq) => (enq.id === id || enq.reference_no === id ? { ...enq, status } : enq))
+  safeSetItem('clinicacure_admin_enquiries', JSON.stringify(enquiriesStore))
   if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_enquiries', JSON.stringify(enquiriesStore))
     window.dispatchEvent(new CustomEvent('clinicacure_enquiry_updated'))
   }
   return true
@@ -135,8 +132,8 @@ export async function addEnquiryNote(
     return enq
   })
 
+  safeSetItem('clinicacure_admin_enquiries', JSON.stringify(enquiriesStore))
   if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_enquiries', JSON.stringify(enquiriesStore))
     window.dispatchEvent(new CustomEvent('clinicacure_enquiry_updated'))
   }
   return true
@@ -161,11 +158,11 @@ export async function createEnquiry(
     if (res.ok) {
       const result = await res.json()
       if (result.data) {
+        const cached = safeGetItem('clinicacure_admin_enquiries')
+        const current: EnquiryRecord[] = cached ? JSON.parse(cached) : [...INITIAL_ENQUIRIES]
+        current.unshift(result.data)
+        safeSetItem('clinicacure_admin_enquiries', JSON.stringify(current))
         if (typeof window !== 'undefined') {
-          const cached = localStorage.getItem('clinicacure_admin_enquiries')
-          const current: EnquiryRecord[] = cached ? JSON.parse(cached) : [...INITIAL_ENQUIRIES]
-          current.unshift(result.data)
-          localStorage.setItem('clinicacure_admin_enquiries', JSON.stringify(current))
           window.dispatchEvent(new CustomEvent('clinicacure_enquiry_created'))
         }
         return { success: true, data: result.data }
@@ -191,11 +188,11 @@ export async function createEnquiry(
     created_at: new Date().toISOString(),
   }
 
+  const cached = safeGetItem('clinicacure_admin_enquiries')
+  const current: EnquiryRecord[] = cached ? JSON.parse(cached) : [...INITIAL_ENQUIRIES]
+  current.unshift(localEnquiry)
+  safeSetItem('clinicacure_admin_enquiries', JSON.stringify(current))
   if (typeof window !== 'undefined') {
-    const cached = localStorage.getItem('clinicacure_admin_enquiries')
-    const current: EnquiryRecord[] = cached ? JSON.parse(cached) : [...INITIAL_ENQUIRIES]
-    current.unshift(localEnquiry)
-    localStorage.setItem('clinicacure_admin_enquiries', JSON.stringify(current))
     window.dispatchEvent(new CustomEvent('clinicacure_enquiry_created'))
   }
 

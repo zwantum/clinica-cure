@@ -18,7 +18,6 @@ import {
   FileText,
   MapPin,
   Printer,
-  Sparkles,
   HeartHandshake,
   MessageCircle,
   ExternalLink,
@@ -29,6 +28,7 @@ import {
 import { departments } from '@/config/navigation'
 import { SEED_DOCTORS } from '@/config/constants'
 import { siteConfig } from '@/config/site'
+import { safeSetItem, safeGetItem } from '@/app/admin/lib/safeStorage'
 import {
   getDoctorSchedule,
   isDoctorAvailableOnDate,

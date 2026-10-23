@@ -12,10 +12,11 @@
     "@hookform/resolvers": "^5.9.1",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.117.2",
+    "@zwantum/blog": "^1.1.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
     "lucide-react": "^1.48.0",
-    "next": "^16.4.0",
+    "next": "^16.4.2",
     "nodemailer": "^10.1.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
@@ -30,11 +31,12 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "^16.4.0",
+    "eslint-config-next": "^16.4.2",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
   "overrides": {
-    "braces": "^3.0.3"
+    "braces": "^3.0.3",
+    "micromatch": "^4.0.8"
   }
 }

@@ -53,6 +53,8 @@ export default function RolesPermissionsPage() {
     { id: 'availability', name: 'Consultation Timings', specialAction: 'Emergency date-specific blocks' },
     { id: 'blood-bank', name: 'Blood Bank', specialAction: 'Adjust unit quantities, Dispense to OT' },
     { id: 'enquiries', name: 'Patient Enquiries CRM', specialAction: 'Assign desk, Log internal staff notes' },
+    { id: 'reviews', name: 'Google Reviews Wall', specialAction: 'Add verified patient reviews, delete or edit rating' },
+    { id: 'blog', name: 'Blog Management', specialAction: 'Create, edit, schedule and publish articles' },
     { id: 'settings', name: 'Settings & RBAC', specialAction: 'Manage team logins, Modify role permissions' },
   ]
 
@@ -103,6 +105,9 @@ export default function RolesPermissionsPage() {
       availability: { can_view: false, can_create: false, can_edit: false, can_delete: false },
       'blood-bank': { can_view: false, can_create: false, can_edit: false, can_delete: false },
       enquiries: { can_view: false, can_create: false, can_edit: false, can_delete: false },
+      reviews: { can_view: false, can_create: false, can_edit: false, can_delete: false },
+      'patient-stories': { can_view: false, can_create: false, can_edit: false, can_delete: false },
+      blog: { can_view: false, can_create: false, can_edit: false, can_delete: false },
       settings: { can_view: false, can_create: false, can_edit: false, can_delete: false },
     }
     saveRolePermissions(slug, customDefault)

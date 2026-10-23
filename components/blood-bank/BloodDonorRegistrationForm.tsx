@@ -12,7 +12,6 @@ import {
   Check,
   ShieldCheck,
   Printer,
-  Sparkles,
   CheckCircle2,
   AlertCircle,
   MessageCircle,

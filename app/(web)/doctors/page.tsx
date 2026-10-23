@@ -24,6 +24,7 @@ import {
 import { SEED_DOCTORS } from '@/config/constants'
 import { departments } from '@/config/navigation'
 import DoctorCard from '@/components/doctors/DoctorCard'
+import FeaturedCoreDoctorsSection from '@/components/doctors/FeaturedCoreDoctorsSection'
 
 // Clinical excellence pillars
 const EXCELLENCE_PILLARS = [
@@ -274,7 +275,10 @@ export default function DoctorsPage() {
         </div>
       </section>
 
-      {/* ── 2. MAIN DIRECTORY SECTION (Filter Bar + Pills + Cards) ── */}
+      {/* ── 2. FEATURED CORE DOCTORS SPOTLIGHT (DR. ABID RAZA & DR. SYED ALTAMASH) ── */}
+      <FeaturedCoreDoctorsSection />
+
+      {/* ── 3. MAIN DIRECTORY SECTION (Filter Bar + Pills + Cards) ── */}
       <section className="bg-[#F6FBFA] py-8 sm:py-6 md:py-7 lg:py-14">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           {/* Section Introduction */}

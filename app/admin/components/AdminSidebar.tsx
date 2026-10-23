@@ -1,14 +1,16 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import {
   LayoutDashboard,
   CalendarDays,
   Stethoscope,
   Droplet,
   Mail,
+  Star,
+  BookOpen,
   Settings,
   ChevronDown,
   UserPlus,
@@ -18,6 +20,14 @@ import {
   HeartHandshake,
   LogOut,
   Hospital,
+  Video,
+  FileText,
+  PenLine,
+  FolderTree,
+  Users,
+  Image,
+  SlidersHorizontal,
+  Compass,
 } from 'lucide-react'
 import { hasPermission } from '../lib/permissions'
 import { StaffUser } from '../types'
@@ -36,11 +46,22 @@ export function AdminSidebar({
   onLogout,
 }: AdminSidebarProps) {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const currentBlogView = searchParams ? (searchParams.get('view') || (pathname.startsWith('/admin/blog') ? 'posts' : '')) : ''
+
   const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({
     doctors: pathname.startsWith('/admin/doctors'),
     bloodBank: pathname.startsWith('/admin/blood-bank'),
+    blog: pathname.startsWith('/admin/blog'),
     settings: pathname.startsWith('/admin/settings'),
   })
+
+  // Auto-expand blog submenu when navigating to blog
+  useEffect(() => {
+    if (pathname.startsWith('/admin/blog')) {
+      setOpenSubmenus((prev) => ({ ...prev, blog: true }))
+    }
+  }, [pathname])
 
   const toggleSubmenu = (key: string) => {
     setOpenSubmenus((prev) => ({ ...prev, [key]: !prev[key] }))
@@ -93,6 +114,36 @@ export function AdminSidebar({
       icon: Mail,
       href: '/admin/enquiries',
       allowed: hasPermission(role, 'enquiries', 'view', user?.permissions),
+    },
+    {
+      id: 'reviews',
+      label: 'Google Reviews',
+      icon: Star,
+      href: '/admin/reviews',
+      allowed: hasPermission(role, 'reviews', 'view', user?.permissions),
+    },
+    {
+      id: 'patient-stories',
+      label: 'Patient Stories (Videos)',
+      icon: Video,
+      href: '/admin/patient-stories',
+      allowed: hasPermission(role, 'patient-stories', 'view', user?.permissions),
+    },
+    {
+      id: 'blog',
+      label: 'Blog Articles',
+      icon: BookOpen,
+      href: '/admin/blog',
+      allowed: hasPermission(role, 'blog', 'view', user?.permissions),
+      submenu: [
+        { label: 'Overview', href: '/admin/blog?view=overview', view: 'overview', icon: Compass },
+        { label: 'All Posts', href: '/admin/blog?view=posts', view: 'posts', icon: FileText },
+        { label: 'Add New Post', href: '/admin/blog?view=new-post', view: 'new-post', icon: PenLine },
+        { label: 'Categories', href: '/admin/blog?view=categories', view: 'categories', icon: FolderTree },
+        { label: 'Authors', href: '/admin/blog?view=authors', view: 'authors', icon: Users },
+        { label: 'Media Library', href: '/admin/blog?view=media', view: 'media', icon: Image },
+        { label: 'Blog Settings', href: '/admin/blog?view=settings', view: 'settings', icon: SlidersHorizontal },
+      ],
     },
     {
       id: 'settings',
@@ -156,7 +207,12 @@ export function AdminSidebar({
                   <div className="flex items-center">
                     <Link
                       href={item.href}
-                      onClick={onCloseMobile}
+                      onClick={() => {
+                        onCloseMobile()
+                        if (hasSubmenu && !isSubmenuOpen) {
+                          toggleSubmenu(item.id)
+                        }
+                      }}
                       className={`flex-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold transition-colors ${
                         isActive
                           ? 'bg-[#FFCC00] text-[#172033] font-bold shadow-xs'
@@ -190,19 +246,26 @@ export function AdminSidebar({
                   {hasSubmenu && isSubmenuOpen && (
                     <div className="pl-9 pr-2 py-1 space-y-1 border-l border-[#E5EAF0] ml-5 my-1">
                       {item.submenu.map((sub, sIdx) => {
-                        const isSubActive = pathname === sub.href
+                        const isSubActive =
+                          item.id === 'blog'
+                            ? pathname.startsWith('/admin/blog') &&
+                              (currentBlogView === ((sub as any).view || 'posts') ||
+                                (currentBlogView === 'edit-post' && (sub as any).view === 'posts'))
+                            : pathname === sub.href
+                        const SubIcon = (sub as any).icon
                         return (
                           <Link
                             key={sIdx}
                             href={sub.href}
                             onClick={onCloseMobile}
-                            className={`block py-1.5 px-2.5 rounded-md text-[11.5px] transition-colors truncate ${
+                            className={`flex items-center gap-2 py-1.5 px-2.5 rounded-md text-[11.5px] transition-colors truncate ${
                               isSubActive
                                 ? 'bg-[#FFF9DB] text-[#806600] font-bold'
                                 : 'text-[#5F6B7A] hover:text-[#172033] hover:bg-[#F7F8FA]'
                             }`}
                           >
-                            {sub.label}
+                            {SubIcon && <SubIcon className="w-3.5 h-3.5 shrink-0 opacity-70" />}
+                            <span className="truncate">{sub.label}</span>
                           </Link>
                         )
                       })}

@@ -1,4 +1,5 @@
 import { AppointmentRecord } from '../types'
+import { safeSetItem, safeGetItem } from '../lib/safeStorage'
 
 // Mock seed fallback if database table is initializing or offline
 const INITIAL_APPOINTMENTS: AppointmentRecord[] = [
@@ -65,18 +66,16 @@ export async function fetchAppointments(): Promise<AppointmentRecord[]> {
   INITIAL_APPOINTMENTS.forEach((apt) => mergedMap.set(apt.id, apt))
 
   // 2. Load from localStorage if present
-  if (typeof window !== 'undefined') {
-    const cached = localStorage.getItem('clinicacure_admin_appointments')
-    if (cached) {
-      try {
-        const localList: AppointmentRecord[] = JSON.parse(cached)
-        if (Array.isArray(localList)) {
-          localList.forEach((apt) => {
-            if (apt.id) mergedMap.set(apt.id, apt)
-          })
-        }
-      } catch {}
-    }
+  const cached = safeGetItem('clinicacure_admin_appointments')
+  if (cached) {
+    try {
+      const localList: AppointmentRecord[] = JSON.parse(cached)
+      if (Array.isArray(localList)) {
+        localList.forEach((apt) => {
+          if (apt.id) mergedMap.set(apt.id, apt)
+        })
+      }
+    } catch {}
   }
 
   // 3. Fetch from API endpoint (Supabase + In-Memory)
@@ -132,9 +131,7 @@ export async function fetchAppointments(): Promise<AppointmentRecord[]> {
   )
 
   appointmentsStore = result
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_appointments', JSON.stringify(result))
-  }
+  safeSetItem('clinicacure_admin_appointments', JSON.stringify(result))
 
   return result
 }
@@ -159,8 +156,8 @@ export async function updateAppointmentStatus(
     apt.id === id ? { ...apt, status: newStatus, admin_notes: notes || apt.admin_notes } : apt
   )
 
+  safeSetItem('clinicacure_admin_appointments', JSON.stringify(appointmentsStore))
   if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_appointments', JSON.stringify(appointmentsStore))
     window.dispatchEvent(new CustomEvent('clinicacure_appointment_updated'))
     window.dispatchEvent(new CustomEvent('clinicacure_appointment_booked'))
   }
@@ -190,8 +187,8 @@ export async function createManualAppointment(
 
   appointmentsStore = [newAppointment, ...appointmentsStore]
 
+  safeSetItem('clinicacure_admin_appointments', JSON.stringify(appointmentsStore))
   if (typeof window !== 'undefined') {
-    localStorage.setItem('clinicacure_admin_appointments', JSON.stringify(appointmentsStore))
     window.dispatchEvent(new CustomEvent('clinicacure_appointment_booked'))
     window.dispatchEvent(new CustomEvent('clinicacure_appointment_updated'))
   }

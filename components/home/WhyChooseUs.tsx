@@ -7,7 +7,7 @@ import {
   Heart,
   Building2,
   BadgeIndianRupee,
-  Sparkles,
+  ShieldCheck,
   type LucideIcon,
 } from 'lucide-react'
 import { WHY_CHOOSE_US } from '@/config/constants'
@@ -41,7 +41,7 @@ export default function WhyChooseUs() {
           {/* 6 Feature cards in 2 columns */}
           <div className="grid sm:grid-cols-2 gap-5">
             {WHY_CHOOSE_US.map((item) => {
-              const Icon = WHY_ICONS[item.icon] ?? Sparkles
+              const Icon = WHY_ICONS[item.icon] ?? ShieldCheck
               return (
                 <div
                   key={item.title}

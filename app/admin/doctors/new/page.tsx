@@ -442,8 +442,17 @@ export default function NewDoctorPage() {
       .map((q) => q.trim())
       .filter(Boolean)
 
+    const deptSlug = formData.department_slug || 'general-medicine'
+    const matchedDept = departments.find((d) => d.slug === deptSlug)
+    const allDepts = Array.from(
+      new Set([deptSlug, ...(matchedDept?.aliases || []), ...(formData.departments || [])])
+    )
+
     await saveDoctor({
       ...formData,
+      department_slug: deptSlug,
+      department_name: formData.department_name || matchedDept?.name || 'General Medicine',
+      departments: allDepts,
       qualifications: parsedQualifications.length > 0 ? parsedQualifications : ['MBBS'],
     })
 

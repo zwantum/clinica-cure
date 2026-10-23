@@ -24,21 +24,53 @@ import {
 } from 'lucide-react'
 import { BLOG_POSTS, BlogPost } from '@/config/blogs'
 import { siteConfig } from '@/config/site'
+import { generatePostMetadata } from '@zwantum/blog/seo'
+import { blogClient } from '@/lib/blogClient'
 import BlogShareBar from '@/components/blog/BlogShareBar'
 import BlogCard from '@/components/blog/BlogCard'
+import DynamicBlogArticleView from '@/components/blog/DynamicBlogArticleView'
+
+export const dynamicParams = true
+export const revalidate = 0
+
+export async function generateStaticParams() {
+  const staticSlugs = BLOG_POSTS.map((post) => ({
+    slug: post.slug,
+  }))
+
+  try {
+    const dynamicResult = await blogClient.posts.list({ status: 'published', limit: 100 })
+    if (dynamicResult?.data && Array.isArray(dynamicResult.data)) {
+      const dynamicSlugs = dynamicResult.data.map((p) => ({ slug: p.slug }))
+      return [...staticSlugs, ...dynamicSlugs]
+    }
+  } catch {}
+
+  return staticSlugs
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>
 }
 
-export async function generateStaticParams() {
-  return BLOG_POSTS.map((post) => ({
-    slug: post.slug,
-  }))
-}
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
+
+  try {
+    const dynamicPost = await blogClient.posts.getBySlug(slug)
+    if (dynamicPost) {
+      const meta = generatePostMetadata(dynamicPost)
+      return {
+        title: meta.title,
+        description: meta.description,
+        alternates: { canonical: meta.canonical },
+        robots: meta.robots,
+        openGraph: meta.openGraph as any,
+        twitter: meta.twitter as any,
+      }
+    }
+  } catch {}
+
   const post = BLOG_POSTS.find((p) => p.slug === slug)
   if (!post) return { title: 'Health Article Not Found | Clinica Cure Hospital' }
 
@@ -59,11 +91,51 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params
+
+  // 1. Check for dynamic post and live module settings from @zwantum/blog
+  let dynamicPost = null
+  let settings = null
+  let dynamicRelatedPosts: any[] = []
+  let categories: any[] = []
+
+  try {
+    const [postResult, settingsResult, allPostsResult, categoriesResult] = await Promise.all([
+      blogClient.posts.getBySlug(slug),
+      blogClient.settings.get(),
+      blogClient.posts.list({ status: 'published', limit: 8 }),
+      blogClient.categories.list(),
+    ])
+    dynamicPost = postResult
+    settings = settingsResult
+    if (allPostsResult?.data && Array.isArray(allPostsResult.data)) {
+      dynamicRelatedPosts = allPostsResult.data.filter((p: any) => p.slug !== slug).slice(0, 3)
+    }
+    if (categoriesResult?.data && Array.isArray(categoriesResult.data)) {
+      categories = categoriesResult.data
+    }
+  } catch (err) {
+    console.warn('Could not fetch post or settings from blogClient:', err)
+  }
+
+  if (dynamicPost) {
+    return (
+      <DynamicBlogArticleView
+        post={dynamicPost}
+        settings={settings}
+        relatedPosts={dynamicRelatedPosts}
+        categories={categories}
+      />
+    )
+  }
+
+  // 2. Fallback to existing static post if present
   const post = BLOG_POSTS.find((p) => p.slug === slug)
 
   if (!post) {
+    console.log('Post not found for slug:', slug)
     notFound()
   }
+  console.log('Successfully found static post:', post.title)
 
   // Find previous and next articles
   const currentIndex = BLOG_POSTS.findIndex((p) => p.slug === slug)
@@ -330,14 +402,17 @@ export default async function BlogPostPage({ params }: PageProps) {
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                     Tags:
                   </span>
-                  {post.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="bg-white border border-slate-200 text-slate-700 text-xs px-3 py-1 rounded-xl"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
+                  {post.tags.map((tag) => {
+                    const cleanTag = tag.replace(/^#+\s*/, '').trim()
+                    return (
+                      <span
+                        key={tag}
+                        className="bg-white border border-slate-200 text-slate-700 text-xs px-3 py-1 rounded-xl"
+                      >
+                        {cleanTag}
+                      </span>
+                    )
+                  })}
                 </div>
 
                 <BlogShareBar title={post.title} slug={post.slug} />
@@ -388,31 +463,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             {/* ══════════════════════════════════════════════
                 RIGHT COLUMN: SIDEBAR WIDGETS
             ══════════════════════════════════════════════ */}
-            <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
-
-              {/* TABLE OF CONTENTS WIDGET */}
-              {post.tableOfContents && post.tableOfContents.length > 0 && (
-                <div className="bg-white rounded-3xl border border-[#E2ECE9] p-6 shadow-[0_4px_24px_-4px_rgba(18,48,44,0.06)]">
-                  <div className="flex items-center gap-2 text-xs font-bold text-[#0E746D] uppercase tracking-wider mb-3">
-                    <BookOpen className="w-4 h-4 text-[#0E746D]" />
-                    <span>TABLE OF CONTENTS</span>
-                  </div>
-                  <nav className="space-y-2">
-                    {post.tableOfContents.map((toc, tIdx) => (
-                      <a
-                        key={toc.id}
-                        href={`#${toc.id}`}
-                        className="flex items-center gap-2 text-xs text-slate-600 hover:text-[#0E746D] hover:translate-x-1 transition-all py-1 cursor-pointer"
-                      >
-                        <span className="w-5 h-5 rounded-md bg-[#EEF9F7] text-[#0E746D] flex items-center justify-center font-bold text-[10px] shrink-0">
-                          {tIdx + 1}
-                        </span>
-                        <span className="line-clamp-1">{toc.title}</span>
-                      </a>
-                    ))}
-                  </nav>
-                </div>
-              )}
+            <aside className="lg:col-span-4 space-y-6">
 
               {/* BOOK A CONSULTATION CARD */}
               <div className="bg-[#0E746D] rounded-3xl p-6 sm:p-7 text-white shadow-[0_8px_30px_-4px_rgba(14,116,109,0.3)] relative overflow-hidden">

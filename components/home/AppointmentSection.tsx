@@ -29,7 +29,6 @@ import {
   AlertCircle,
   FileText,
   RotateCcw,
-  Sparkles,
 } from 'lucide-react'
 
 const QUICK_REASONS = [

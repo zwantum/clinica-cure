@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
+import { blogClient } from '@/lib/blogClient'
 
-interface BlogPost {
+interface BlogPostItem {
   id: string
   title: string
   excerpt: string
@@ -10,52 +11,101 @@ interface BlogPost {
   slug: string
 }
 
-const BLOG_POSTS: BlogPost[] = [
+function formatDate(dateString?: string): string {
+  if (!dateString) return 'Oct 2026'
+  try {
+    const d = new Date(dateString)
+    if (isNaN(d.getTime())) return 'Oct 2026'
+    return d.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })
+  } catch {
+    return 'Oct 2026'
+  }
+}
+
+// Curated fallbacks matching hospital specialties in case database is empty or loading
+const FALLBACK_POSTS: BlogPostItem[] = [
   {
-    id: 'pineapple',
-    title: 'Is Pineapple Good for You? Health Benefits, Nutrition Facts & Side Effects',
-    excerpt: 'Explore the key nutritional values, key vitamins, health advantages, and potential digestive side effects of eating pineapples.',
-    date: 'Aug 19, 2026',
-    image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=600&q=80',
-    slug: 'is-pineapple-good-for-you',
+    id: 'heart-care',
+    title: 'Warning Signs of Heart Disease You Should Never Ignore: A Cardiologist’s Guide',
+    excerpt: 'Learn the subtle early signs, risk factors, and proactive steps to protect your cardiovascular health.',
+    date: 'Oct 22, 2026',
+    image: '/images/blog-featured-universal.jpg',
+    slug: 'warning-signs-heart-disease-never-ignore',
   },
   {
-    id: 'heart-failure',
-    title: 'What Happens in Advanced Heart Failure? Warning Signs & Management',
-    excerpt: 'Understand what occurs when heart failure worsens, the key symptoms of advanced stages, and modern treatment options.',
-    date: 'Aug 18, 2026',
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=600&q=80',
-    slug: 'what-happens-in-advanced-heart-failure',
+    id: 'knee-pain',
+    title: 'Chronic Knee and Joint Pain: Non-Surgical Therapies vs. Joint Replacement',
+    excerpt: 'Discover the full spectrum of modern orthopedic care—from targeted physical therapy to robotic-assisted joint replacement.',
+    date: 'Oct 21, 2026',
+    image: '/images/blog-featured-universal.jpg',
+    slug: 'chronic-knee-joint-pain-treatments-surgery',
   },
   {
-    id: 'mumps',
-    title: 'Mumps Disease: Symptoms, Causes, Treatment and Prevention Guide',
-    excerpt: 'Learn about the symptoms, viral causes, vaccine prevention, and supportive care for mumps.',
-    date: 'Jul 31, 2026',
-    image: 'https://images.unsplash.com/photo-1518152006812-edab29b069ac?auto=format&fit=crop&w=300&q=80',
-    slug: 'mumps-disease-guide',
+    id: 'stroke-awareness',
+    title: 'Stroke Prevention and Emergency Response: Why Every Second Matters',
+    excerpt: 'Learn how to recognize the BE-FAST signs and how rapid treatment saves lives and preserves brain function.',
+    date: 'Oct 20, 2026',
+    image: '/images/blog-featured-universal.jpg',
+    slug: 'stroke-symptoms-prevention-be-fast-protocol',
   },
   {
-    id: 'aloe-vera',
-    title: 'Aloe Vera Juice Benefits: Reasons to Add It to Your Daily Routine',
-    excerpt: 'Discover how aloe vera juice improves digestion, skin health, and hydration levels daily.',
-    date: 'Jul 30, 2026',
-    image: 'https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=300&q=80',
-    slug: 'aloe-vera-juice-benefits',
+    id: 'prenatal-guide',
+    title: 'The Essential Trimester-by-Trimester Prenatal Care Guide for Expectant Mothers',
+    excerpt: 'Explore our comprehensive trimester-by-trimester guide to essential medical check-ups, nutrition, and wellness.',
+    date: 'Oct 19, 2026',
+    image: '/images/blog-featured-universal.jpg',
+    slug: 'essential-prenatal-care-guide-trimester-by-trimester',
   },
   {
-    id: 'skin-tags',
-    title: 'Skin Tags: What Causes Them, How to Remove Them and Prevention',
-    excerpt: 'Understand what causes skin tags to form and safe, professional options for removal.',
-    date: 'Jul 30, 2026',
-    image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=300&q=80',
-    slug: 'skin-tags-causes-removal',
+    id: 'blood-donation',
+    title: 'The Life-Saving Power of Blood Donation: Health Benefits, Myths, and Eligibility',
+    excerpt: 'Explore the biological benefits of donating, dispel common myths, and understand the simple steps to becoming a regular donor.',
+    date: 'Oct 18, 2026',
+    image: '/images/blog-featured-universal.jpg',
+    slug: 'life-saving-power-blood-donation-benefits-myths',
   },
 ]
 
-export default function BlogUpdatesSection() {
-  const bigBlogs = BLOG_POSTS.slice(0, 2)
-  const smallBlogs = BLOG_POSTS.slice(2, 5)
+export default async function BlogUpdatesSection() {
+  let displayBlogs: BlogPostItem[] = []
+
+  try {
+    const res = await blogClient.posts.list({
+      status: 'published',
+      page: 1,
+      limit: 5,
+    })
+
+    if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      displayBlogs = res.data.map((p: any) => ({
+        id: p.id,
+        title: p.title,
+        excerpt: p.excerpt || '',
+        date: formatDate(p.published_at || p.created_at),
+        image: p.featured_image?.url || '/images/blog-featured-universal.jpg',
+        slug: p.slug,
+      }))
+    }
+  } catch (err) {
+    console.warn('Could not fetch dynamic blog posts for homepage:', err)
+  }
+
+  // If fewer than 5 posts fetched, fill remaining with curated fallback articles
+  if (displayBlogs.length < 5) {
+    const existingSlugs = new Set(displayBlogs.map((b) => b.slug))
+    for (const fb of FALLBACK_POSTS) {
+      if (!existingSlugs.has(fb.slug) && displayBlogs.length < 5) {
+        displayBlogs.push(fb)
+      }
+    }
+  }
+
+  const bigBlogs = displayBlogs.slice(0, 2)
+  const smallBlogs = displayBlogs.slice(2, 5)
 
   return (
     <section id="blog" className="py-8 sm:py-6 md:py-7 lg:py-14 bg-white">
@@ -66,7 +116,7 @@ export default function BlogUpdatesSection() {
             Latest Blogs
           </h2>
           <Link
-            href="/blogs"
+            href="/blog"
             className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#00A88F] transition-colors group"
           >
             <span>View All Blogs</span>
@@ -96,12 +146,12 @@ export default function BlogUpdatesSection() {
 
               {/* Card Content */}
               <div className="p-4 sm:p-4 md:p-5 lg:p-6 flex flex-col flex-1">
-                <Link href={`/blogs/${b.slug}`}>
-                  <h4 className="font-display font-bold text-slate-900 text-sm sm:text-base md:text-[1.125rem] leading-snug hover:text-[#00A88F] transition-colors cursor-pointer">
+                <Link href={`/blog/${b.slug}`}>
+                  <h4 className="font-display font-bold text-slate-900 text-sm sm:text-base md:text-[1.125rem] leading-snug hover:text-[#00A88F] transition-colors cursor-pointer line-clamp-2">
                     {b.title}
                   </h4>
                 </Link>
-                <p className="text-[14px] sm:text-xs md:text-sm text-slate-600 mt-2 sm:mt-2.5 leading-relaxed flex-1">
+                <p className="text-[14px] sm:text-xs md:text-sm text-slate-600 mt-2 sm:mt-2.5 leading-relaxed flex-1 line-clamp-3">
                   {b.excerpt}
                 </p>
 
@@ -111,7 +161,7 @@ export default function BlogUpdatesSection() {
                     {b.date}
                   </span>
                   <Link
-                    href={`/blogs/${b.slug}`}
+                    href={`/blog/${b.slug}`}
                     className="flex items-center gap-2 text-slate-900 font-display font-extrabold text-[11px] sm:text-xs hover:text-[#00A88F] transition-all group/btn"
                   >
                     <span>Read More</span>
@@ -144,7 +194,7 @@ export default function BlogUpdatesSection() {
                 {/* Text Details */}
                 <div className="flex-1 flex flex-col h-full justify-between py-0.5 min-w-0">
                   <div>
-                    <Link href={`/blogs/${b.slug}`}>
+                    <Link href={`/blog/${b.slug}`}>
                       <h5 className="font-display font-semibold text-slate-900 text-[12.5px] sm:text-[13px] md:text-sm leading-snug line-clamp-1 hover:text-[#00A88F] transition-colors cursor-pointer">
                         {b.title}
                       </h5>
@@ -158,7 +208,7 @@ export default function BlogUpdatesSection() {
                       {b.date}
                     </span>
                     <Link
-                      href={`/blogs/${b.slug}`}
+                      href={`/blog/${b.slug}`}
                       className="flex items-center gap-1.5 text-slate-900 font-display font-extrabold text-[10.5px] sm:text-[11px] hover:text-[#00A88F] transition-all group/btn"
                     >
                       <span>Read More</span>

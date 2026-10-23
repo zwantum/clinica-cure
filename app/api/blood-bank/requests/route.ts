@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { BloodRequestRecord } from '@/app/admin/types'
+import { sendBloodRequestNotificationEmail } from '@/lib/email'
 
 const INITIAL_REQUESTS: BloodRequestRecord[] = [
   {
@@ -81,6 +82,23 @@ export async function POST(request: Request) {
 
     // Prepend newest request first
     inMemoryRequests.unshift(newReq)
+
+    // Send email notification to Admin & Blood Bank officers
+    sendBloodRequestNotificationEmail({
+      reference_no: newReq.reference_no,
+      patient_name: newReq.patient_name,
+      requester_name: newReq.requester_name,
+      contact_phone: newReq.contact_phone,
+      blood_group: newReq.blood_group,
+      units_needed: newReq.units_needed,
+      hospital_ward: newReq.hospital_ward,
+      urgency_level: newReq.urgency_level,
+      component_type: newReq.component_type,
+      notes: notes || null,
+      created_at: newReq.created_at,
+    }).catch((emailErr) => {
+      console.warn('[Blood Bank API] Failed to dispatch admin email:', emailErr)
+    })
 
     return NextResponse.json({
       success: true,

@@ -12,7 +12,7 @@ import {
   PhoneCall,
   MapPin,
   ArrowRight,
-  Sparkles,
+  Activity,
   Building2,
   HeartHandshake,
 } from 'lucide-react'
@@ -295,7 +295,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <div>
                     <div className="pb-2 mb-2 border-b border-slate-100">
                       <span className="text-xs font-bold uppercase tracking-wider text-[#0E6B60] flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5" />
+                        <Activity className="w-3.5 h-3.5" />
                         Hospital Services ({matchedServices.length})
                       </span>
                     </div>
